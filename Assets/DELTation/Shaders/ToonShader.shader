@@ -4,27 +4,25 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
-        _ShadowTint ("ShadowTint", Color) = (0.0, 0.0, 0.0)
-        _ShadowHardness ("ShadowHardness", Range(0, 1)) = 1
+        _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         
         [Toggle(_RAMP_TRIPLE)] _RampTriple ("Triple Ramp", Float) = 1
         _Ramp0 ("Ramp0", Range(-1, 1)) = 0
         _Ramp1 ("Ramp1", Range(-1, 1)) = 0.5
-        _RampSteps ("RampSteps", Int) = 1
-        _RampSmoothness ("RampSmoothness", Range(0, 1)) = 0.005
+        _RampSmoothness ("Ramp Smoothness", Range(0, 1)) = 0.005
         
         [Toggle(_EMISSION)] _Emission ("Emission", Float) = 0
         [HDR] _EmissionColor ("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
         
         [Toggle(_FRESNEL)] _Fresnel ("Rim", Float) = 1
-        _FresnelThickness ("RimThickness", Range(0, 1)) = 0.25
-        _FresnelSmoothness ("RimSmoothness", Range(0, 1)) = 0.1
-        _FresnelOpacity ("RimOpacity", Range(0, 1)) = 1
+        _FresnelThickness ("Rim Thickness", Range(0, 1)) = 0.25
+        _FresnelSmoothness ("Rim Smoothness", Range(0, 1)) = 0.1
+        _FresnelOpacity ("Rim Opacity", Range(0, 1)) = 1
         
         [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 1
-        _SpecularSize ("SpecularSize", Range(0, 1)) = 0.025
-        _SpecularSmoothness ("SpecularSmoothness", Range(0, 1)) = 0.05
-        _SpecularOpacity ("SpecularOpacity", Range(0, 1)) = 0.25
+        _SpecularSize ("Specular Size", Range(0, 1)) = 0.025
+        _SpecularSmoothness ("Specular Smoothness", Range(0, 1)) = 0.05
+        _SpecularOpacity ("Specular Opacity", Range(0, 1)) = 0.25
         
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
@@ -91,10 +89,9 @@
             CBUFFER_START(UnityPerMaterial)
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            half3 _ShadowTint;
+            half4 _ShadowTint;
             half _Ramp0;
             half _Ramp1;
-            half _ShadowHardness;
             half _RampSmoothness;
             half3 _BaseColor;
             half3 _EmissionColor;
@@ -243,7 +240,7 @@
                 sample_color += SampleSH(position_ws);
                 
                 half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
-                half3 shadow_color = lerp(sample_color, _ShadowTint, _ShadowHardness);
+                half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
                 half3 fragment_color = lerp(shadow_color, sample_color, brightness);
 
 #ifdef _SPECULAR
@@ -270,4 +267,6 @@
         UsePass "Universal Render Pipeline/Lit/ShadowCaster"
         UsePass "Universal Render Pipeline/Lit/DepthOnly"
     }
+    
+    CustomEditor "DELTation.Editor.ToonShaderEditor"
 }

@@ -9,8 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Robot_Color
   m_Shader: {fileID: 4800000, guid: b92a4e0445ec9ec43b457115fdcd60ee, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _FOG _FRESNEL _RAMP_TRIPLE _SPECULAR
-    _SPECULAR_ON
+  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _FOG _FRESNEL _RAMP_TRIPLE _SPECULAR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -78,10 +77,10 @@ Material:
     - _ShadowHardness: 0.75
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
-    - _Specular: 1
+    - _Specular: 0
     - _SpecularHighlights: 1
     - _SpecularOpacity: 0.25
-    - _SpecularSize: 0.025
+    - _SpecularSize: 0.05
     - _SpecularSmoothness: 0.05
     - _SrcBlend: 1
     - _Surface: 0
@@ -92,5 +91,5 @@ Material:
     - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _ShadowTint: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowTint: {r: 0, g: 0, b: 0, a: 0.5019608}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
