@@ -13,9 +13,9 @@
         
         [HDR] _Emission ("Emission", Color) = (0.0, 0.0, 0.0, 0.0)
         
-        _FresnelThickness ("FresnelThickness", Range(0, 1)) = 0.25
-        _FresnelSmoothness ("FresnelSmoothness", Range(0, 1)) = 0.1
-        _FresnelOpacity ("FresnelOpacity", Range(0, 1)) = 1
+        _FresnelThickness ("RimThickness", Range(0, 1)) = 0.25
+        _FresnelSmoothness ("RimSmoothness", Range(0, 1)) = 0.1
+        _FresnelOpacity ("RimOpacity", Range(0, 1)) = 1
         
         _SpecularSize ("SpecularSize", Range(0, 1)) = 0.025
         _SpecularSmoothness ("SpecularSmoothness", Range(0, 1)) = 0.05
