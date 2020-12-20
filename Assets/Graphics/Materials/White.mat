@@ -80,6 +80,7 @@ Material:
     - _Ramp0: 0
     - _Ramp1: 0.5
     - _RampSmoothness: 0.005
+    - _RampSteps: 1
     - _ReceiveShadows: 1
     - _ShadowHardness: 0.5
     - _Smoothness: 0.5

@@ -38,6 +38,8 @@
             #pragma fragment frag
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile_fog
 
@@ -160,12 +162,43 @@
                 return ramp0 + ramp1;
             }
 
-            inline half get_brightness(half3 normal_ws, half3 light_direction, half shadow_attenuation, half distance_attenuation)
+            inline half get_brightness(half3 normal_ws, half3 light_direction, half shadow_attenuation, half distance_attenuation, half3 position_ws)
             {
                 half dot_value = dot(normal_ws, light_direction);
                 half attenuation = shadow_attenuation * distance_attenuation;
                 half ramp = get_triple_ramp(dot_value * attenuation);
+                
+
+#ifdef _ADDITIONAL_LIGHTS
+                
+                int additional_lights_count = GetAdditionalLightsCount();
+                for (int i = 0; i < additional_lights_count; ++i)
+                {
+                    Light light = GetAdditionalLight(i, position_ws);
+                    ramp += get_triple_ramp(light.distanceAttenuation * light.shadowAttenuation);
+                }
+#endif
+                
                 return saturate(ramp);
+            }
+
+            inline half3 get_additional_lights(half3 position_ws)
+            {
+                half3 color = 0;
+                
+#ifdef _ADDITIONAL_LIGHTS
+                
+                int additional_lights_count = GetAdditionalLightsCount();
+                for (int i = 0; i < additional_lights_count; ++i)
+                {
+                    Light light = GetAdditionalLight(i, position_ws);
+                    half3 attenuation = get_triple_ramp(light.shadowAttenuation * light.distanceAttenuation);
+                    color += light.color * attenuation;
+                }
+                
+#endif
+                
+                return color;
             }
 
             half3 frag (v2f input) : SV_Target
@@ -174,10 +207,13 @@
                 half3 normal_ws = normalize(input.normalWS);
                 half3 light_direction_ws = normalize(main_light.direction);
                 half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
+                half3 position_ws = input.positionWSAndFogFactor.xyz;
  
                 half3 sample_color = (half3) tex2D(_MainTex, input.uv) * _BaseColor;
                 sample_color *= main_light.color;
-                half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation);
+                sample_color += get_additional_lights(position_ws);
+                
+                half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
                 half3 shadow_color = lerp(sample_color, _ShadowTint, _ShadowHardness);
                 half3 fragment_color = lerp(shadow_color, sample_color, brightness);
                 fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws, brightness);
