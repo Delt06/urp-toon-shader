@@ -16,6 +16,8 @@ A toon shader compatible with Universal Rendering Pipeline.
 ![Additional Lights](Showcase/additional_lights.gif)
 - Ambient lighting  
 ![Ambient Lighting](Showcase/ambient_lighting.gif)
+- Fog
+![Fog](Showcase/fog.gif)
 
 ## Usage
 - Download the latest `.unitypackage` from the `Releases` section and add it to your project.
