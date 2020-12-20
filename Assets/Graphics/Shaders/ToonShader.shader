@@ -1,4 +1,4 @@
-﻿Shader "Stylized/Toon Shader"
+﻿Shader "DELTation/Toon Shader"
 {
     Properties
     {
