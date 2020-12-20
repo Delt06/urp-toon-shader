@@ -6,20 +6,28 @@
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
         _ShadowTint ("ShadowTint", Color) = (0.0, 0.0, 0.0)
         _ShadowHardness ("ShadowHardness", Range(0, 1)) = 1
+        
+        [Toggle(_RAMP_TRIPLE)] _RampTriple ("Triple Ramp", Float) = 1
         _Ramp0 ("Ramp0", Range(-1, 1)) = 0
         _Ramp1 ("Ramp1", Range(-1, 1)) = 0.5
         _RampSteps ("RampSteps", Int) = 1
         _RampSmoothness ("RampSmoothness", Range(0, 1)) = 0.005
         
-        [HDR] _Emission ("Emission", Color) = (0.0, 0.0, 0.0, 0.0)
+        [Toggle(_EMISSION)] _Emission ("Emission", Float) = 0
+        [HDR] _EmissionColor ("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
         
+        [Toggle(_FRESNEL)] _Fresnel ("Rim", Float) = 1
         _FresnelThickness ("RimThickness", Range(0, 1)) = 0.25
         _FresnelSmoothness ("RimSmoothness", Range(0, 1)) = 0.1
         _FresnelOpacity ("RimOpacity", Range(0, 1)) = 1
         
+        [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 1
         _SpecularSize ("SpecularSize", Range(0, 1)) = 0.025
         _SpecularSmoothness ("SpecularSmoothness", Range(0, 1)) = 0.05
         _SpecularOpacity ("SpecularOpacity", Range(0, 1)) = 0.25
+        
+        [Toggle(_FOG)] _Fog ("Fog", Float) = 1
+        [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
     }
     SubShader
     {
@@ -46,6 +54,13 @@
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
+
+            #pragma shader_feature _SPECULAR
+            #pragma shader_feature _FRESNEL
+            #pragma shader_feature _EMISSION
+            #pragma shader_feature _FOG
+            #pragma shader_feature _ADDITIONAL_LIGHTS_ENABLED
+            #pragma shader_feature _RAMP_TRIPLE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -82,7 +97,7 @@
             half _ShadowHardness;
             half _RampSmoothness;
             half3 _BaseColor;
-            half3 _Emission;
+            half3 _EmissionColor;
             
             half _FresnelOpacity;
             half _FresnelSmoothness;
@@ -95,6 +110,15 @@
             
             CBUFFER_END
 
+            inline float get_fog_factor(float depth)
+            {
+#ifdef _FOG
+                return ComputeFogFactor(depth);
+#else
+                return 0;
+#endif          
+            }
+
             v2f vert (appdata v)
             {
                 v2f output;
@@ -102,7 +126,7 @@
                 VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(v.normalOS, v.tangentOS);
                 output.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 output.uvLM = v.uvLM.xy * unity_LightmapST.xy + unity_LightmapST.zw;
-                float fog_factor = ComputeFogFactor(vertex_position_inputs.positionCS.z);
+                float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
                 output.positionWSAndFogFactor = float4(vertex_position_inputs.positionWS, fog_factor);
                 output.normalWS = vertex_normal_inputs.normalWS;
 #ifdef _MAIN_LIGHT_SHADOWS
@@ -155,27 +179,31 @@
                 return get_simple_ramp(light_color, _FresnelOpacity, _FresnelThickness, _FresnelSmoothness, brightness * fresnel);
             }
 
-            inline half get_triple_ramp(half value)
+            inline half get_ramp(half value)
             {
+#ifdef _RAMP_TRIPLE
                 half ramp0 = smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value) * 0.5;
                 half ramp1 = smoothstep(_Ramp1, _Ramp1 + _RampSmoothness, value) * 0.5;
                 return ramp0 + ramp1;
+#else
+                return smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value);
+#endif
             }
 
             inline half get_brightness(half3 normal_ws, half3 light_direction, half shadow_attenuation, half distance_attenuation, half3 position_ws)
             {
                 half dot_value = dot(normal_ws, light_direction);
                 half attenuation = shadow_attenuation * distance_attenuation;
-                half ramp = get_triple_ramp(dot_value * attenuation);
+                half ramp = get_ramp(dot_value * attenuation);
                 
 
-#ifdef _ADDITIONAL_LIGHTS
+#if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
                 
                 int additional_lights_count = GetAdditionalLightsCount();
                 for (int i = 0; i < additional_lights_count; ++i)
                 {
                     Light light = GetAdditionalLight(i, position_ws);
-                    ramp += get_triple_ramp(light.distanceAttenuation * light.shadowAttenuation);
+                    ramp += get_ramp(light.distanceAttenuation * light.shadowAttenuation);
                 }
 #endif
                 
@@ -186,13 +214,13 @@
             {
                 half3 color = 0;
                 
-#ifdef _ADDITIONAL_LIGHTS
+#if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED)
                 
                 int additional_lights_count = GetAdditionalLightsCount();
                 for (int i = 0; i < additional_lights_count; ++i)
                 {
                     Light light = GetAdditionalLight(i, position_ws);
-                    half3 attenuation = get_triple_ramp(light.shadowAttenuation * light.distanceAttenuation);
+                    half3 attenuation = get_ramp(light.shadowAttenuation * light.distanceAttenuation);
                     color += light.color * attenuation;
                 }
                 
@@ -217,12 +245,22 @@
                 half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
                 half3 shadow_color = lerp(sample_color, _ShadowTint, _ShadowHardness);
                 half3 fragment_color = lerp(shadow_color, sample_color, brightness);
+
+#ifdef _SPECULAR
                 fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws, brightness);
+#endif
+#ifdef _FRESNEL
                 fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, brightness);
-                
-                fragment_color += _Emission;
+#endif
+#ifdef _EMISSION
+                fragment_color += _EmissionColor;
+#endif
+
+#ifdef _FOG
                 float fog_factor = input.positionWSAndFogFactor.w;
                 fragment_color = MixFog(fragment_color, fog_factor);
+#endif
+               
                 
                 return saturate(fragment_color);
             }
