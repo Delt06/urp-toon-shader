@@ -1,0 +1,3 @@
+*.unity binary merge=unityyamlmerge
+*.prefab binary merge=unityyamlmerge
+*.asset binary merge=unityyamlmerge
