@@ -212,6 +212,7 @@
                 half3 sample_color = (half3) tex2D(_MainTex, input.uv) * _BaseColor;
                 sample_color *= main_light.color;
                 sample_color += get_additional_lights(position_ws);
+                sample_color += SampleSH(position_ws);
                 
                 half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
                 half3 shadow_color = lerp(sample_color, _ShadowTint, _ShadowHardness);
