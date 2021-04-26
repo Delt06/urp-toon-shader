@@ -49,6 +49,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AdditionalLights: 1
+    - _AdditionalLightsMultiplier: 0.1
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -70,7 +71,7 @@ Material:
     - _OcclusionStrength: 1
     - _QueueOffset: 0
     - _Ramp0: 0
-    - _Ramp1: 0.376
+    - _Ramp1: 0.25
     - _RampSmoothness: 0.02
     - _RampSteps: 3
     - _RampTriple: 1

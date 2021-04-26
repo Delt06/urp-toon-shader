@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Robot_Color_Lit
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ShaderKeywords: _ENVIRONMENTREFLECTIONS_OFF
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -57,7 +57,7 @@ Material:
     - _Cutoff: 0.5
     - _DstBlend: 0
     - _Emission: 0
-    - _EnvironmentReflections: 0
+    - _EnvironmentReflections: 1
     - _Fog: 1
     - _Fresnel: 1
     - _FresnelOpacity: 1
@@ -66,7 +66,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Metallic: 0
+    - _Metallic: 0.078
     - _OcclusionStrength: 1
     - _QueueOffset: 0
     - _Ramp0: 0
@@ -76,7 +76,7 @@ Material:
     - _RampTriple: 1
     - _ReceiveShadows: 1
     - _ShadowHardness: 0.75
-    - _Smoothness: 0
+    - _Smoothness: 0.573
     - _SmoothnessTextureChannel: 0
     - _Specular: 0
     - _SpecularHighlights: 1

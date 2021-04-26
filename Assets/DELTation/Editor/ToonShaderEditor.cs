@@ -106,6 +106,7 @@ namespace DELTation.Editor
 		{
 			DrawProperty(materialEditor, properties, "_Fog");
 			DrawProperty(materialEditor, properties, "_AdditionalLights");
+			DrawProperty(materialEditor, properties, "_AdditionalLightsMultiplier");
 		}
 
 		private static void DrawProperty(MaterialEditor materialEditor, MaterialProperty[] properties, string name)

@@ -27,6 +27,7 @@
         
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
+        _AdditionalLightsMultiplier ("Additonal Lights Multiplier", Range(0, 10)) = 0.1
     }
     SubShader
     {
@@ -60,6 +61,12 @@
             #pragma shader_feature _FOG
             #pragma shader_feature _ADDITIONAL_LIGHTS_ENABLED
             #pragma shader_feature _RAMP_TRIPLE
+
+#if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
+                
+            #define TOON_ADDITIONAL_LIGHTS
+            
+#endif
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -106,6 +113,8 @@
             half _SpecularThreshold;
             half _SpecularExponent;
             int _RampSteps;
+
+            half _AdditionalLightsMultiplier;
             
             CBUFFER_END
 
@@ -191,60 +200,71 @@
 #endif
             }
 
+            inline half get_additional_lights_attenuation(const half3 position_ws)
+            {
+                half brightness = 0;
+                
+                const int additional_lights_count = GetAdditionalLightsCount();
+                for (int i = 0; i < additional_lights_count; ++i)
+                {
+                    const Light light = GetAdditionalLight(i, position_ws);
+                    brightness += light.distanceAttenuation * light.shadowAttenuation;
+                }
+
+                return brightness;
+            }
+
             inline half get_brightness(half3 normal_ws, half3 light_direction, half shadow_attenuation, half distance_attenuation, half3 position_ws)
             {
-                half dot_value = dot(normal_ws, light_direction);
-                half attenuation = shadow_attenuation * distance_attenuation;
-                half ramp = get_ramp(dot_value * attenuation);
-                
+                const half dot_value = dot(normal_ws, light_direction);
+                const half attenuation = shadow_attenuation * distance_attenuation;
+                half brightness = dot_value * attenuation;
 
-#if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
+#ifdef TOON_ADDITIONAL_LIGHTS
                 
-                int additional_lights_count = GetAdditionalLightsCount();
-                for (int i = 0; i < additional_lights_count; ++i)
-                {
-                    Light light = GetAdditionalLight(i, position_ws);
-                    ramp += get_ramp(light.distanceAttenuation * light.shadowAttenuation);
-                }
+                brightness += get_additional_lights_attenuation(position_ws);
 #endif
                 
-                return saturate(ramp);
+                return saturate(get_ramp(brightness));
             }
 
-            inline half3 get_additional_lights(half3 position_ws)
+            inline half3 get_additional_lights_color(const half3 position_ws)
             {
-                half3 color = 0;
-                
-#if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED)
-                
-                int additional_lights_count = GetAdditionalLightsCount();
+                half4 color = 0;
+
+                const int additional_lights_count = GetAdditionalLightsCount();
                 for (int i = 0; i < additional_lights_count; ++i)
                 {
-                    Light light = GetAdditionalLight(i, position_ws);
-                    half3 attenuation = get_ramp(light.shadowAttenuation * light.distanceAttenuation);
-                    color += light.color * attenuation;
+                    const Light light = GetAdditionalLight(i, position_ws);
+                    const float attenuation = light.shadowAttenuation * light.distanceAttenuation; 
+                    color.a += attenuation;
+                    color.xyz += light.color * attenuation;
                 }
                 
-#endif
-                
-                return color;
+                return color.xyz * get_ramp(color.a * _AdditionalLightsMultiplier);
             }
 
-            half3 frag (v2f input) : SV_Target
+            half3 frag (const v2f input) : SV_Target
             {
-                Light main_light = get_main_light(input);
-                half3 normal_ws = normalize(input.normalWS);
-                half3 light_direction_ws = normalize(main_light.direction);
-                half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
-                half3 position_ws = input.positionWSAndFogFactor.xyz;
+                const Light main_light = get_main_light(input);
+                const half3 normal_ws = normalize(input.normalWS);
+                const half3 light_direction_ws = normalize(main_light.direction);
+                const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
+                const half3 position_ws = input.positionWSAndFogFactor.xyz;
  
                 half3 sample_color = (half3) tex2D(_MainTex, input.uv) * _BaseColor;
                 sample_color *= main_light.color;
-                sample_color += get_additional_lights(position_ws);
-                sample_color += SampleSH(position_ws);
+
+#ifdef TOON_ADDITIONAL_LIGHTS
                 
-                half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
-                half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
+                sample_color += get_additional_lights_color(position_ws);
+
+#endif
+                
+                sample_color += saturate(SampleSH(input.normalWS));
+
+                const half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
+                const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
                 half3 fragment_color = lerp(shadow_color, sample_color, brightness);
 
 #ifdef _SPECULAR
