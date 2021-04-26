@@ -15,14 +15,15 @@
         [HDR] _EmissionColor ("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
         
         [Toggle(_FRESNEL)] _Fresnel ("Rim", Float) = 1
-        _FresnelThickness ("Rim Thickness", Range(0, 1)) = 0.25
+        _FresnelThickness ("Rim Thickness", Range(0, 1)) = 0.45
         _FresnelSmoothness ("Rim Smoothness", Range(0, 1)) = 0.1
-        _FresnelOpacity ("Rim Opacity", Range(0, 1)) = 1
+        [HDR] _FresnelColor ("Rim Color", Color) = (1.0, 1.0, 1.0, 1.0)
         
         [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 1
-        _SpecularSize ("Specular Size", Range(0, 1)) = 0.025
-        _SpecularSmoothness ("Specular Smoothness", Range(0, 1)) = 0.05
-        _SpecularOpacity ("Specular Opacity", Range(0, 1)) = 0.25
+        _SpecularThreshold ("Specular Threshold", Range(0, 1)) = 0.8
+        _SpecularExponent ("Specular Exponent", Range(0, 1000)) = 200
+        _SpecularSmoothness ("Specular Smoothness", Range(0, 1)) = 0.025
+        [HDR] _SpecularColor ("Specular Color", Color) = (1.0, 1.0, 1.0, 1.0)
         
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
@@ -96,13 +97,14 @@
             half3 _BaseColor;
             half3 _EmissionColor;
             
-            half _FresnelOpacity;
+            half4 _FresnelColor;
             half _FresnelSmoothness;
             half _FresnelThickness;
 
-            half _SpecularOpacity;
+            half4 _SpecularColor;
             half _SpecularSmoothness;
-            half _SpecularSize;
+            half _SpecularThreshold;
+            half _SpecularExponent;
             int _RampSteps;
             
             CBUFFER_END
@@ -155,25 +157,27 @@
 
             inline half get_specular(half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws)
             {
-                half3 half_vector = (view_direction_ws + light_direction_ws) * 0.5;
-                return dot(normal_ws, half_vector);
+                const half3 half_vector = normalize(view_direction_ws + light_direction_ws);
+                return saturate(dot(normal_ws, half_vector));
             }
 
-            inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws, half brightness)
+            inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws)
             {
                 half specular = get_specular(view_direction_ws, normal_ws, light_direction_ws);
-                return get_simple_ramp(light_color, _SpecularOpacity, _SpecularSize, _SpecularSmoothness, specular * brightness);
+                specular = pow(specular, _SpecularExponent);
+                const half3 ramp = get_simple_ramp(light_color, _SpecularColor.a, _SpecularThreshold, _SpecularSmoothness, specular);
+                return _SpecularColor.xyz * ramp;
             }
 
             inline half get_fresnel(half3 view_direction_ws, half3 normal_ws)
             {
-                return 1 - dot(view_direction_ws, normal_ws); 
+                return 1 - saturate(dot(view_direction_ws, normal_ws)); 
             }
 
             inline half3 get_fresnel_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half brightness)
             {
-                half fresnel = get_fresnel(view_direction_ws, normal_ws);
-                return get_simple_ramp(light_color, _FresnelOpacity, _FresnelThickness, _FresnelSmoothness, brightness * fresnel);
+                const half fresnel = get_fresnel(view_direction_ws, normal_ws);
+                return _FresnelColor.xyz * get_simple_ramp(light_color, _FresnelColor.a, _FresnelThickness, _FresnelSmoothness, brightness * fresnel);
             }
 
             inline half get_ramp(half value)
@@ -244,7 +248,7 @@
                 half3 fragment_color = lerp(shadow_color, sample_color, brightness);
 
 #ifdef _SPECULAR
-                fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws, brightness);
+                fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
 #endif
 #ifdef _FRESNEL
                 fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, brightness);
@@ -259,7 +263,7 @@
 #endif
                
                 
-                return saturate(fragment_color);
+                return max(fragment_color, 0);
             }
             ENDHLSL
         }

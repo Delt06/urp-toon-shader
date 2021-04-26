@@ -7,14 +7,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Robot_Color
-  m_Shader: {fileID: 4800000, guid: b92a4e0445ec9ec43b457115fdcd60ee, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _FRESNEL _RAMP_TRIPLE _SPECULAR _SPECULAR_ON
+  m_Name: Robot_Color_Lit
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_ShaderKeywords: _ENVIRONMENTREFLECTIONS_OFF
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2050
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -56,13 +57,12 @@ Material:
     - _Cutoff: 0.5
     - _DstBlend: 0
     - _Emission: 0
-    - _EnvironmentReflections: 1
-    - _Fog: 0
+    - _EnvironmentReflections: 0
+    - _Fog: 1
     - _Fresnel: 1
-    - _FresnelColor: 1
     - _FresnelOpacity: 1
     - _FresnelSmoothness: 0.1
-    - _FresnelThickness: 0.45
+    - _FresnelThickness: 0.25
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -70,21 +70,19 @@ Material:
     - _OcclusionStrength: 1
     - _QueueOffset: 0
     - _Ramp0: 0
-    - _Ramp1: 0.376
-    - _RampSmoothness: 0.02
+    - _Ramp1: 0.5
+    - _RampSmoothness: 0.005
     - _RampSteps: 3
     - _RampTriple: 1
     - _ReceiveShadows: 1
     - _ShadowHardness: 0.75
-    - _Smoothness: 0.5
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
-    - _Specular: 1
-    - _SpecularExponent: 200
+    - _Specular: 0
     - _SpecularHighlights: 1
-    - _SpecularOpacity: 1
-    - _SpecularSize: 0.028
-    - _SpecularSmoothness: 0.025
-    - _SpecularThreshold: 0.8
+    - _SpecularOpacity: 0.25
+    - _SpecularSize: 0.05
+    - _SpecularSmoothness: 0.05
     - _SrcBlend: 1
     - _Surface: 0
     - _WorkflowMode: 1
@@ -94,7 +92,18 @@ Material:
     - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _FresnelColor: {r: 2.9960785, g: 2.9960785, b: 2.9960785, a: 1}
     - _ShadowTint: {r: 0, g: 0, b: 0, a: 0.5019608}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _SpecularColor: {r: 5.3403134, g: 5.3403134, b: 5.3403134, a: 0.79607844}
+--- !u!114 &4486788364073219497
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1

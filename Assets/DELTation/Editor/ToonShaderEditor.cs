@@ -82,9 +82,9 @@ namespace DELTation.Editor
 
 			if (material.IsKeywordEnabled("_FRESNEL"))
 			{
+				DrawProperty(materialEditor, properties, "_FresnelColor");
 				DrawProperty(materialEditor, properties, "_FresnelThickness");
 				DrawProperty(materialEditor, properties, "_FresnelSmoothness");
-				DrawProperty(materialEditor, properties, "_FresnelOpacity");
 			}
 		}
 
@@ -95,9 +95,10 @@ namespace DELTation.Editor
 
 			if (material.IsKeywordEnabled("_SPECULAR"))
 			{
-				DrawProperty(materialEditor, properties, "_SpecularSize");
+				DrawProperty(materialEditor, properties, "_SpecularColor");
+				DrawProperty(materialEditor, properties, "_SpecularThreshold");
+				DrawProperty(materialEditor, properties, "_SpecularExponent");
 				DrawProperty(materialEditor, properties, "_SpecularSmoothness");
-				DrawProperty(materialEditor, properties, "_SpecularOpacity");
 			}
 		}
 
