@@ -33,7 +33,7 @@ namespace DELTation.Editor
 			Label("Specular");
 			DrawSpecularProperties(materialEditor, properties, material);
 			Label("Misc");
-			DrawMiscProperties(materialEditor, properties);
+			DrawMiscProperties(materialEditor, properties, material);
 		}
 
 		private void Label(string text)
@@ -102,11 +102,18 @@ namespace DELTation.Editor
 			}
 		}
 
-		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
 		{
 			DrawProperty(materialEditor, properties, "_Fog");
+			
 			DrawProperty(materialEditor, properties, "_AdditionalLights");
-			DrawProperty(materialEditor, properties, "_AdditionalLightsMultiplier");
+			if (material.IsKeywordEnabled("_ADDITIONAL_LIGHTS_ENABLED"))
+				DrawProperty(materialEditor, properties, "_AdditionalLightsMultiplier");
+			
+			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
+			if (material.IsKeywordEnabled("_ENVIRONMENT_LIGHTING_ENABLED"))
+				DrawProperty(materialEditor, properties, "_EnvironmentLightingMultiplier");
 		}
 
 		private static void DrawProperty(MaterialEditor materialEditor, MaterialProperty[] properties, string name)

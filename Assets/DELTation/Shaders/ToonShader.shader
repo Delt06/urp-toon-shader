@@ -28,6 +28,9 @@
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
         _AdditionalLightsMultiplier ("Additonal Lights Multiplier", Range(0, 10)) = 0.1
+        
+        [Toggle(_ENVIRONMENT_LIGHTING_ENABLED)] _EnvironmentLightingEnabled ("Environment Lighting", Float) = 1
+        _EnvironmentLightingMultiplier ("Environment Lighting Multiplier", Range(0, 10)) = 0.5
     }
     SubShader
     {
@@ -60,6 +63,7 @@
             #pragma shader_feature _EMISSION
             #pragma shader_feature _FOG
             #pragma shader_feature _ADDITIONAL_LIGHTS_ENABLED
+            #pragma shader_feature _ENVIRONMENT_LIGHTING_ENABLED
             #pragma shader_feature _RAMP_TRIPLE
 
 #if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
@@ -103,18 +107,28 @@
             half _RampSmoothness;
             half3 _BaseColor;
             half3 _EmissionColor;
-            
+
+#ifdef _FRESNEL
             half4 _FresnelColor;
             half _FresnelSmoothness;
             half _FresnelThickness;
+#endif
 
+#ifdef _SPECULAR
             half4 _SpecularColor;
             half _SpecularSmoothness;
             half _SpecularThreshold;
             half _SpecularExponent;
-            int _RampSteps;
+            
+#endif
 
+#ifdef _ADDITIONAL_LIGHTS_ENABLED
             half _AdditionalLightsMultiplier;
+#endif
+
+#ifdef _ENVIRONMENT_LIGHTING_ENABLED
+            half _EnvironmentLightingMultiplier;
+#endif       
             
             CBUFFER_END
 
@@ -172,10 +186,15 @@
 
             inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws)
             {
+#ifndef _SPECULAR
+                return 0;
+
+#else
                 half specular = get_specular(view_direction_ws, normal_ws, light_direction_ws);
                 specular = pow(specular, _SpecularExponent);
                 const half3 ramp = get_simple_ramp(light_color, _SpecularColor.a, _SpecularThreshold, _SpecularSmoothness, specular);
                 return _SpecularColor.xyz * ramp;
+#endif                
             }
 
             inline half get_fresnel(half3 view_direction_ws, half3 normal_ws)
@@ -185,8 +204,12 @@
 
             inline half3 get_fresnel_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half brightness)
             {
+#ifndef _FRESNEL
+                return 0;
+#else                
                 const half fresnel = get_fresnel(view_direction_ws, normal_ws);
                 return _FresnelColor.xyz * get_simple_ramp(light_color, _FresnelColor.a, _FresnelThickness, _FresnelSmoothness, brightness * fresnel);
+#endif                
             }
 
             inline half get_ramp(half value)
@@ -230,6 +253,9 @@
 
             inline half3 get_additional_lights_color(const half3 position_ws)
             {
+#ifndef _ADDITIONAL_LIGHTS_ENABLED
+                return 0;
+#else
                 half4 color = 0;
 
                 const int additional_lights_count = GetAdditionalLightsCount();
@@ -242,6 +268,7 @@
                 }
                 
                 return color.xyz * get_ramp(color.a * _AdditionalLightsMultiplier);
+#endif                
             }
 
             half3 frag (const v2f input) : SV_Target
@@ -260,8 +287,12 @@
                 sample_color += get_additional_lights_color(position_ws);
 
 #endif
-                
-                sample_color += saturate(SampleSH(input.normalWS));
+
+#ifdef _ENVIRONMENT_LIGHTING_ENABLED
+
+                sample_color += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
+
+#endif              
 
                 const half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
                 const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
@@ -278,7 +309,7 @@
 #endif
 
 #ifdef _FOG
-                float fog_factor = input.positionWSAndFogFactor.w;
+                const float fog_factor = input.positionWSAndFogFactor.w;
                 fragment_color = MixFog(fragment_color, fog_factor);
 #endif
                

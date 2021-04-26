@@ -62,6 +62,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AdditionalLights: 1
+    - _AdditionalLightsMultiplier: 1
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -82,11 +83,11 @@ Material:
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _QueueOffset: 0
-    - _Ramp0: 0
-    - _Ramp1: 0.5
+    - _Ramp0: 0.27
+    - _Ramp1: 0.474
     - _RampSmoothness: 0.005
     - _RampSteps: 1
-    - _RampTriple: 1
+    - _RampTriple: 0
     - _ReceiveShadows: 1
     - _ShadowHardness: 0.5
     - _Smoothness: 0.5
