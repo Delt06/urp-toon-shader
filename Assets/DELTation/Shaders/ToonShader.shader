@@ -72,6 +72,12 @@
             
 #endif
 
+#if defined(_ADDITIONAL_LIGHTS_VERTEX) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
+                
+            #define TOON_ADDITIONAL_LIGHTS_VERTEX
+            
+#endif
+
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
@@ -96,6 +102,10 @@
                 float4 shadowCoord : TEXCOORD6;
 #endif
                 float4 positionCS : SV_POSITION;
+
+#ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
+                half4 additional_lights_vertex : TEXCOORD7; // a is attenuation
+#endif
             };
 
             CBUFFER_START(UnityPerMaterial)
@@ -155,6 +165,23 @@
                 output.shadowCoord = GetShadowCoord(vertex_position_inputs);
 #endif
                 output.positionCS = vertex_position_inputs.positionCS;
+
+#ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
+
+                half4 additional_lights_vertex = 0;
+
+                const int additional_lights_count = GetAdditionalLightsCount();
+                for (int i = 0; i < additional_lights_count; ++i)
+                {
+                    const Light light = GetAdditionalLight(i, vertex_position_inputs.positionWS);
+                    additional_lights_vertex.a += light.distanceAttenuation * light.shadowAttenuation;
+                    additional_lights_vertex.xyz += light.color;
+                }
+
+                output.additional_lights_vertex = additional_lights_vertex;
+#endif
+                
+                
                 return output;
             }
 
@@ -223,21 +250,26 @@
 #endif
             }
 
-            inline half get_additional_lights_attenuation(const half3 position_ws)
+            inline half get_additional_lights_attenuation(in v2f input)
             {
+#ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
+                return input.additional_lights_vertex.a;
+#else
+                
                 half brightness = 0;
                 
                 const int additional_lights_count = GetAdditionalLightsCount();
                 for (int i = 0; i < additional_lights_count; ++i)
                 {
-                    const Light light = GetAdditionalLight(i, position_ws);
+                    const Light light = GetAdditionalLight(i, input.positionWSAndFogFactor.xyz);
                     brightness += light.distanceAttenuation * light.shadowAttenuation;
                 }
 
                 return brightness;
+#endif                
             }
 
-            inline half get_brightness(half3 normal_ws, half3 light_direction, half shadow_attenuation, half distance_attenuation, half3 position_ws)
+            inline half get_brightness(in v2f input, half3 normal_ws, half3 light_direction, half shadow_attenuation, half distance_attenuation)
             {
                 const half dot_value = dot(normal_ws, light_direction);
                 const half attenuation = shadow_attenuation * distance_attenuation;
@@ -245,27 +277,33 @@
 
 #ifdef TOON_ADDITIONAL_LIGHTS
                 
-                brightness += get_additional_lights_attenuation(position_ws);
+                brightness += get_additional_lights_attenuation(input);
 #endif
                 
                 return saturate(get_ramp(brightness));
             }
 
-            inline half3 get_additional_lights_color(const half3 position_ws)
+            inline half3 get_additional_lights_color(in v2f input)
             {
 #ifndef _ADDITIONAL_LIGHTS_ENABLED
                 return 0;
 #else
+                
+#ifdef  TOON_ADDITIONAL_LIGHTS_VERTEX
+                const half4 additional_lights_vertex = input.additional_lights_vertex; 
+                half4 color = float4(additional_lights_vertex.xyz * additional_lights_vertex.a, additional_lights_vertex.a);
+#else          
                 half4 color = 0;
 
                 const int additional_lights_count = GetAdditionalLightsCount();
                 for (int i = 0; i < additional_lights_count; ++i)
                 {
-                    const Light light = GetAdditionalLight(i, position_ws);
+                    const Light light = GetAdditionalLight(i, input.positionWSAndFogFactor.xyz);
                     const float attenuation = light.shadowAttenuation * light.distanceAttenuation; 
                     color.a += attenuation;
                     color.xyz += light.color * attenuation;
                 }
+#endif        
                 
                 return color.xyz * get_ramp(color.a * _AdditionalLightsMultiplier);
 #endif                
@@ -277,14 +315,13 @@
                 const half3 normal_ws = normalize(input.normalWS);
                 const half3 light_direction_ws = normalize(main_light.direction);
                 const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
-                const half3 position_ws = input.positionWSAndFogFactor.xyz;
  
                 half3 sample_color = (half3) tex2D(_MainTex, input.uv) * _BaseColor;
                 sample_color *= main_light.color;
 
-#ifdef TOON_ADDITIONAL_LIGHTS
+#if defined(TOON_ADDITIONAL_LIGHTS) || defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
                 
-                sample_color += get_additional_lights_color(position_ws);
+                sample_color += get_additional_lights_color(input);
 
 #endif
 
@@ -294,7 +331,7 @@
 
 #endif              
 
-                const half brightness = get_brightness(normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation, position_ws);
+                const half brightness = get_brightness(input, normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation);
                 const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
                 half3 fragment_color = lerp(shadow_color, sample_color, brightness);
 
