@@ -105,7 +105,7 @@
 
 #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
                 half4 additional_lights_vertex : TEXCOORD7; // a is attenuation
-#endif
+#endif                
             };
 
             CBUFFER_START(UnityPerMaterial)
@@ -155,7 +155,7 @@
             {
                 v2f output;
                 VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(v.positionOS.xyz);
-                VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(v.normalOS, v.tangentOS);
+                const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(v.normalOS, v.tangentOS);
                 output.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 output.uvLM = v.uvLM.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
@@ -242,8 +242,8 @@
             inline half get_ramp(half value)
             {
 #ifdef _RAMP_TRIPLE
-                half ramp0 = smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value) * 0.5;
-                half ramp1 = smoothstep(_Ramp1, _Ramp1 + _RampSmoothness, value) * 0.5;
+                const half ramp0 = smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value) * 0.5;
+                const half ramp1 = smoothstep(_Ramp1, _Ramp1 + _RampSmoothness, value) * 0.5;
                 return ramp0 + ramp1;
 #else
                 return smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value);
@@ -273,7 +273,7 @@
             {
                 const half dot_value = dot(normal_ws, light_direction);
                 const half attenuation = shadow_attenuation * distance_attenuation;
-                half brightness = dot_value * attenuation;
+                const half brightness = dot_value * attenuation;
 
 #ifdef TOON_ADDITIONAL_LIGHTS
                 
