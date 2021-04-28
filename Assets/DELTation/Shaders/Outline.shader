@@ -52,7 +52,7 @@
             struct appdata
             {
                 float4 uv : TEXCOORD0;
-                float4 positionOS : POSITION;
+                float3 positionOS : POSITION;
             };
         
             struct v2f
@@ -65,8 +65,8 @@
             {
                 v2f output;
                 output.uv = input.uv;
-                const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
-                output.positionCS = vertex_position_inputs.positionCS;
+                const half3 positionWS = TransformObjectToWorld(input.positionOS);
+                output.positionCS = TransformWorldToHClip(positionWS);
                 return output;
             }
 
