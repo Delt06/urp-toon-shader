@@ -51,21 +51,21 @@ void Outline_float(float2 UV, float OutlineThickness, float DepthSensitivity, fl
     const float depth_finite_difference1 = depth_samples[3] - depth_samples[2];
     float edge_depth = sqrt(pow(depth_finite_difference0, 2) + pow(depth_finite_difference1, 2)) * 100;
     const float depth_threshold = 1 / DepthSensitivity * depth_samples[0];
-    edge_depth = edge_depth > depth_threshold ? 1 : 0;
+    edge_depth = step(depth_threshold, edge_depth);
 
     // Normals
     const float3 normal_finite_difference0 = normal_samples[1] - normal_samples[0];
     const float3 normal_finite_difference1 = normal_samples[3] - normal_samples[2];
     float edge_normal = sqrt(
         dot(normal_finite_difference0, normal_finite_difference0) + dot(normal_finite_difference1, normal_finite_difference1));
-    edge_normal = edge_normal > 1 / NormalsSensitivity ? 1 : 0;
+    edge_normal = step(1 / NormalsSensitivity, edge_normal);
 
     // Color
     const float3 color_finite_difference0 = color_samples[1] - color_samples[0];
     const float3 color_finite_difference1 = color_samples[3] - color_samples[2];
     float edge_color = sqrt(
         dot(color_finite_difference0, color_finite_difference0) + dot(color_finite_difference1, color_finite_difference1));
-    edge_color = edge_color > 1 / ColorSensitivity ? 1 : 0;
+    edge_color = step(1 / ColorSensitivity, edge_color);
 
     const float edge = max(edge_depth, max(edge_normal, edge_color));
 
