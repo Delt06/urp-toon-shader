@@ -32,12 +32,7 @@ TEXTURE2D(_BaseMap);    SAMPLER(sampler_BaseMap);
 
 half Alpha(half albedoAlpha, half4 color, half cutoff)
 {
-    half alpha = color.a;
-
-    #if defined(_ALPHATEST_ON)
-    clip(alpha - cutoff);
-    #endif
-
+    half alpha = color.a * albedoAlpha;
     return alpha;
 }
 
