@@ -7,7 +7,7 @@
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         
         [Toggle(_RAMP_MAP)]
-        _UseRampMap("Use Ramp Map", Float) = 0
+        _UseRampMap("Use Ramp Texture", Float) = 0
         [NoScaleOffset]
         _RampMap ("Ramp Texture", 2D) = "white" {}
         [Toggle(_RAMP_TRIPLE)] _RampTriple ("Triple Ramp", Float) = 1
