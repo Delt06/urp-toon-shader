@@ -206,9 +206,9 @@
             inline half get_ramp(half value)
             {
 #ifdef _RAMP_TRIPLE
-                const half ramp0 = smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value) * 0.5;
-                const half ramp1 = smoothstep(_Ramp1, _Ramp1 + _RampSmoothness, value) * 0.5;
-                return ramp0 + ramp1;
+                const half ramp0 = smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value);
+                const half ramp1 = smoothstep(_Ramp1, _Ramp1 + _RampSmoothness, value);
+                return (ramp0 + ramp1) * 0.5;
 #else
                 return smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value);
 #endif
