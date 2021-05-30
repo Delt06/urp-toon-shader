@@ -1,4 +1,4 @@
-﻿Shader "Outline"
+﻿Shader "DELTation/Outline"
 {
     Properties
     {
