@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _BaseMap ("Texture", 2D) = "white" {}
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         
@@ -29,6 +29,7 @@
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
         _AdditionalLightsMultiplier ("Additonal Lights Multiplier", Range(0, 10)) = 0.1
         
+        _Cutoff ("Cutoff", Range(0, 1)) = 0
         [Toggle(_ENVIRONMENT_LIGHTING_ENABLED)] _EnvironmentLightingEnabled ("Environment Lighting", Float) = 1
         _EnvironmentLightingMultiplier ("Environment Lighting Multiplier", Range(0, 10)) = 0.5
     }
@@ -80,6 +81,7 @@
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "./ToonShaderInput.hlsl"
 
             struct appdata
             {
@@ -108,40 +110,6 @@
 #endif                
             };
 
-            CBUFFER_START(UnityPerMaterial)
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
-            half4 _ShadowTint;
-            half _Ramp0;
-            half _Ramp1;
-            half _RampSmoothness;
-            half3 _BaseColor;
-            half3 _EmissionColor;
-
-#ifdef _FRESNEL
-            half4 _FresnelColor;
-            half _FresnelSmoothness;
-            half _FresnelThickness;
-#endif
-
-#ifdef _SPECULAR
-            half4 _SpecularColor;
-            half _SpecularSmoothness;
-            half _SpecularThreshold;
-            half _SpecularExponent;
-            
-#endif
-
-#ifdef _ADDITIONAL_LIGHTS_ENABLED
-            half _AdditionalLightsMultiplier;
-#endif
-
-#ifdef _ENVIRONMENT_LIGHTING_ENABLED
-            half _EnvironmentLightingMultiplier;
-#endif       
-            
-            CBUFFER_END
-
             inline float get_fog_factor(float depth)
             {
 #ifdef _FOG
@@ -156,7 +124,7 @@
                 v2f output;
                 VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(v.positionOS.xyz);
                 const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(v.normalOS, v.tangentOS);
-                output.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                output.uv = TRANSFORM_TEX(v.uv, _BaseMap);
                 output.uvLM = v.uvLM.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
                 output.positionWSAndFogFactor = float4(vertex_position_inputs.positionWS, fog_factor);
@@ -316,24 +284,24 @@
                 const half3 light_direction_ws = normalize(main_light.direction);
                 const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
  
-                half3 sample_color = (half3) tex2D(_MainTex, input.uv) * _BaseColor;
-                sample_color *= main_light.color;
+                half4 sample_color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor;
+                sample_color.xyz *= main_light.color;
 
 #if defined(TOON_ADDITIONAL_LIGHTS) || defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
                 
-                sample_color += get_additional_lights_color(input);
+                sample_color.xyz += get_additional_lights_color(input);
 
 #endif
 
 #ifdef _ENVIRONMENT_LIGHTING_ENABLED
 
-                sample_color += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
+                sample_color.xyz += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
 
 #endif              
 
                 const half brightness = get_brightness(input, normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation);
-                const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
-                half3 fragment_color = lerp(shadow_color, sample_color, brightness);
+                const half3 shadow_color = lerp((half3) sample_color, _ShadowTint.xyz, _ShadowTint.a);
+                half3 fragment_color = lerp(shadow_color, (half3) sample_color, brightness);
 
 #ifdef _SPECULAR
                 fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
@@ -370,21 +338,17 @@
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
 
-            // -------------------------------------
-            // Material Keywords
+            #pragma multi_compile_instancing
+            
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-
-            //--------------------------------------
-            // GPU Instancing
-            #pragma multi_compile_instancing
-            #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
+            #include "./ToonShaderInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+
             ENDHLSL
         }
         Pass
@@ -397,19 +361,19 @@
             Cull[_Cull]
 
             HLSLPROGRAM
+
+            #pragma multi_compile_instancing
+            
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
 
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
+           
 
-            // -------------------------------------
-            // Material Keywords
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
-            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
+            #include "./ToonShaderInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            
             ENDHLSL
         }
     }

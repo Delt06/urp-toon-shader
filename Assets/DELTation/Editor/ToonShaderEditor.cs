@@ -6,19 +6,19 @@ namespace DELTation.Editor
 	public class ToonShaderEditor : ShaderGUI
 	{
 		private GUIStyle _headerStyle;
-		
+
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
 			var material = materialEditor.target as Material;
 			if (material == null) return;
-			
+
 			_headerStyle = new GUIStyle
 			{
 				normal = new GUIStyleState
 				{
-					textColor = Color.white
+					textColor = Color.white,
 				},
-				richText = true
+				richText = true,
 			};
 
 			DrawColorProperties(materialEditor, properties);
@@ -43,7 +43,7 @@ namespace DELTation.Editor
 
 		private static void DrawColorProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
-			DrawProperty(materialEditor, properties, "_MainTex");
+			DrawProperty(materialEditor, properties, "_BaseMap");
 			DrawProperty(materialEditor, properties, "_BaseColor");
 		}
 
@@ -52,7 +52,8 @@ namespace DELTation.Editor
 			DrawProperty(materialEditor, properties, "_ShadowTint");
 		}
 
-		private static void DrawRampProperties(MaterialEditor materialEditor, MaterialProperty[] properties, Material material)
+		private static void DrawRampProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
 		{
 			DrawProperty(materialEditor, properties, "_RampTriple");
 			DrawProperty(materialEditor, properties, "_Ramp0");
@@ -68,13 +69,13 @@ namespace DELTation.Editor
 		{
 			EditorGUILayout.BeginHorizontal();
 			DrawProperty(materialEditor, properties, "_Emission");
-			
+
 			if (material.IsKeywordEnabled("_EMISSION"))
 				DrawProperty(materialEditor, properties, "_EmissionColor");
-			
+
 			EditorGUILayout.EndHorizontal();
 		}
-		
+
 		private static void DrawRimProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
 		{
@@ -106,14 +107,16 @@ namespace DELTation.Editor
 			Material material)
 		{
 			DrawProperty(materialEditor, properties, "_Fog");
-			
+
 			DrawProperty(materialEditor, properties, "_AdditionalLights");
 			if (material.IsKeywordEnabled("_ADDITIONAL_LIGHTS_ENABLED"))
 				DrawProperty(materialEditor, properties, "_AdditionalLightsMultiplier");
-			
+
 			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
 			if (material.IsKeywordEnabled("_ENVIRONMENT_LIGHTING_ENABLED"))
 				DrawProperty(materialEditor, properties, "_EnvironmentLightingMultiplier");
+
+			DrawProperty(materialEditor, properties, "_Cutoff");
 		}
 
 		private static void DrawProperty(MaterialEditor materialEditor, MaterialProperty[] properties, string name)
