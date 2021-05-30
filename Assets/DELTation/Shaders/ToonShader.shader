@@ -335,8 +335,6 @@
             HLSLPROGRAM
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
-
-            #pragma multi_compile_instancing
             
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
@@ -344,11 +342,14 @@
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 
+            #pragma multi_compile_instancing
+
             #include "./ToonShaderInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
 
             ENDHLSL
         }
+        
         Pass
         {
             Name "DepthOnly"
@@ -359,19 +360,41 @@
             Cull[_Cull]
 
             HLSLPROGRAM
-
-            #pragma multi_compile_instancing
             
             #pragma exclude_renderers gles gles3 glcore
             #pragma target 4.5
 
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
+
+            #pragma multi_compile_instancing
            
 
             #include "./ToonShaderInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
             
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Name "DepthNormals"
+            Tags{"LightMode" = "DepthNormals"}
+
+            ZWrite On
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma only_renderers gles gles3 glcore
+            #pragma target 2.0
+
+            #pragma vertex DepthNormalsVertex
+            #pragma fragment DepthNormalsFragment
+
+            #pragma multi_compile_instancing
+
+            #include "./ToonShaderInput.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthNormalsPass.hlsl"
             ENDHLSL
         }
     }
