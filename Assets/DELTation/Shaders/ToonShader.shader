@@ -244,7 +244,7 @@
                 brightness += get_additional_lights_attenuation(input);
 #endif
                 
-                return saturate(get_ramp(brightness));
+                return get_ramp(brightness);
             }
 
             inline half3 get_additional_lights_color(in v2f input)
