@@ -139,8 +139,7 @@
                 for (int i = 0; i < additional_lights_count; ++i)
                 {
                     const Light light = GetAdditionalLight(i, vertex_position_inputs.positionWS);
-                    additional_lights_vertex.a += light.distanceAttenuation * light.shadowAttenuation;
-                    additional_lights_vertex.xyz += light.color;
+                    additional_lights_vertex += half4(light.color, light.distanceAttenuation * light.shadowAttenuation);
                 }
 
                 output.additional_lights_vertex = additional_lights_vertex;
@@ -256,7 +255,7 @@
                 
 #ifdef  TOON_ADDITIONAL_LIGHTS_VERTEX
                 const half4 additional_lights_vertex = input.additional_lights_vertex; 
-                half4 color = float4(additional_lights_vertex.xyz * additional_lights_vertex.a, additional_lights_vertex.a);
+                half4 color = half4(additional_lights_vertex.xyz * additional_lights_vertex.a, additional_lights_vertex.a);
 #else          
                 half4 color = 0;
 
@@ -264,9 +263,8 @@
                 for (int i = 0; i < additional_lights_count; ++i)
                 {
                     const Light light = GetAdditionalLight(i, input.positionWSAndFogFactor.xyz);
-                    const float attenuation = light.shadowAttenuation * light.distanceAttenuation; 
-                    color.a += attenuation;
-                    color.xyz += light.color * attenuation;
+                    const half attenuation = light.shadowAttenuation * light.distanceAttenuation; 
+                    color += half4(light.color, attenuation);
                 }
 #endif        
                 
@@ -281,24 +279,24 @@
                 const half3 light_direction_ws = normalize(main_light.direction);
                 const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - input.positionWSAndFogFactor.xyz);
  
-                half4 sample_color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor;
-                sample_color.xyz *= main_light.color;
+                half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor).xyz;
+                sample_color *= main_light.color;
 
 #if defined(TOON_ADDITIONAL_LIGHTS) || defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
                 
-                sample_color.xyz += get_additional_lights_color(input);
+                sample_color += get_additional_lights_color(input);
 
 #endif
 
 #ifdef _ENVIRONMENT_LIGHTING_ENABLED
 
-                sample_color.xyz += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
+                sample_color += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
 
 #endif              
 
                 const half brightness = get_brightness(input, normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation);
-                const half3 shadow_color = lerp((half3) sample_color, _ShadowTint.xyz, _ShadowTint.a);
-                half3 fragment_color = lerp(shadow_color, (half3) sample_color, brightness);
+                const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
+                half3 fragment_color = lerp(shadow_color, sample_color, brightness);
 
 #ifdef _SPECULAR
                 fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
