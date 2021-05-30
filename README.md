@@ -18,8 +18,9 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Depth+Normals+Color-based outline render feature
 
 ## Usage
-- Download the latest `.unitypackage` from the `Releases` section and add it to your project.
-- Create a material and choose `DELTation/Toon Shader` in the shader dropdown list.
+- Download and import the `Assets/DELTation` folder.
+
+**TODO**: allow installation via Package Manager.
 
 ## Used Assets
 - [Animated Mech Pack](https://quaternius.com/packs/animatedmech.html) by Quaternius
