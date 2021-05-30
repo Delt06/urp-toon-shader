@@ -34,36 +34,35 @@
     SubShader
     {
         Tags{"RenderType" = "Opaque" "RenderPipeline" = "UniversalRenderPipeline" "IgnoreProjector" = "True"}
-        LOD 100
+        LOD 300
 
         Pass
         {
             HLSLPROGRAM
             
-            #pragma prefer_hlslcc gles
-            #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
             
             #pragma vertex vert
             #pragma fragment frag
+
+            #pragma shader_feature_local _FOG
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED
+            #pragma shader_feature_local_fragment _SPECULAR
+            #pragma shader_feature_local_fragment _FRESNEL
+            #pragma shader_feature_local_fragment _EMISSION
+            #pragma shader_feature_local_fragment _ENVIRONMENT_LIGHTING_ENABLED
+            #pragma shader_feature_local_fragment _RAMP_TRIPLE
+            
+            // URP
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
-            #pragma multi_compile _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            
+            // Unity
             #pragma multi_compile_fog
-
-            #pragma prefer_hlslcc gles
-            #pragma exclude_renderers d3d11_9x
-            #pragma target 2.0
-
-            #pragma shader_feature _SPECULAR
-            #pragma shader_feature _FRESNEL
-            #pragma shader_feature _EMISSION
-            #pragma shader_feature _FOG
-            #pragma shader_feature _ADDITIONAL_LIGHTS_ENABLED
-            #pragma shader_feature _ENVIRONMENT_LIGHTING_ENABLED
-            #pragma shader_feature _RAMP_TRIPLE
+            
 
 #if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
                 
@@ -239,7 +238,7 @@
             {
                 const half dot_value = dot(normal_ws, light_direction);
                 const half attenuation = shadow_attenuation * distance_attenuation;
-                const half brightness = dot_value * attenuation;
+                half brightness = dot_value * attenuation;
 
 #ifdef TOON_ADDITIONAL_LIGHTS
                 
@@ -333,8 +332,7 @@
             Cull[_Cull]
 
             HLSLPROGRAM
-            #pragma exclude_renderers gles gles3 glcore
-            #pragma target 4.5
+            #pragma target 2.0
             
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
@@ -361,8 +359,7 @@
 
             HLSLPROGRAM
             
-            #pragma exclude_renderers gles gles3 glcore
-            #pragma target 4.5
+            #pragma target 2.0
 
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
@@ -385,7 +382,6 @@
             Cull[_Cull]
 
             HLSLPROGRAM
-            #pragma only_renderers gles gles3 glcore
             #pragma target 2.0
 
             #pragma vertex DepthNormalsVertex
