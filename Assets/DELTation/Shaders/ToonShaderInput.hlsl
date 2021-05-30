@@ -7,12 +7,13 @@
 CBUFFER_START(UnityPerMaterial)
 float4 _BaseMap_ST;
 half4 _ShadowTint;
+half4 _BaseColor;
+
 half _Ramp0;
 half _Ramp1;
 half _RampSmoothness;
-half4 _BaseColor;
+
 half3 _EmissionColor;
-half _Cutoff;
 
 half4 _FresnelColor;
 half _FresnelSmoothness;
@@ -25,10 +26,13 @@ half _SpecularExponent;
 
 half _AdditionalLightsMultiplier;
 half _EnvironmentLightingMultiplier;
+
+half _Cutoff;
             
 CBUFFER_END
 
 TEXTURE2D(_BaseMap);    SAMPLER(sampler_BaseMap);
+TEXTURE2D(_RampMap);    SAMPLER(sampler_RampMap);
 
 half Alpha(half albedoAlpha, half4 color, half cutoff)
 {

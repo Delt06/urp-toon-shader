@@ -22,8 +22,6 @@ namespace DELTation.Editor
 			};
 
 			DrawColorProperties(materialEditor, properties);
-			Label("Shadow");
-			DrawShadowProperties(materialEditor, properties);
 			Label("Ramp");
 			DrawRampProperties(materialEditor, properties, material);
 			Label("Emission");
@@ -47,21 +45,26 @@ namespace DELTation.Editor
 			DrawProperty(materialEditor, properties, "_BaseColor");
 		}
 
-		private static void DrawShadowProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
-		{
-			DrawProperty(materialEditor, properties, "_ShadowTint");
-		}
-
 		private static void DrawRampProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
 		{
-			DrawProperty(materialEditor, properties, "_RampTriple");
-			DrawProperty(materialEditor, properties, "_Ramp0");
+			DrawProperty(materialEditor, properties, "_UseRampMap");
 
-			if (material.IsKeywordEnabled("_RAMP_TRIPLE"))
-				DrawProperty(materialEditor, properties, "_Ramp1");
+			if (material.IsKeywordEnabled("_RAMP_MAP"))
+			{
+				DrawProperty(materialEditor, properties, "_RampMap");
+			}
+			else
+			{
+				DrawProperty(materialEditor, properties, "_ShadowTint");
+				DrawProperty(materialEditor, properties, "_RampTriple");
+				DrawProperty(materialEditor, properties, "_Ramp0");
 
-			DrawProperty(materialEditor, properties, "_RampSmoothness");
+				if (material.IsKeywordEnabled("_RAMP_TRIPLE"))
+					DrawProperty(materialEditor, properties, "_Ramp1");
+
+				DrawProperty(materialEditor, properties, "_RampSmoothness");
+			}
 		}
 
 		private static void DrawEmissionProperties(MaterialEditor materialEditor, MaterialProperty[] properties,

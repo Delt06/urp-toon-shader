@@ -6,6 +6,10 @@
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         
+        [Toggle(_RAMP_MAP)]
+        _UseRampMap("Use Ramp Map", Float) = 0
+        [NoScaleOffset]
+        _RampMap ("Ramp Texture", 2D) = "white" {}
         [Toggle(_RAMP_TRIPLE)] _RampTriple ("Triple Ramp", Float) = 1
         _Ramp0 ("Ramp0", Range(-1, 1)) = 0
         _Ramp1 ("Ramp1", Range(-1, 1)) = 0.5
@@ -51,6 +55,7 @@
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _ENVIRONMENT_LIGHTING_ENABLED
+            #pragma shader_feature_local_fragment _RAMP_MAP
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
             
             // URP
@@ -205,7 +210,9 @@
 
             inline half get_ramp(half value)
             {
-#ifdef _RAMP_TRIPLE
+#ifdef _RAMP_MAP
+                return (value + 1) * 0.5;
+#elif defined(_RAMP_TRIPLE)
                 const half ramp0 = smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value);
                 const half ramp1 = smoothstep(_Ramp1, _Ramp1 + _RampSmoothness, value);
                 return (ramp0 + ramp1) * 0.5;
@@ -237,7 +244,7 @@
             {
                 const half dot_value = dot(normal_ws, light_direction);
                 const half attenuation = shadow_attenuation * distance_attenuation;
-                half brightness = dot_value * attenuation;
+                half brightness = min(dot_value, dot_value * attenuation); 
 
 #ifdef TOON_ADDITIONAL_LIGHTS
                 
@@ -295,8 +302,15 @@
 #endif              
 
                 const half brightness = get_brightness(input, normal_ws, light_direction_ws, main_light.shadowAttenuation, main_light.distanceAttenuation);
+#ifdef _RAMP_MAP
+                const half2 ramp_uv = half2(brightness, 0.5);
+                const half3 ramp_color = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, ramp_uv).xyz;
+                half3 fragment_color =  sample_color * ramp_color;
+#else
                 const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
-                half3 fragment_color = lerp(shadow_color, sample_color, brightness);
+                half3 fragment_color =  lerp(shadow_color, sample_color, brightness);
+#endif
+               
 
 #ifdef _SPECULAR
                 fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
