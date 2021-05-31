@@ -963,7 +963,7 @@ GameObject:
   - component: {fileID: 1299186692}
   - component: {fileID: 1299186691}
   - component: {fileID: 1299186690}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Lamp
   m_TagString: Untagged
   m_Icon: {fileID: 0}

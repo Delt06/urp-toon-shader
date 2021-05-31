@@ -73,6 +73,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RampMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -91,7 +95,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AdditionalLights: 1
-    - _AdditionalLightsMultiplier: 0.0002
+    - _AdditionalLightsMultiplier: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -131,6 +135,7 @@ Material:
     - _SpecularThreshold: 0.8
     - _SrcBlend: 1
     - _Surface: 0
+    - _UseRampMap: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

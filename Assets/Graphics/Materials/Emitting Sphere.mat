@@ -22,8 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Emitting Sphere
   m_Shader: {fileID: 4800000, guid: b92a4e0445ec9ec43b457115fdcd60ee, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG
-    _RAMP_TRIPLE
+  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _EMISSION _ENVIRONMENT_LIGHTING_ENABLED
+    _FOG _RAMP_TRIPLE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -73,6 +73,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RampMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -102,7 +106,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Emission: 0
+    - _Emission: 1
     - _EnvironmentLightingEnabled: 1
     - _EnvironmentLightingMultiplier: 0.5
     - _EnvironmentReflections: 1
@@ -131,12 +135,13 @@ Material:
     - _SpecularThreshold: 0.8
     - _SrcBlend: 1
     - _Surface: 0
+    - _UseRampMap: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 0.59586155, b: 0.033018887, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 10.381991, g: 7.853045, b: 2.6176815, a: 1}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowTint: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

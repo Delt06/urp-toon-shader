@@ -28,11 +28,13 @@ half _AdditionalLightsMultiplier;
 half _EnvironmentLightingMultiplier;
 
 half _Cutoff;
-            
+
 CBUFFER_END
 
-TEXTURE2D(_BaseMap);    SAMPLER(sampler_BaseMap);
-TEXTURE2D(_RampMap);    SAMPLER(sampler_RampMap);
+TEXTURE2D(_BaseMap);
+SAMPLER(sampler_BaseMap);
+TEXTURE2D(_RampMap);
+SAMPLER(sampler_RampMap);
 
 half Alpha(half albedoAlpha, half4 color, half cutoff)
 {
