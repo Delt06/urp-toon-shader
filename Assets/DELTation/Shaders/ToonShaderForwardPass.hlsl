@@ -145,7 +145,7 @@ inline half get_ramp(half value)
     #endif
 }
 
-inline half get_brightness(in v2f input, half3 normal_ws, half3 light_direction, half shadow_attenuation,
+inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light_direction, half shadow_attenuation,
                            half distance_attenuation, half additional_lights_attenuation)
 {
     const half dot_value = dot(normal_ws, light_direction);
@@ -157,7 +157,7 @@ inline half get_brightness(in v2f input, half3 normal_ws, half3 light_direction,
     #endif
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
-    const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(input.positionCS);
+    const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(position_cs);
     const AmbientOcclusionFactor ao_factor = GetScreenSpaceAmbientOcclusion(normalized_screen_space_uv);
     brightness = min(brightness, brightness * ao_factor.directAmbientOcclusion * ao_factor.indirectAmbientOcclusion);
     #endif
@@ -199,7 +199,7 @@ half3 frag(const v2f input) : SV_Target
     sample_color += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
     #endif
 
-    const half brightness = get_brightness(input, normal_ws, light_direction_ws, main_light.shadowAttenuation,
+    const half brightness = get_brightness(input.positionCS, normal_ws, light_direction_ws, main_light.shadowAttenuation,
                                            main_light.distanceAttenuation, additional_lights_attenuation);
     #ifdef _RAMP_MAP
     const half2 ramp_uv = half2(brightness, 0.5);
