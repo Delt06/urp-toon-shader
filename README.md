@@ -13,6 +13,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Emission
 - Rim lighting (Fresnel effect) and specular highlights with HDR color support (e.g. for bloom)
 - Fog
+- SSAO
 - SRP Batcher compatibility
 
 ## Extras

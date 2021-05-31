@@ -64,6 +64,7 @@
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             
             // Unity
             #pragma multi_compile_fog
@@ -250,6 +251,12 @@
                 
                 brightness += get_additional_lights_attenuation(input);
 #endif
+
+#if defined(_SCREEN_SPACE_OCCLUSION)
+                const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(input.positionCS);
+                const AmbientOcclusionFactor ao_factor = GetScreenSpaceAmbientOcclusion(normalized_screen_space_uv);
+                brightness = min(brightness, brightness * ao_factor.directAmbientOcclusion * ao_factor.indirectAmbientOcclusion);
+#endif
                 
                 return get_ramp(brightness);
             }
@@ -288,6 +295,8 @@
  
                 half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor).xyz;
                 sample_color *= main_light.color;
+
+                
 
 #if defined(TOON_ADDITIONAL_LIGHTS) || defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
                 

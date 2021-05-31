@@ -30,7 +30,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 4207007852501241860}
   - {fileID: -8259831862404917567}
-  m_RendererFeatureMap: 04909d275a4b623ac1d6e600af2e5f8d
+  - {fileID: 8406822707764167044}
+  m_RendererFeatureMap: 04909d275a4b623ac1d6e600af2e5f8d8481f821b608ab74
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -77,3 +78,25 @@ MonoBehaviour:
     LayerMask:
       serializedVersion: 2
       m_Bits: 64
+--- !u!114 &8406822707764167044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
+  m_Name: SSAO
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
+  m_Settings:
+    Downsample: 0
+    Source: 1
+    NormalSamples: 2
+    Intensity: 2.67
+    DirectLightingStrength: 0.353
+    Radius: 0.2
+    SampleCount: 16
