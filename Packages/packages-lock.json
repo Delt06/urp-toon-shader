@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "com.deltation.toonshader": {
-      "version": "file:ToonShader",
+    "com.deltation.toon-shader": {
+      "version": "file:com.deltation.toon-shader",
       "depth": 0,
       "source": "embedded",
       "dependencies": {

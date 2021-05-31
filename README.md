@@ -19,10 +19,17 @@ A toon shader compatible with the Universal Rendering Pipeline.
 ## Extras
 - Depth+Normals+Color-based outline render feature
 
-## Usage
-- Download and import the `Assets/DELTation` folder.
+## Installation
+### Option 1
+- Open Package Manager through Window/Package Manager
+- Click "+" and choose "Add package from git URL..."
+- Insert the URL: https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader
 
-**TODO**: allow installation via Package Manager.
+### Option 2
+Add the following line to `Packages/manifest.json`:
+```
+"com.deltation.toon-shader": "https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader",
+```
 
 ## Used Assets
 - [Animated Mech Pack](https://quaternius.com/packs/animatedmech.html) by Quaternius

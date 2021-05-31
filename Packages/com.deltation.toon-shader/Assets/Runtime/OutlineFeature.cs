@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace DELTation.Scripts
+// ReSharper disable once CheckNamespace
+namespace DELTation.ToonShader
 {
 	public class OutlineFeature : ScriptableRendererFeature
 	{
