@@ -23,7 +23,7 @@ struct v2f
     #ifdef _MAIN_LIGHT_SHADOWS
     float4 shadowCoord : TEXCOORD3;
     #endif
-    
+
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
     half4 additional_lights_vertex : TEXCOORD4; // a is attenuation
@@ -64,11 +64,11 @@ v2f vert(appdata v)
     float3 position_ws = vertex_position_inputs.positionWS;
     output.positionWSAndFogFactor = float4(position_ws, fog_factor);
     output.normalWS = vertex_normal_inputs.normalWS;
-    
+
     #ifdef _MAIN_LIGHT_SHADOWS
     output.shadowCoord = GetShadowCoord(vertex_position_inputs);
     #endif
-    
+
     output.positionCS = vertex_position_inputs.positionCS;
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
@@ -145,14 +145,13 @@ inline half get_ramp(half value)
     #endif
 }
 
-inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light_direction, half shadow_attenuation,
-                           half distance_attenuation, half additional_lights_attenuation)
+inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light_direction, half main_light_attenuation,
+                           half additional_lights_attenuation)
 {
     const half dot_value = dot(normal_ws, light_direction);
-    const half attenuation = shadow_attenuation * distance_attenuation;
-    half brightness = min(dot_value, dot_value * attenuation);
+    half brightness = min(dot_value, dot_value * main_light_attenuation);
 
-    #ifdef TOON_ADDITIONAL_LIGHTS        
+    #ifdef TOON_ADDITIONAL_LIGHTS
     brightness += additional_lights_attenuation;
     #endif
 
@@ -177,17 +176,17 @@ half3 frag(const v2f input) : SV_Target
     sample_color *= main_light.color;
 
     half additional_lights_attenuation = 0;
-    
+
     #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
     half4 additional_lights_color_attenuation = 0;
     #endif
-    
+
     #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
     additional_lights_color_attenuation = input.additional_lights_vertex;
     #elif defined(TOON_ADDITIONAL_LIGHTS)
     additional_lights_color_attenuation = get_additional_lights_color_attenuation(position_ws);
     #endif
-    
+
     #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
     half3 additional_lights_color = additional_lights_color_attenuation.xyz;
     additional_lights_attenuation = additional_lights_color_attenuation.a * _AdditionalLightsMultiplier;
@@ -199,8 +198,10 @@ half3 frag(const v2f input) : SV_Target
     sample_color += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
     #endif
 
-    const half brightness = get_brightness(input.positionCS, normal_ws, light_direction_ws, main_light.shadowAttenuation,
-                                           main_light.distanceAttenuation, additional_lights_attenuation);
+    const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
+    const half brightness = get_brightness(input.positionCS, normal_ws, light_direction_ws,
+                                           main_light_attenuation,
+                                           additional_lights_attenuation);
     #ifdef _RAMP_MAP
     const half2 ramp_uv = half2(brightness, 0.5);
     const half3 ramp_color = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, ramp_uv).xyz;
