@@ -5,7 +5,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 ![Main](Showcase/main.png)
 
 ## Shader Capabilities
-- 2 or 3-step ramp with configurable thresholds and smoothness- Ramp Texture
+- 2 or 3-step ramp with configurable thresholds and smoothness
 - Ramp textures
 - Main and additional lights
 - Casting and receiving shadows
