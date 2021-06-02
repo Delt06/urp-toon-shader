@@ -31,5 +31,45 @@ Add the following line to `Packages/manifest.json`:
 "com.deltation.toon-shader": "https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader",
 ```
 
+## Performance
+Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
+
+> The results are obtained with Mali Offline Compiler.
+
+Shader Type               | Vertex Shader Cycles (L/S) | Fragment Shader Cycles (L/S)
+--------------------------|----------------------------|-----------------------------
+Lit                       | 9                          | 15
+URP Toon Shader           | 12                         | 10
+Toony Colors Pro (Hybrid) | 7                          | 15
+
+> L/S = Load/Store.
+
+
+### Configuration
+```
+Hardware: Mali-G78 r1p1
+Architecture: Valhall
+Driver: r25p0-00rel0
+```
+
+### Enabled keywords
+Lit:
+```
+Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE  _SHADOWS_SOFT
+Local Keywords: _EMISSION
+```
+
+URP Toon Shader:
+```
+Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT 
+Local Keywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG _FRESNEL _RAMP_TRIPLE _SPECULAR
+```
+
+Toony Colors Pro (Hybrid)
+```
+Global Keywords: FOG_LINEAR TCP2_HYBRID_URP _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT 
+Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW_LIGHT_COLOR
+```
+
 ## Used Assets
 - [Animated Mech Pack](https://quaternius.com/packs/animatedmech.html) by Quaternius
