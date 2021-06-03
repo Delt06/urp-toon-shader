@@ -10,6 +10,7 @@ struct appdata
     float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
     float2 uv : TEXCOORD0;
+	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct v2f
@@ -28,6 +29,8 @@ struct v2f
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
     half4 additional_lights_vertex : TEXCOORD4; // a is attenuation
     #endif
+
+	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 inline float get_fog_factor(float depth)
@@ -52,30 +55,6 @@ inline half4 get_additional_lights_color_attenuation(const float3 position_ws)
     }
 
     return color_attenuation;
-}
-
-v2f vert(appdata v)
-{
-    v2f output;
-    const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(v.positionOS.xyz);
-    const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(v.normalOS, v.tangentOS);
-    output.uv = TRANSFORM_TEX(v.uv, _BaseMap);
-    float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
-    float3 position_ws = vertex_position_inputs.positionWS;
-    output.positionWSAndFogFactor = float4(position_ws, fog_factor);
-    output.normalWS = vertex_normal_inputs.normalWS;
-
-    #ifdef _MAIN_LIGHT_SHADOWS
-    output.shadowCoord = GetShadowCoord(vertex_position_inputs);
-    #endif
-
-    output.positionCS = vertex_position_inputs.positionCS;
-
-    #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
-    output.additional_lights_vertex = get_additional_lights_color_attenuation(position_ws);
-    #endif
-
-    return output;
 }
 
 inline Light get_main_light(in v2f input)
@@ -164,8 +143,38 @@ inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light
     return get_ramp(brightness);
 }
 
+v2f vert(appdata input)
+{
+    v2f output;
+	
+	UNITY_SETUP_INSTANCE_ID(input);
+    UNITY_TRANSFER_INSTANCE_ID(input, output);
+
+    const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
+    const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+    output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+    float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
+    float3 position_ws = vertex_position_inputs.positionWS;
+    output.positionWSAndFogFactor = float4(position_ws, fog_factor);
+    output.normalWS = vertex_normal_inputs.normalWS;
+
+    #ifdef _MAIN_LIGHT_SHADOWS
+    output.shadowCoord = GetShadowCoord(vertex_position_inputs);
+    #endif
+
+    output.positionCS = vertex_position_inputs.positionCS;
+
+    #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
+    output.additional_lights_vertex = get_additional_lights_color_attenuation(position_ws);
+    #endif
+
+    return output;
+}
+
 half3 frag(const v2f input) : SV_Target
 {
+	UNITY_SETUP_INSTANCE_ID(input);
+
     const Light main_light = get_main_light(input);
     const half3 normal_ws = normalize(input.normalWS);
     const half3 light_direction_ws = normalize(main_light.direction);

@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace DELTation.Editor
+namespace DELTation.ToonShader.Editor
 {
 	public class ToonShaderEditor : ShaderGUI
 	{
@@ -32,6 +32,8 @@ namespace DELTation.Editor
 			DrawSpecularProperties(materialEditor, properties, material);
 			Label("Misc");
 			DrawMiscProperties(materialEditor, properties, material);
+
+			materialEditor.EnableInstancingField();
 		}
 
 		private void Label(string text)

@@ -13,7 +13,7 @@
         [Toggle(_RAMP_TRIPLE)] _RampTriple ("Triple Ramp", Float) = 1
         _Ramp0 ("Ramp0", Range(-1, 1)) = 0
         _Ramp1 ("Ramp1", Range(-1, 1)) = 0.5
-        _RampSmoothness ("Ramp Smoothness", Range(0, 1)) = 0.005
+        _RampSmoothness ("Ramp Smoothness", Range(0, 2)) = 0.005
         
         [Toggle(_EMISSION)] _Emission ("Emission", Float) = 0
         [HDR] _EmissionColor ("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
@@ -68,6 +68,8 @@
             
             // Unity
             #pragma multi_compile_fog
+
+			#pragma multi_compile_instancing
             
 
             #if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
@@ -158,5 +160,5 @@
         }
     }
     
-    CustomEditor "DELTation.Editor.ToonShaderEditor"
+    CustomEditor "DELTation.ToonShader.Editor.ToonShaderEditor"
 }
