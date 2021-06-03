@@ -2,7 +2,9 @@
 {
     Properties
     {
+        [MainTexture]
         _BaseMap ("Texture", 2D) = "white" {}
+        [MainColor]
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         
