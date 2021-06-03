@@ -16,6 +16,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Fog
 - SSAO
 - SRP Batcher compatibility
+- GPU Instancing
 
 ## Extras
 - Depth+Normals+Color-based outline render feature
