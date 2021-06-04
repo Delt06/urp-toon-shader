@@ -7,7 +7,8 @@ namespace DELTation.ToonShader.Editor
 	{
 		private GUIStyle _headerStyle;
 
-		protected virtual bool Instancing => true;
+		protected virtual bool InstancingField => true;
+		protected virtual bool RenderQueueField => true;
 
 		public sealed override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
@@ -25,8 +26,11 @@ namespace DELTation.ToonShader.Editor
 
 			DrawProperties(materialEditor, properties, material);
 
-			if (Instancing)
+			if (InstancingField)
 				materialEditor.EnableInstancingField();
+			
+			if (RenderQueueField)
+				materialEditor.RenderQueueField();
 		}
 
 		protected abstract void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
