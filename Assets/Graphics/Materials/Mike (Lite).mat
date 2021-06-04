@@ -7,10 +7,11 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mike
-  m_Shader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
+  m_Name: Mike (Lite)
+  m_Shader: {fileID: 4800000, guid: 78ba6c2256ec3954188411a3a2382dc8, type: 3}
   m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG
     _FRESNEL _MULTI_COMPILE_PROPERTIES _RAMP_TRIPLE _SPECULAR _TOON_MAIN_LIGHT_VERTEX
+    _TOON_VERTEX_LIT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -129,6 +130,7 @@ Material:
     - _SrcBlend: 1
     - _Surface: 0
     - _UseRampMap: 0
+    - _VertexLit: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

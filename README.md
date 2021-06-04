@@ -4,7 +4,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 
 ![Main](Showcase/main.png)
 
-## Shader Capabilities
+## Toon Shader Capabilities
 - 2 or 3-step ramp with configurable thresholds and smoothness
 - Ramp textures
 - Main light
@@ -15,6 +15,16 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Rim lighting (Fresnel effect) and specular highlights with HDR color support (e.g. for bloom)
 - Fog
 - SSAO
+- Ambient Lighting
+- SRP Batcher compatibility
+- GPU Instancing
+
+## Toon Shader (Lite) Capabilities
+- 2-step ramp with configurable threshold and smoothness
+- Main light (per-vertex or per-pixel)
+- Casting shadows
+- Configurable shadow color
+- Fog
 - SRP Batcher compatibility
 - GPU Instancing
 

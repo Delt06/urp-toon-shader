@@ -3,26 +3,13 @@ using UnityEngine;
 
 namespace DELTation.ToonShader.Editor
 {
-	public class ToonShaderEditor : ShaderGUI
+	public class ToonShaderEditor : ToonShaderEditorBase
 	{
-		private GUIStyle _headerStyle;
-
-		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
+		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
 		{
-			var material = materialEditor.target as Material;
-			if (material == null) return;
-
-			_headerStyle = new GUIStyle
-			{
-				normal = new GUIStyleState
-				{
-					textColor = Color.white,
-				},
-				richText = true,
-			};
-
 			DrawColorProperties(materialEditor, properties);
-			Label("Ramp");
+			RampLabel();
 			DrawRampProperties(materialEditor, properties, material);
 			Label("Emission");
 			DrawEmissionProperties(materialEditor, properties, material);
@@ -30,21 +17,8 @@ namespace DELTation.ToonShader.Editor
 			DrawRimProperties(materialEditor, properties, material);
 			Label("Specular");
 			DrawSpecularProperties(materialEditor, properties, material);
-			Label("Misc");
+			MiscLabel();
 			DrawMiscProperties(materialEditor, properties, material);
-
-			materialEditor.EnableInstancingField();
-		}
-
-		private void Label(string text)
-		{
-			GUILayout.Label($"<b>{text}</b>", _headerStyle);
-		}
-
-		private static void DrawColorProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
-		{
-			DrawProperty(materialEditor, properties, "_BaseMap");
-			DrawProperty(materialEditor, properties, "_BaseColor");
 		}
 
 		private static void DrawRampProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
@@ -58,14 +32,14 @@ namespace DELTation.ToonShader.Editor
 			}
 			else
 			{
-				DrawProperty(materialEditor, properties, "_ShadowTint");
+				DrawShadowTintProperty(materialEditor, properties);
 				DrawProperty(materialEditor, properties, "_RampTriple");
-				DrawProperty(materialEditor, properties, "_Ramp0");
+				DrawRampProperty0(materialEditor, properties);
 
 				if (material.IsKeywordEnabled("_RAMP_TRIPLE"))
 					DrawProperty(materialEditor, properties, "_Ramp1");
 
-				DrawProperty(materialEditor, properties, "_RampSmoothness");
+				DrawRampSmoothnessProperty(materialEditor, properties);
 			}
 		}
 
@@ -111,7 +85,7 @@ namespace DELTation.ToonShader.Editor
 		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
 		{
-			DrawProperty(materialEditor, properties, "_Fog");
+			DrawFogProperty(materialEditor, properties);
 
 			DrawProperty(materialEditor, properties, "_AdditionalLights");
 			if (material.IsKeywordEnabled("_ADDITIONAL_LIGHTS_ENABLED"))
@@ -120,12 +94,6 @@ namespace DELTation.ToonShader.Editor
 			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
 			if (material.IsKeywordEnabled("_ENVIRONMENT_LIGHTING_ENABLED"))
 				DrawProperty(materialEditor, properties, "_EnvironmentLightingMultiplier");
-		}
-
-		private static void DrawProperty(MaterialEditor materialEditor, MaterialProperty[] properties, string name)
-		{
-			var property = FindProperty(name, properties);
-			materialEditor.ShaderProperty(property, property.displayName);
 		}
 	}
 }
