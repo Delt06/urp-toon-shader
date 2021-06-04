@@ -7,11 +7,11 @@
         [MainColor]
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
 
-		[Toggle(_TOON_VERTEX_LIT)] _VertexLit ("Vertex Lighting", Float) = 0
-        _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
-        
-        _Ramp0 ("Ramp0", Range(-1, 1)) = 0
+		_ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
+        _Ramp0 ("Ramp Threshold", Range(-1, 1)) = 0
         _RampSmoothness ("Ramp Smoothness", Range(0, 2)) = 0.005
+
+		[Toggle(_TOON_VERTEX_LIT)] _VertexLit ("Vertex Lighting", Float) = 0
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
     }
     SubShader
@@ -116,5 +116,5 @@
         }
     }
     
-    //CustomEditor "DELTation.ToonShader.Editor.ToonShaderEditor"
+    CustomEditor "DELTation.ToonShader.Editor.ToonShaderLiteEditor"
 }
