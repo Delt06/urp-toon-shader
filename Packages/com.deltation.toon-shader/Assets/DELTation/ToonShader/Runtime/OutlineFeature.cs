@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -84,7 +83,7 @@ namespace DELTation.ToonShader
 			}
 #if UNITY_EDITOR
 
-			if (!Lightmapping.isRunning)
+			if (!UnityEditor.Lightmapping.isRunning)
 			{
 #endif
 
