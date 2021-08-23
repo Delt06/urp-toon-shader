@@ -124,7 +124,7 @@
 
             ZWrite On
             ColorMask 0
-            Cull[_Cull]
+            Cull Back
 
             HLSLPROGRAM
             
@@ -148,7 +148,7 @@
             Tags{"LightMode" = "DepthNormals"}
 
             ZWrite On
-            Cull[_Cull]
+            Cull Back
 
             HLSLPROGRAM
             #pragma target 2.0
