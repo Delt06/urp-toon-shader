@@ -13,6 +13,7 @@
 
 		[Toggle(_TOON_VERTEX_LIT)] _VertexLit ("Vertex Lighting", Float) = 0
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
+        [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
     }
     SubShader
     {
@@ -29,6 +30,7 @@
             #pragma fragment frag
 
             #pragma shader_feature_local _FOG
+            #pragma shader_feature_local _VERTEX_COLOR
             #pragma shader_feature_local _TOON_VERTEX_LIT
             
             // Unity

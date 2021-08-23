@@ -28,7 +28,7 @@ namespace DELTation.ToonShader.Editor
 
 			if (InstancingField)
 				materialEditor.EnableInstancingField();
-			
+
 			if (RenderQueueField)
 				materialEditor.RenderQueueField();
 		}
@@ -72,6 +72,11 @@ namespace DELTation.ToonShader.Editor
 		protected static void DrawFogProperty(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
 			DrawProperty(materialEditor, properties, "_Fog");
+		}
+
+		protected static void DrawVertexColorProperty(MaterialEditor materialEditor, MaterialProperty[] properties)
+		{
+			DrawProperty(materialEditor, properties, "_VertexColor");
 		}
 	}
 }

@@ -7,6 +7,11 @@ struct appdata
     float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
     float2 uv : TEXCOORD0;
+	
+	#ifdef _VERTEX_COLOR
+	half3 vertexColor : COLOR;
+	#endif
+	
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -21,6 +26,10 @@ struct v2f
 	half4 mainLightColorAndBrightness : TEXCOORD2;
 	#else
 	half3 normalWS : TEXCOORD2;
+	#endif
+
+	#ifdef _VERTEX_COLOR
+	half3 vertexColor : COLOR;
 	#endif
 
 	UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -62,6 +71,10 @@ v2f vert(appdata input)
 	output.normalWS = vertex_normal_inputs.normalWS;
 	#endif
 
+	#ifdef _VERTEX_COLOR
+	output.vertexColor = input.vertexColor;
+	#endif
+
     return output;
 }
 
@@ -70,6 +83,9 @@ half3 frag(const v2f input) : SV_Target
 	UNITY_SETUP_INSTANCE_ID(input);
 	
     half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor).xyz;
+	#ifdef _VERTEX_COLOR
+	sample_color *= input.vertexColor;
+	#endif
 
 	#ifdef _TOON_VERTEX_LIT
 	const half4 main_light_color_and_brightness = input.mainLightColorAndBrightness;

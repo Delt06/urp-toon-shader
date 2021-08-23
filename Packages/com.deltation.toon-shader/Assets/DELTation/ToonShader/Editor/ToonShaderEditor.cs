@@ -94,6 +94,8 @@ namespace DELTation.ToonShader.Editor
 			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
 			if (material.IsKeywordEnabled("_ENVIRONMENT_LIGHTING_ENABLED"))
 				DrawProperty(materialEditor, properties, "_EnvironmentLightingMultiplier");
+
+			DrawVertexColorProperty(materialEditor, properties);
 		}
 	}
 }

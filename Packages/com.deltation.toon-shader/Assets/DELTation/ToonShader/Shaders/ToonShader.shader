@@ -36,6 +36,7 @@
         _AdditionalLightsMultiplier ("Additonal Lights Multiplier", Range(0, 10)) = 0.1
         [Toggle(_ENVIRONMENT_LIGHTING_ENABLED)] _EnvironmentLightingEnabled ("Environment Lighting", Float) = 1
         _EnvironmentLightingMultiplier ("Environment Lighting Multiplier", Range(0, 10)) = 0.5
+        [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
     }
     SubShader
     {
@@ -52,6 +53,7 @@
             #pragma fragment frag
 
             #pragma shader_feature_local _FOG
+            #pragma shader_feature_local _VERTEX_COLOR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED
             #pragma shader_feature_local_fragment _SPECULAR
             #pragma shader_feature_local_fragment _FRESNEL

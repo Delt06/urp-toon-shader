@@ -16,6 +16,7 @@ namespace DELTation.ToonShader.Editor
 			MiscLabel();
 			DrawProperty(materialEditor, properties, "_VertexLit");
 			DrawFogProperty(materialEditor, properties);
+			DrawVertexColorProperty(materialEditor, properties);
 		}
 	}
 }

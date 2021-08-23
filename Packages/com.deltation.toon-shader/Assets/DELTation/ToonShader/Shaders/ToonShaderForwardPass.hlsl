@@ -7,6 +7,11 @@ struct appdata
     float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
     float2 uv : TEXCOORD0;
+    
+    #ifdef _VERTEX_COLOR
+    half3 vertexColor : COLOR;
+    #endif
+    
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -22,9 +27,12 @@ struct v2f
     float4 shadowCoord : TEXCOORD3;
     #endif
 
-
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
     half4 additional_lights_vertex : TEXCOORD4; // a is attenuation
+    #endif
+
+    #ifdef _VERTEX_COLOR
+    half3 vertexColor : COLOR;
     #endif
 
 	UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -57,6 +65,10 @@ v2f vert(appdata input)
     output.additional_lights_vertex = get_additional_lights_color_attenuation(position_ws);
     #endif
 
+    #ifdef _VERTEX_COLOR
+    output.vertexColor = input.vertexColor;
+    #endif
+
     return output;
 }
 
@@ -71,6 +83,9 @@ half3 frag(const v2f input) : SV_Target
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
     half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor).xyz;
+	#ifdef _VERTEX_COLOR
+    sample_color *= input.vertexColor;
+	#endif
     sample_color *= main_light.color;
 
     half additional_lights_attenuation = 0;
