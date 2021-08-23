@@ -18,6 +18,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Ambient Lighting
 - SRP Batcher compatibility
 - GPU Instancing
+- Vertex Color
 
 ## Toon Shader (Lite) Capabilities
 - 2-step ramp with configurable threshold and smoothness
@@ -27,6 +28,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Fog
 - SRP Batcher compatibility
 - GPU Instancing
+- Vertex Color
 
 ## Extras
 - Depth+Normals+Color-based outline render feature
