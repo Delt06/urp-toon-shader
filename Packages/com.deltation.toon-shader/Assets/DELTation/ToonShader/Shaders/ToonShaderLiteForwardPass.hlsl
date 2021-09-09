@@ -78,7 +78,7 @@ v2f vert(appdata input)
     return output;
 }
 
-half3 frag(const v2f input) : SV_Target
+half4 frag(const v2f input) : SV_Target
 {
 	UNITY_SETUP_INSTANCE_ID(input);
 	
@@ -102,7 +102,7 @@ half3 frag(const v2f input) : SV_Target
     fragment_color = MixFog(fragment_color, input.fogFactor);
     #endif
 
-    return max(fragment_color, 0);
+    return half4(max(fragment_color, 0), 1);
 }
 
 #endif
