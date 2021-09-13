@@ -8,5 +8,11 @@
     "com.unity.render-pipelines.universal": "10.3.2"
   },
   "type": "shader",
-  "unityRelease": "0f1"
+  "unityRelease": "0f1",
+
+  "author": {
+    "name": "Vladislav Kantaev",
+    "email": "vvkantaev@yandex.ru",
+    "url": "https://deltation.tatar/"
+  }
 }
