@@ -129,6 +129,7 @@ Material:
     - _SrcBlend: 1
     - _Surface: 0
     - _UseRampMap: 0
+    - _VertexColor: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

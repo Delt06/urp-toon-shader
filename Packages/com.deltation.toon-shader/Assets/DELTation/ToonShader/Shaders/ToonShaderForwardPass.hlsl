@@ -107,10 +107,6 @@ half4 frag(const v2f input) : SV_Target
     sample_color += additional_lights_color;
     #endif
 
-    #ifdef _ENVIRONMENT_LIGHTING_ENABLED
-    sample_color += _EnvironmentLightingMultiplier * SampleSH(input.normalWS);
-    #endif
-
     const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
     const half brightness = get_brightness(input.positionCS, normal_ws, light_direction_ws,
                                            main_light_attenuation,
@@ -134,6 +130,10 @@ half4 frag(const v2f input) : SV_Target
     #ifdef _EMISSION
     fragment_color += _EmissionColor;
     #endif
+
+	#ifdef _ENVIRONMENT_LIGHTING_ENABLED
+	fragment_color += _EnvironmentLightingMultiplier * SampleSH(normal_ws);
+	#endif
 
     #ifdef _FOG
     const float fog_factor = input.positionWSAndFogFactor.w;
