@@ -28,10 +28,8 @@ MonoBehaviour:
   m_Name: UniversalRenderPipelineAsset_Renderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 513365448283860688}
-  - {fileID: 930320410220456594}
   - {fileID: 8406822707764167044}
-  m_RendererFeatureMap: d02eebc027d71f07926a7cea7b29e90c8481f821b608ab74
+  m_RendererFeatureMap: 8481f821b608ab74
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -61,38 +59,6 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
   m_AccurateGbufferNormals: 0
---- !u!114 &513365448283860688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 198cf738b41f4e2b8e7776a2bec1363d, type: 3}
-  m_Name: DepthNormalsFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  Settings:
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 64
---- !u!114 &930320410220456594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a793f8bce4f44d19040748d84e015c2, type: 3}
-  m_Name: OutlineFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  Settings:
-    OutlineMaterial: {fileID: 2100000, guid: a9a059cf6d49f504c9cafeba5c773443, type: 2}
 --- !u!114 &4207007852501241860
 MonoBehaviour:
   m_ObjectHideFlags: 0

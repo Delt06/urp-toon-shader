@@ -30,9 +30,6 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - GPU Instancing
 - Vertex Color
 
-## Extras
-- Depth+Normals+Color-based outline render feature
-
 ## Installation
 ### Option 1
 - Open Package Manager through Window/Package Manager
