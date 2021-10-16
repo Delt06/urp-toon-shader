@@ -4,21 +4,17 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
 
-CBUFFER_START(UnityPerMaterial)
-float4 _BaseMap_ST;
-half4 _ShadowTint;
-half4 _BaseColor;
+UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
+UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
+UNITY_DEFINE_INSTANCED_PROP(half4, _ShadowTint)
+UNITY_DEFINE_INSTANCED_PROP(half4, _BaseColor)
 
-half _Ramp0;
-half _RampSmoothness;
+UNITY_DEFINE_INSTANCED_PROP(half, _Ramp0)
+UNITY_DEFINE_INSTANCED_PROP(half, _RampSmoothness)
 
-half _Cutoff;
-
-CBUFFER_END
+UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 TEXTURE2D(_BaseMap);
 SAMPLER(sampler_BaseMap);
-
-#include "./ToonAlpha.hlsl"
 
 #endif

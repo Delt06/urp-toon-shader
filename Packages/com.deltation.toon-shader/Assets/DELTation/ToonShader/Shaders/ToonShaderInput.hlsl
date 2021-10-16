@@ -4,7 +4,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
 
-CBUFFER_START(UnityPerMaterial)
+UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
 float4 _BaseMap_ST;
 half4 _ShadowTint;
 half4 _BaseColor;
@@ -27,15 +27,11 @@ half _SpecularExponent;
 half _AdditionalLightsMultiplier;
 half _EnvironmentLightingMultiplier;
 
-half _Cutoff;
-
-CBUFFER_END
+UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 TEXTURE2D(_BaseMap);
 SAMPLER(sampler_BaseMap);
 TEXTURE2D(_RampMap);
 SAMPLER(sampler_RampMap);
-
-#include "./ToonAlpha.hlsl"
 
 #endif

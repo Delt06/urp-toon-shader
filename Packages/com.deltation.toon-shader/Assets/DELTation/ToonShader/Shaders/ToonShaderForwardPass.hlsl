@@ -49,7 +49,8 @@ v2f vert(appdata input)
 
     const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
     const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+	const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    output.uv = apply_tiling_offset(input.uv, basemap_st);
     float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
     float3 position_ws = vertex_position_inputs.positionWS;
     output.positionWSAndFogFactor = float4(position_ws, fog_factor);
@@ -82,7 +83,8 @@ half4 frag(const v2f input) : SV_Target
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
-    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor).xyz;
+	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).xyz;
 	#ifdef _VERTEX_COLOR
     sample_color *= input.vertexColor;
 	#endif
@@ -102,7 +104,8 @@ half4 frag(const v2f input) : SV_Target
 
     #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
     half3 additional_lights_color = additional_lights_color_attenuation.xyz;
-    additional_lights_attenuation = additional_lights_color_attenuation.a * _AdditionalLightsMultiplier;
+	const float additional_lights_multiplier = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AdditionalLightsMultiplier);
+    additional_lights_attenuation = additional_lights_color_attenuation.a * additional_lights_multiplier;
     additional_lights_color *= get_ramp(additional_lights_attenuation);
     sample_color += additional_lights_color;
     #endif
@@ -116,7 +119,8 @@ half4 frag(const v2f input) : SV_Target
     const half3 ramp_color = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, ramp_uv).xyz;
     half3 fragment_color = sample_color * ramp_color;
     #else
-    const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
+	const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
+    const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
     half3 fragment_color = lerp(shadow_color, sample_color, brightness);
     #endif
 
@@ -132,7 +136,8 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
 	#ifdef _ENVIRONMENT_LIGHTING_ENABLED
-	fragment_color += _EnvironmentLightingMultiplier * SampleSH(normal_ws);
+	const half environment_lighting_multiplier = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EnvironmentLightingMultiplier);
+	fragment_color += environment_lighting_multiplier * SampleSH(normal_ws);
 	#endif
 
     #ifdef _FOG

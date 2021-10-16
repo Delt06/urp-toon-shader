@@ -102,9 +102,6 @@
 
             HLSLPROGRAM
             #pragma target 2.0
-            
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
-            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
@@ -112,7 +109,7 @@
             #pragma multi_compile_instancing
 
             #include "./ToonShaderInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            #include "./ToonShaderShadowCasterPass.hlsl"
 
             ENDHLSL
         }
@@ -137,7 +134,7 @@
            
 
             #include "./ToonShaderInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            #include "./ToonShaderDepthOnlyPass.hlsl"
             
             ENDHLSL
         }
@@ -159,7 +156,7 @@
             #pragma multi_compile_instancing
 
             #include "./ToonShaderInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthNormalsPass.hlsl"
+            #include "./ToonShaderDepthNormalsPass.hlsl"
             ENDHLSL
         }
     }

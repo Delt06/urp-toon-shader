@@ -1,5 +1,5 @@
-﻿#ifndef TOON_SHADER_LITE_FORWARD_PASS_INCLUDED
-#define TOON_SHADER_LITE_FORWARD_PASS_INCLUDED
+﻿#ifndef TOON_SHADER_LITE_FORWARD_PASS
+#define TOON_SHADER_LITE_FORWARD_PASS
 
 struct appdata
 {
@@ -56,9 +56,12 @@ v2f vert(appdata input)
 	UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
 
+	const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+	output.uv = apply_tiling_offset(input.uv, basemap_st);
+
     const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
     const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+	
 
 	float4 position_cs = vertex_position_inputs.positionCS;
 	output.positionCS = position_cs;
@@ -81,8 +84,9 @@ v2f vert(appdata input)
 half4 frag(const v2f input) : SV_Target
 {
 	UNITY_SETUP_INSTANCE_ID(input);
-	
-    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor).xyz;
+
+	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).xyz;
 	#ifdef _VERTEX_COLOR
 	sample_color *= input.vertexColor;
 	#endif
@@ -94,8 +98,9 @@ half4 frag(const v2f input) : SV_Target
 	#endif
 	
     sample_color *= main_light_color_and_brightness.xyz;
-	
-	const half3 shadow_color = lerp(sample_color, _ShadowTint.xyz, _ShadowTint.a);
+
+	const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
+	const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
 	half3 fragment_color = lerp(shadow_color, sample_color, main_light_color_and_brightness.w);
 
     #ifdef _FOG

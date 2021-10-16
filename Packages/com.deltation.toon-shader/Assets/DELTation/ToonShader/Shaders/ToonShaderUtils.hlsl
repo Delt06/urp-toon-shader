@@ -13,6 +13,11 @@ inline float get_fog_factor(float depth)
     #endif
 }
 
+inline float2 apply_tiling_offset(const float2 uv, const float4 map_st)
+{
+    return uv * map_st.xy + map_st.zw;
+}
+
 inline half4 get_additional_lights_color_attenuation(const float3 position_ws)
 {
     half4 color_attenuation = 0;
@@ -61,9 +66,13 @@ inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half
 
     #else
     half specular = get_specular(view_direction_ws, normal_ws, light_direction_ws);
-    specular = pow(specular, _SpecularExponent);
-    const half3 ramp = get_simple_ramp(light_color, _SpecularColor.a, _SpecularThreshold, _SpecularSmoothness, specular);
-    return _SpecularColor.xyz * ramp;
+    const half specular_exponent = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularExponent);
+    specular = pow(specular, specular_exponent);
+    const half4 specular_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularColor);
+    const half specular_threshold = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularThreshold);
+    const half specular_smothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularSmoothness);
+    const half3 ramp = get_simple_ramp(light_color, specular_color.a, specular_threshold, specular_smothness, specular);
+    return specular_color.xyz * ramp;
     #endif
 }
 
@@ -78,7 +87,10 @@ inline half3 get_fresnel_color(half3 light_color, half3 view_direction_ws, half3
     return 0;
     #else
     const half fresnel = get_fresnel(view_direction_ws, normal_ws);
-    return _FresnelColor.xyz * get_simple_ramp(light_color, _FresnelColor.a, _FresnelThickness, _FresnelSmoothness, brightness * fresnel);
+    const half4 fresnel_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _FresnelColor);
+    const half fresnel_thickness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _FresnelThickness);
+    const half fresnel_smothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _FresnelSmoothness);
+    return fresnel_color.xyz * get_simple_ramp(light_color, fresnel_color.a, fresnel_thickness, fresnel_smothness, brightness * fresnel);
     #endif
 }
 
@@ -87,11 +99,16 @@ inline half get_ramp(half value)
     #ifdef _RAMP_MAP
     return (value + 1) * 0.5;
     #elif defined(_RAMP_TRIPLE)
-    const half ramp0 = smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value);
-    const half ramp1 = smoothstep(_Ramp1, _Ramp1 + _RampSmoothness, value);
-    return (ramp0 + ramp1) * 0.5;
+    const half ramp0 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp0);
+    const half ramp1 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp0);
+    const half ramp_smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _RampSmoothness);
+    const half ramp0_value = smoothstep(ramp0, ramp0 + ramp_smoothness, value);
+    const half ramp1_value = smoothstep(ramp1, ramp1 + ramp_smoothness, value);
+    return (ramp0_value + ramp1_value) * 0.5;
     #else
-    return smoothstep(_Ramp0, _Ramp0 + _RampSmoothness, value);
+    const half ramp0 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp0);
+    const half ramp_smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _RampSmoothness);
+    return smoothstep(ramp0, ramp0 + ramp_smoothness, value);
     #endif
 }
 
