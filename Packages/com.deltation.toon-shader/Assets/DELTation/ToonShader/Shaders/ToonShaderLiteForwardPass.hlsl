@@ -43,8 +43,7 @@ inline half4 get_main_light_color_and_brightness(in const float4 position_cs, in
 	const half3 light_direction_ws = normalize(main_light.direction);
 	const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
 	const half brightness = get_brightness(position_cs, normal_ws, light_direction_ws,
-										main_light_attenuation,
-										0);
+										main_light_attenuation);
 
 	return half4(main_light.color, brightness);
 }
@@ -86,22 +85,23 @@ half4 frag(const v2f input) : SV_Target
 	UNITY_SETUP_INSTANCE_ID(input);
 
 	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).xyz;
-	#ifdef _VERTEX_COLOR
-	sample_color *= input.vertexColor;
-	#endif
+    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).rgb;
+	
 
 	#ifdef _TOON_VERTEX_LIT
 	const half4 main_light_color_and_brightness = input.mainLightColorAndBrightness;
 	#else
 	const half4 main_light_color_and_brightness = get_main_light_color_and_brightness(input.positionCS, input.normalWS);
 	#endif
-	
-    sample_color *= main_light_color_and_brightness.xyz;
 
 	const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
 	const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
 	half3 fragment_color = lerp(shadow_color, sample_color, main_light_color_and_brightness.w);
+
+	#ifdef _VERTEX_COLOR
+	fragment_color *= input.vertexColor;
+	#endif
+	fragment_color *= main_light_color_and_brightness.xyz;
 
     #ifdef _FOG
     fragment_color = MixFog(fragment_color, input.fogFactor);

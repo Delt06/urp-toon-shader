@@ -85,10 +85,7 @@ half4 frag(const v2f input) : SV_Target
 
 	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
     half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).xyz;
-	#ifdef _VERTEX_COLOR
-    sample_color *= input.vertexColor;
-	#endif
-    sample_color *= main_light.color;
+	
 
     half additional_lights_attenuation = 0;
 
@@ -112,8 +109,7 @@ half4 frag(const v2f input) : SV_Target
 
     const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
     const half brightness = get_brightness(input.positionCS, normal_ws, light_direction_ws,
-                                           main_light_attenuation,
-                                           additional_lights_attenuation);
+                                           main_light_attenuation);
     #ifdef _RAMP_MAP
     const half2 ramp_uv = half2(brightness, 0.5);
     const half3 ramp_color = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, ramp_uv).xyz;
@@ -123,6 +119,11 @@ half4 frag(const v2f input) : SV_Target
     const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
     half3 fragment_color = lerp(shadow_color, sample_color, brightness);
     #endif
+
+	#ifdef _VERTEX_COLOR
+	fragment_color *= input.vertexColor;
+	#endif
+	fragment_color *= main_light.color;
 
 
     #ifdef _SPECULAR

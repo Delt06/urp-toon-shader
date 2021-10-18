@@ -112,15 +112,11 @@ inline half get_ramp(half value)
     #endif
 }
 
-inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light_direction, half main_light_attenuation,
-                           half additional_lights_attenuation)
+inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light_direction, half main_light_attenuation)
 {
     const half dot_value = dot(normal_ws, light_direction);
+    // ReSharper disable once CppLocalVariableMayBeConst
     half brightness = min(dot_value, dot_value * main_light_attenuation);
-
-    #ifdef TOON_ADDITIONAL_LIGHTS
-    brightness += additional_lights_attenuation;
-    #endif
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
     const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(position_cs);
