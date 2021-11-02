@@ -55,7 +55,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "10.5.1",
+      "version": "10.3.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -75,19 +75,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
-      "version": "4.3.2",
+      "version": "4.3.1",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "10.5.1",
+      "version": "10.3.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "10.5.1",
-        "com.unity.searcher": "4.3.2"
+        "com.unity.render-pipelines.core": "10.3.2",
+        "com.unity.searcher": "4.3.1"
       },
       "url": "https://packages.unity.com"
     },
