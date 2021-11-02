@@ -38,6 +38,9 @@
         _EnvironmentLightingMultiplier ("Environment Lighting Multiplier", Range(0, 10)) = 0.5
         [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
         
+        [Slider(0, 1)]
+        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+        
         // Blending state
         [Toggle] _ZWrite("Z Write", Float) = 1.0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Float) = 0
@@ -46,10 +49,10 @@
         [HideInInspector] _Blend("__blend", Float) = 0.0
         [HideInInspector] _SrcBlend("__src", Float) = 1.0
         [HideInInspector] _DstBlend("__dst", Float) = 0.0
+        [Toggle] _AlphaClip("Alpha Clipping", Float) = 0.0
         
-        
-        
-        [HideInInspector] _AlphaClip("__clip", Float) = 0.0
+        // Editmode props
+        [HideInInspector] _QueueOffset("Queue Offset", Float) = 0.0
         
     }
     SubShader
