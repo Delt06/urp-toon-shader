@@ -37,6 +37,20 @@
         [Toggle(_ENVIRONMENT_LIGHTING_ENABLED)] _EnvironmentLightingEnabled ("Environment Lighting", Float) = 1
         _EnvironmentLightingMultiplier ("Environment Lighting Multiplier", Range(0, 10)) = 0.5
         [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
+        
+        // Blending state
+        [Toggle] _ZWrite("Z Write", Float) = 1.0
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling", Float) = 0
+        
+        [HideInInspector] _Surface("__surface", Float) = 0.0
+        [HideInInspector] _Blend("__blend", Float) = 0.0
+        [HideInInspector] _SrcBlend("__src", Float) = 1.0
+        [HideInInspector] _DstBlend("__dst", Float) = 0.0
+        
+        
+        
+        [HideInInspector] _AlphaClip("__clip", Float) = 0.0
+        
     }
     SubShader
     {
@@ -45,9 +59,14 @@
 
         Pass
         {
-            HLSLPROGRAM
+            Name "ForwardLit"
+            Tags{"LightMode" = "UniversalForward"}
+
+            Blend[_SrcBlend][_DstBlend]
+            ZWrite[_ZWrite]
+            Cull[_Cull]
             
-            #pragma target 2.0
+            HLSLPROGRAM
             
             #pragma vertex vert
             #pragma fragment frag
@@ -98,7 +117,7 @@
             ZWrite On
             ZTest LEqual
             ColorMask 0
-            Cull Back
+            Cull[_Cull]
 
             HLSLPROGRAM
             #pragma target 2.0
@@ -121,7 +140,7 @@
 
             ZWrite On
             ColorMask 0
-            Cull Back
+            Cull[_Cull]
 
             HLSLPROGRAM
             
@@ -145,7 +164,7 @@
             Tags{"LightMode" = "DepthNormals"}
 
             ZWrite On
-            Cull Back
+            Cull[_Cull]
 
             HLSLPROGRAM
             #pragma target 2.0
