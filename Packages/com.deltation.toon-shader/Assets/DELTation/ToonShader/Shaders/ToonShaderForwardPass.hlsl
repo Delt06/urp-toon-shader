@@ -84,7 +84,8 @@ half4 frag(const v2f input) : SV_Target
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
 	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).xyz;
+	const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
+    half3 sample_color = albedo.xyz;
 	
 
     half additional_lights_attenuation = 0;
@@ -146,7 +147,7 @@ half4 frag(const v2f input) : SV_Target
     fragment_color = MixFog(fragment_color, fog_factor);
     #endif
 
-    return half4(max(fragment_color, 0), 1);
+    return half4(max(fragment_color, 0), albedo.a);
 }
 
 #endif
