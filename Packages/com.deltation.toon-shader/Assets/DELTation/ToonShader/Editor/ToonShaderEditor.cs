@@ -43,7 +43,7 @@ namespace DELTation.ToonShader.Editor
 			Label("Specular");
 			DrawSpecularProperties(materialEditor, properties, material);
 			MiscLabel();
-			DrawMiscProperties(materialEditor, properties, material);
+			DrawMiscProperties(materialEditor, properties);
 		}
 
 		private static void DrawSurfaceProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -149,7 +149,7 @@ namespace DELTation.ToonShader.Editor
 				srcBlendProperty.floatValue = (float)src;
 				dstBlendProperty.floatValue = (float)dst;
 
-				
+
 				switch (blendMode)
 				{
 					case BlendMode.Alpha:
@@ -284,18 +284,12 @@ namespace DELTation.ToonShader.Editor
 			}
 		}
 
-		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
 			DrawFogProperty(materialEditor, properties);
 
 			DrawProperty(materialEditor, properties, "_AdditionalLights");
-			if (material.IsKeywordEnabled("_ADDITIONAL_LIGHTS_ENABLED"))
-				DrawProperty(materialEditor, properties, "_AdditionalLightsMultiplier");
-
 			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
-			if (material.IsKeywordEnabled("_ENVIRONMENT_LIGHTING_ENABLED"))
-				DrawProperty(materialEditor, properties, "_EnvironmentLightingMultiplier");
 
 
 			DrawVertexColorProperty(materialEditor, properties);

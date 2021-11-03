@@ -27,8 +27,9 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -95,7 +96,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AdditionalLights: 1
-    - _AdditionalLightsMultiplier: 3
+    - _AdditionalLightsMultiplier: 1
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -108,7 +109,7 @@ Material:
     - _DstBlend: 0
     - _Emission: 0
     - _EnvironmentLightingEnabled: 1
-    - _EnvironmentLightingMultiplier: 0.5
+    - _EnvironmentLightingMultiplier: 1
     - _EnvironmentReflections: 1
     - _Fog: 1
     - _Fresnel: 0
@@ -121,9 +122,9 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
-    - _Ramp0: 0.171
-    - _Ramp1: 0.734
-    - _RampSmoothness: 0.005
+    - _Ramp0: 0.051
+    - _Ramp1: 0.451
+    - _RampSmoothness: 0.008
     - _RampTriple: 1
     - _ReceiveShadows: 1
     - _Smoothness: 0.5

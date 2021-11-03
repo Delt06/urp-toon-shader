@@ -33,9 +33,7 @@
         
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
-        _AdditionalLightsMultiplier ("Additonal Lights Multiplier", Range(0, 10)) = 0.1
         [Toggle(_ENVIRONMENT_LIGHTING_ENABLED)] _EnvironmentLightingEnabled ("Environment Lighting", Float) = 1
-        _EnvironmentLightingMultiplier ("Environment Lighting Multiplier", Range(0, 10)) = 0.5
         [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
         
         [Slider(0, 1)]

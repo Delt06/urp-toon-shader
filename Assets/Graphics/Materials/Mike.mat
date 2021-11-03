@@ -88,7 +88,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AdditionalLights: 1
-    - _AdditionalLightsMultiplier: 0.1
+    - _AdditionalLightsMultiplier: 1
     - _AlphaClip: 0
     - _Blend: 3
     - _BumpScale: 1
@@ -101,7 +101,7 @@ Material:
     - _DstBlend: 0
     - _Emission: 0
     - _EnvironmentLightingEnabled: 1
-    - _EnvironmentLightingMultiplier: 0.3
+    - _EnvironmentLightingMultiplier: 1
     - _EnvironmentReflections: 1
     - _Fog: 1
     - _Fresnel: 1
@@ -118,7 +118,7 @@ Material:
     - _QueueOffset: 0
     - _Ramp0: 0.1
     - _Ramp1: 0.401
-    - _RampSmoothness: 0.062
+    - _RampSmoothness: 0.019
     - _RampTriple: 1
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
@@ -135,7 +135,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.1764706}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 25.688938, g: 25.688938, b: 25.688938, a: 1}

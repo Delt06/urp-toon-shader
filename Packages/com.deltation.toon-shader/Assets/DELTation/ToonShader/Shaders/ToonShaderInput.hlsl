@@ -24,9 +24,6 @@ UNITY_DEFINE_INSTANCED_PROP(half, _SpecularSmoothness)
 UNITY_DEFINE_INSTANCED_PROP(half, _SpecularThreshold)
 UNITY_DEFINE_INSTANCED_PROP(half, _SpecularExponent)
 
-UNITY_DEFINE_INSTANCED_PROP(half, _AdditionalLightsMultiplier)
-UNITY_DEFINE_INSTANCED_PROP(half, _EnvironmentLightingMultiplier)
-
 UNITY_DEFINE_INSTANCED_PROP(half, _Surface)
 UNITY_DEFINE_INSTANCED_PROP(half, _Cutoff)
 

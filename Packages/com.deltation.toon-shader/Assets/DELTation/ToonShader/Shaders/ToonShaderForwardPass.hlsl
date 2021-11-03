@@ -99,7 +99,9 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
 
+    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
     half additional_lights_attenuation = 0;
+    #endif
 
     #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
     half4 additional_lights_color_attenuation = 0;
@@ -113,10 +115,9 @@ half4 frag(const v2f input) : SV_Target
 
     #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
     half3 additional_lights_color = additional_lights_color_attenuation.xyz;
-	const float additional_lights_multiplier = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AdditionalLightsMultiplier);
-    additional_lights_attenuation = additional_lights_color_attenuation.a * additional_lights_multiplier;
+    additional_lights_attenuation = additional_lights_color_attenuation.a;
     additional_lights_color *= get_ramp(additional_lights_attenuation);
-    sample_color += additional_lights_color;
+    sample_color += albedo.xyz * additional_lights_color;
     #endif
 
     const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
@@ -144,8 +145,7 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     #ifdef _ENVIRONMENT_LIGHTING_ENABLED
-	const half environment_lighting_multiplier = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EnvironmentLightingMultiplier);
-	fragment_color += environment_lighting_multiplier * SampleSH(normal_ws);
+	fragment_color += albedo.xyz * SampleSH(normal_ws);
     #endif
 
     #ifdef _EMISSION
