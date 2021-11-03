@@ -163,8 +163,6 @@ namespace DELTation.ToonShader.Editor
 						break;
 					case BlendMode.Multiply:
 						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-						// TODO: check impl
-						material.EnableKeyword("_ALPHAMODULATE_ON");
 						break;
 				}
 
