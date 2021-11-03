@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityBlendMode = UnityEngine.Rendering.BlendMode;
+
 // ReSharper disable Unity.PreferAddressByIdToGraphicsParams
 
 namespace DELTation.ToonShader.Editor
@@ -12,7 +13,6 @@ namespace DELTation.ToonShader.Editor
 	// ReSharper disable once UnusedType.Global
 	public class ToonShaderEditor : ToonShaderEditorBase
 	{
-		private const int queueOffsetRange = 50;
 		public enum BlendMode
 		{
 			Alpha,
@@ -27,6 +27,8 @@ namespace DELTation.ToonShader.Editor
 			Transparent,
 		}
 
+		private const int queueOffsetRange = 50;
+
 		private static readonly Dictionary<(UnityBlendMode src, UnityBlendMode dst), BlendMode>
 			UnityBlendModeToBlendMode =
 				new Dictionary<(UnityBlendMode src, UnityBlendMode dst), BlendMode>
@@ -36,6 +38,8 @@ namespace DELTation.ToonShader.Editor
 					[(UnityBlendMode.One, UnityBlendMode.One)] = BlendMode.Additive,
 					[(UnityBlendMode.DstColor, UnityBlendMode.Zero)] = BlendMode.Multiply,
 				};
+
+		protected override bool RenderQueueField => false;
 
 		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
@@ -61,19 +65,38 @@ namespace DELTation.ToonShader.Editor
 			DrawPropertyCustom(materialEditor, properties, "Surface Type", DrawSurfaceType);
 			if (IsTransparent(properties))
 				DrawPropertyCustom(materialEditor, properties, "Blending Mode", DrawBlendMode);
-			
-			DrawProperty(materialEditor, properties, "_AlphaClip");
+
+			DrawPropertyCustom(materialEditor, properties, "Alpha Clipping", DrawAlphaClip);
 			if (IsAlphaClip(properties))
 				DrawProperty(materialEditor, properties, "_Cutoff");
-			
-			
+
 			DrawProperty(materialEditor, properties, "_Cull");
 		}
 
-		private static bool IsAlphaClip(MaterialProperty[] properties) => FindProperty("_AlphaClip", properties).floatValue > 0.5f;
+		private static bool IsAlphaClip(MaterialProperty[] properties) =>
+			FindProperty("_AlphaClip", properties).floatValue > 0.5f;
 
 		private static bool IsTransparent(MaterialProperty[] properties) =>
 			(SurfaceType)FindProperty("_Surface", properties).floatValue == SurfaceType.Transparent;
+
+		private static void DrawAlphaClip(MaterialEditor materialEditor, MaterialProperty[] properties)
+		{
+			var property = FindProperty("_AlphaClip", properties);
+			var alphaClip = property.floatValue > 0.5f;
+
+			EditorGUI.showMixedValue = property.hasMixedValue;
+			EditorGUI.BeginChangeCheck();
+			var newAlphaClip = EditorGUILayout.Toggle(alphaClip);
+
+			if (EditorGUI.EndChangeCheck())
+			{
+				property.floatValue = newAlphaClip ? 1f : 0f;
+				materialEditor.PropertiesChanged();
+				TryUpdateSurfaceData(materialEditor, properties);
+			}
+
+			EditorGUI.showMixedValue = false;
+		}
 
 		private static void DrawSurfaceType(MaterialEditor materialEditor, MaterialProperty[] properties)
 		{
@@ -81,73 +104,92 @@ namespace DELTation.ToonShader.Editor
 			var surfaceType = (SurfaceType)surfaceProperty.floatValue;
 
 			EditorGUI.showMixedValue = surfaceProperty.hasMixedValue;
+			EditorGUI.BeginChangeCheck();
 			var newSurfaceType = (SurfaceType)EditorGUILayout.EnumPopup(surfaceType);
-			
-			if (surfaceType != newSurfaceType)
+
+			if (EditorGUI.EndChangeCheck())
 			{
-				var material = (Material)materialEditor.target;
+				surfaceProperty.floatValue = (float)newSurfaceType;
+				materialEditor.PropertiesChanged();
+				TryUpdateSurfaceData(materialEditor, properties);
+			}
 
-				if (newSurfaceType == SurfaceType.Opaque)
+			EditorGUI.showMixedValue = false;
+		}
+
+		private static void TryUpdateSurfaceData(MaterialEditor materialEditor, MaterialProperty[] properties)
+		{
+			var surfaceProperty = FindProperty("_Surface", properties);
+			var surfaceType = (SurfaceType)surfaceProperty.floatValue;
+			var material = (Material)materialEditor.target;
+			var alphaClip = IsAlphaClip(properties);
+
+			const string alphaTestOnKeyword = "_ALPHATEST_ON";
+			if (alphaClip)
+				material.EnableKeyword(alphaTestOnKeyword);
+			else
+				material.DisableKeyword(alphaTestOnKeyword);
+
+
+			if (surfaceType == SurfaceType.Opaque)
+			{
+				if (alphaClip)
 				{
-					if (IsAlphaClip(properties))
-					{
-						material.renderQueue = (int) RenderQueue.AlphaTest;
-						material.SetOverrideTag("RenderType", "TransparentCutout");
-					}
-					else
-					{
-						material.renderQueue = (int) RenderQueue.Geometry;
-						material.SetOverrideTag("RenderType", "Opaque");
-					}
-
-					material.renderQueue += material.HasProperty("_QueueOffset") ? (int) material.GetFloat("_QueueOffset") : 0;
-					material.SetInt("_SrcBlend", (int)UnityBlendMode.One);
-					material.SetInt("_DstBlend", (int)UnityBlendMode.Zero);
-					material.SetInt("_ZWrite", 1);
-					material.DisableKeyword("_ALPHAPREMULTIPLY_ON"); // TODO: check impl
-					material.SetShaderPassEnabled("ShadowCaster", true);
+					material.renderQueue = (int)RenderQueue.AlphaTest;
+					material.SetOverrideTag("RenderType", "TransparentCutout");
 				}
 				else
 				{
-					var srcBlendProperty = FindProperty("_SrcBlend", properties);
-					var dstBlendProperty = FindProperty("_DstBlend", properties);
-					var blendProperty = FindProperty("_Blend", properties);
-
-					var blendMode = (BlendMode)blendProperty.floatValue;
-					var (src, dst) = ConvertBlendModeToUnityBlendMode(blendMode);
-					srcBlendProperty.floatValue = (float)src;
-					dstBlendProperty.floatValue = (float)dst;
-					
-					// TODO: check impl
-					switch (blendMode)
-					{
-						case BlendMode.Alpha:
-							material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-							break;
-						case BlendMode.Premultiply:
-							material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-							break;
-						case BlendMode.Additive:
-							material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-							break;
-						case BlendMode.Multiply:
-							material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-							material.EnableKeyword("_ALPHAMODULATE_ON");
-							break;
-					}
-
-					material.SetOverrideTag("RenderType", "Transparent");
-					material.SetInt("_ZWrite", 0);
-					material.renderQueue = (int)RenderQueue.Transparent;
-					material.renderQueue += material.HasProperty("_QueueOffset") ? (int) material.GetFloat("_QueueOffset") : 0;
-					material.SetShaderPassEnabled("ShadowCaster", false);
+					material.renderQueue = (int)RenderQueue.Geometry;
+					material.SetOverrideTag("RenderType", "Opaque");
 				}
 
-				surfaceProperty.floatValue = (float)newSurfaceType;
-				materialEditor.PropertiesChanged();
+				material.renderQueue +=
+					material.HasProperty("_QueueOffset") ? (int)material.GetFloat("_QueueOffset") : 0;
+				material.SetInt("_SrcBlend", (int)UnityBlendMode.One);
+				material.SetInt("_DstBlend", (int)UnityBlendMode.Zero);
+				material.SetInt("_ZWrite", 1);
+				material.DisableKeyword("_ALPHAPREMULTIPLY_ON"); // TODO: check impl
+				material.SetShaderPassEnabled("ShadowCaster", true);
 			}
-			
-			EditorGUI.showMixedValue = false;
+			else
+			{
+				var srcBlendProperty = FindProperty("_SrcBlend", properties);
+				var dstBlendProperty = FindProperty("_DstBlend", properties);
+				var blendProperty = FindProperty("_Blend", properties);
+
+				var blendMode = (BlendMode)blendProperty.floatValue;
+				var (src, dst) = ConvertBlendModeToUnityBlendMode(blendMode);
+				srcBlendProperty.floatValue = (float)src;
+				dstBlendProperty.floatValue = (float)dst;
+
+				// TODO: check impl
+				switch (blendMode)
+				{
+					case BlendMode.Alpha:
+						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+						break;
+					case BlendMode.Premultiply:
+						material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+						break;
+					case BlendMode.Additive:
+						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+						break;
+					case BlendMode.Multiply:
+						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+						material.EnableKeyword("_ALPHAMODULATE_ON");
+						break;
+				}
+
+				material.SetOverrideTag("RenderType", "Transparent");
+				material.SetInt("_ZWrite", 0);
+				material.renderQueue = (int)RenderQueue.Transparent;
+				material.renderQueue +=
+					material.HasProperty("_QueueOffset") ? (int)material.GetFloat("_QueueOffset") : 0;
+				material.SetShaderPassEnabled("ShadowCaster", false);
+			}
+
+			materialEditor.PropertiesChanged();
 		}
 
 		private static void DrawBlendMode(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -155,10 +197,11 @@ namespace DELTation.ToonShader.Editor
 			var blendProperty = FindProperty("_Blend", properties);
 			var currentBlendMode = (BlendMode)blendProperty.floatValue;
 
-			EditorGUI.showMixedValue = blendProperty.hasMixedValue || FindProperty("_Surface", properties).hasMixedValue;
+			EditorGUI.showMixedValue =
+				blendProperty.hasMixedValue || FindProperty("_Surface", properties).hasMixedValue;
 			var newBlendMode = (BlendMode)EditorGUILayout.EnumPopup(currentBlendMode);
-			
-			
+
+
 			var (newSrcBlend, newDstBlend) = ConvertBlendModeToUnityBlendMode(newBlendMode);
 			if (currentBlendMode != newBlendMode)
 			{
@@ -169,7 +212,7 @@ namespace DELTation.ToonShader.Editor
 				blendProperty.floatValue = (float)newBlendMode;
 				materialEditor.PropertiesChanged();
 			}
-			
+
 			EditorGUI.showMixedValue = false;
 		}
 
@@ -253,8 +296,6 @@ namespace DELTation.ToonShader.Editor
 			}
 		}
 
-		protected override bool RenderQueueField => false;
-
 		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
 		{
@@ -267,10 +308,10 @@ namespace DELTation.ToonShader.Editor
 			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
 			if (material.IsKeywordEnabled("_ENVIRONMENT_LIGHTING_ENABLED"))
 				DrawProperty(materialEditor, properties, "_EnvironmentLightingMultiplier");
-			
-			
+
+
 			DrawVertexColorProperty(materialEditor, properties);
-			
+
 			DrawPropertyCustom(materialEditor, properties, "Priority", DrawQueueOffset);
 		}
 
@@ -278,13 +319,14 @@ namespace DELTation.ToonShader.Editor
 		{
 			var property = FindProperty("_QueueOffset", properties);
 			EditorGUI.showMixedValue = property.hasMixedValue;
-			var currentValue = (int) property.floatValue;
+			var currentValue = (int)property.floatValue;
 			var newValue = EditorGUILayout.IntSlider(currentValue, -queueOffsetRange, queueOffsetRange);
 			if (currentValue != newValue)
 			{
 				property.floatValue = newValue;
 				materialEditor.PropertiesChanged();
 			}
+
 			EditorGUI.showMixedValue = false;
 		}
 	}

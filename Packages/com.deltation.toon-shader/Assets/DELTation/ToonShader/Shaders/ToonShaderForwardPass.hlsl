@@ -1,6 +1,8 @@
 ﻿#ifndef TOON_SHADER_FORWARD_PASS_INCLUDED
 #define TOON_SHADER_FORWARD_PASS_INCLUDED
 
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl"
+
 struct appdata
 {
     float4 positionOS : POSITION;
@@ -75,6 +77,7 @@ v2f vert(appdata input)
 
 half4 frag(const v2f input) : SV_Target
 {
+	
 	UNITY_SETUP_INSTANCE_ID(input);
 
     const Light main_light = get_main_light(input);
@@ -85,6 +88,9 @@ half4 frag(const v2f input) : SV_Target
 
 	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
 	const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
+	const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
+	AlphaDiscard(albedo.a, cutoff);
+	
     half3 sample_color = albedo.xyz;
 	
 
@@ -147,7 +153,9 @@ half4 frag(const v2f input) : SV_Target
     fragment_color = MixFog(fragment_color, fog_factor);
     #endif
 
-    return half4(max(fragment_color, 0), albedo.a);
+	const half surface = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Surface);
+	const half alpha = 1.0 * (1 - surface) + albedo.a * surface; 
+    return half4(max(fragment_color, 0), alpha);
 }
 
 #endif

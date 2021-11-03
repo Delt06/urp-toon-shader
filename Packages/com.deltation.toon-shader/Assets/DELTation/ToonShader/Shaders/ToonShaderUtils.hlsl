@@ -3,6 +3,7 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl"
 
 inline float get_fog_factor(float depth)
 {
@@ -16,6 +17,16 @@ inline float get_fog_factor(float depth)
 inline float2 apply_tiling_offset(const float2 uv, const float4 map_st)
 {
     return uv * map_st.xy + map_st.zw;
+}
+
+inline void alpha_discard(v2f input)
+{
+    #ifdef _ALPHATEST_ON
+    const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
+    const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
+    AlphaDiscard(albedo.a, cutoff);
+    #endif
 }
 
 inline half4 get_additional_lights_color_attenuation(const float3 position_ws)

@@ -83,6 +83,9 @@
             #pragma shader_feature_local_fragment _ENVIRONMENT_LIGHTING_ENABLED
             #pragma shader_feature_local_fragment _RAMP_MAP
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             
             // URP
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
@@ -125,6 +128,8 @@
             HLSLPROGRAM
             #pragma target 2.0
 
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 
@@ -149,6 +154,8 @@
             
             #pragma target 2.0
 
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
 
@@ -171,6 +178,8 @@
 
             HLSLPROGRAM
             #pragma target 2.0
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
 
             #pragma vertex DepthNormalsVertex
             #pragma fragment DepthNormalsFragment
