@@ -12,7 +12,7 @@
         _UseRampMap("Use Ramp Texture", Float) = 0
         [NoScaleOffset]
         _RampMap ("Ramp Texture", 2D) = "white" {}
-        [Toggle(_RAMP_TRIPLE)] _RampTriple ("Triple Ramp", Float) = 1
+        [Toggle(_RAMP_TRIPLE)] _RampTriple ("Triple Ramp", Float) = 0
         _Ramp0 ("Ramp Threshold 0", Range(-1, 1)) = 0
         _Ramp1 ("Ramp Threshold 1", Range(-1, 1)) = 0.5
         _RampSmoothness ("Ramp Smoothness", Range(0, 2)) = 0.005
