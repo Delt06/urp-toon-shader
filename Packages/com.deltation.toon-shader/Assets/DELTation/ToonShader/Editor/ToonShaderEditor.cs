@@ -13,21 +13,7 @@ namespace DELTation.ToonShader.Editor
 	// ReSharper disable once UnusedType.Global
 	public class ToonShaderEditor : ToonShaderEditorBase
 	{
-		public enum BlendMode
-		{
-			Alpha,
-			Premultiply,
-			Additive,
-			Multiply,
-		}
-
-		public enum SurfaceType
-		{
-			Opaque,
-			Transparent,
-		}
-
-		private const int queueOffsetRange = 50;
+		private const int QueueOffsetRange = 50;
 
 		private static readonly Dictionary<(UnityBlendMode src, UnityBlendMode dst), BlendMode>
 			UnityBlendModeToBlendMode =
@@ -149,7 +135,7 @@ namespace DELTation.ToonShader.Editor
 				material.SetInt("_SrcBlend", (int)UnityBlendMode.One);
 				material.SetInt("_DstBlend", (int)UnityBlendMode.Zero);
 				material.SetInt("_ZWrite", 1);
-				material.DisableKeyword("_ALPHAPREMULTIPLY_ON"); // TODO: check impl
+				material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
 				material.SetShaderPassEnabled("ShadowCaster", true);
 			}
 			else
@@ -163,7 +149,7 @@ namespace DELTation.ToonShader.Editor
 				srcBlendProperty.floatValue = (float)src;
 				dstBlendProperty.floatValue = (float)dst;
 
-				// TODO: check impl
+				
 				switch (blendMode)
 				{
 					case BlendMode.Alpha:
@@ -177,6 +163,7 @@ namespace DELTation.ToonShader.Editor
 						break;
 					case BlendMode.Multiply:
 						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+						// TODO: check impl
 						material.EnableKeyword("_ALPHAMODULATE_ON");
 						break;
 				}
@@ -199,11 +186,13 @@ namespace DELTation.ToonShader.Editor
 
 			EditorGUI.showMixedValue =
 				blendProperty.hasMixedValue || FindProperty("_Surface", properties).hasMixedValue;
+			EditorGUI.BeginChangeCheck();
 			var newBlendMode = (BlendMode)EditorGUILayout.EnumPopup(currentBlendMode);
 
 
 			var (newSrcBlend, newDstBlend) = ConvertBlendModeToUnityBlendMode(newBlendMode);
-			if (currentBlendMode != newBlendMode)
+
+			if (EditorGUI.EndChangeCheck())
 			{
 				var srcBlendProperty = FindProperty("_SrcBlend", properties);
 				srcBlendProperty.floatValue = (float)newSrcBlend;
@@ -211,6 +200,7 @@ namespace DELTation.ToonShader.Editor
 				dstBlendProperty.floatValue = (float)newDstBlend;
 				blendProperty.floatValue = (float)newBlendMode;
 				materialEditor.PropertiesChanged();
+				TryUpdateSurfaceData(materialEditor, properties);
 			}
 
 			EditorGUI.showMixedValue = false;
@@ -320,7 +310,7 @@ namespace DELTation.ToonShader.Editor
 			var property = FindProperty("_QueueOffset", properties);
 			EditorGUI.showMixedValue = property.hasMixedValue;
 			var currentValue = (int)property.floatValue;
-			var newValue = EditorGUILayout.IntSlider(currentValue, -queueOffsetRange, queueOffsetRange);
+			var newValue = EditorGUILayout.IntSlider(currentValue, -QueueOffsetRange, QueueOffsetRange);
 			if (currentValue != newValue)
 			{
 				property.floatValue = newValue;
@@ -328,6 +318,20 @@ namespace DELTation.ToonShader.Editor
 			}
 
 			EditorGUI.showMixedValue = false;
+		}
+
+		private enum BlendMode
+		{
+			Alpha,
+			Premultiply,
+			Additive,
+			Multiply,
+		}
+
+		private enum SurfaceType
+		{
+			Opaque,
+			Transparent,
 		}
 	}
 }

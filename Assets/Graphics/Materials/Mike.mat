@@ -9,15 +9,15 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Mike
   m_Shader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ALPHACLIP_ON _ALPHATEST_ON _ENVIRONMENT_LIGHTING_ENABLED
+  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ALPHACLIP_ON _ALPHAMODULATE_ON _ENVIRONMENT_LIGHTING_ENABLED
     _FOG _FRESNEL _MULTI_COMPILE_PROPERTIES _RAMP_TRIPLE _SPECULAR _TOON_MAIN_LIGHT_VERTEX
     _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2450
+  m_CustomRenderQueue: 2000
   stringTagMap:
-    RenderType: TransparentCutout
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -89,8 +89,8 @@ Material:
     m_Floats:
     - _AdditionalLights: 1
     - _AdditionalLightsMultiplier: 0.1
-    - _AlphaClip: 1
-    - _Blend: 0
+    - _AlphaClip: 0
+    - _Blend: 3
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -101,7 +101,7 @@ Material:
     - _DstBlend: 0
     - _Emission: 0
     - _EnvironmentLightingEnabled: 1
-    - _EnvironmentLightingMultiplier: 0.5
+    - _EnvironmentLightingMultiplier: 0.3
     - _EnvironmentReflections: 1
     - _Fog: 1
     - _Fresnel: 1
@@ -135,7 +135,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.4745098}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.1764706}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelColor: {r: 25.688938, g: 25.688938, b: 25.688938, a: 1}

@@ -9,12 +9,12 @@ struct appdata
     float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
     float2 uv : TEXCOORD0;
-    
+
     #ifdef _VERTEX_COLOR
     half3 vertexColor : COLOR;
     #endif
-    
-	UNITY_VERTEX_INPUT_INSTANCE_ID
+
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct v2f
@@ -37,7 +37,7 @@ struct v2f
     half3 vertexColor : COLOR;
     #endif
 
-	UNITY_VERTEX_INPUT_INSTANCE_ID
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 #include "./ToonShaderUtils.hlsl"
@@ -45,13 +45,13 @@ struct v2f
 v2f vert(appdata input)
 {
     v2f output;
-	
-	UNITY_SETUP_INSTANCE_ID(input);
+
+    UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
 
     const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
     const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-	const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
     output.uv = apply_tiling_offset(input.uv, basemap_st);
     float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
     float3 position_ws = vertex_position_inputs.positionWS;
@@ -77,8 +77,7 @@ v2f vert(appdata input)
 
 half4 frag(const v2f input) : SV_Target
 {
-	
-	UNITY_SETUP_INSTANCE_ID(input);
+    UNITY_SETUP_INSTANCE_ID(input);
 
     const Light main_light = get_main_light(input);
     const half3 normal_ws = normalize(input.normalWS);
@@ -86,13 +85,19 @@ half4 frag(const v2f input) : SV_Target
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
-	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-	const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
-	const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
-	AlphaDiscard(albedo.a, cutoff);
-	
+    half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    #ifdef _VERTEX_COLOR
+    base_color.xyz *= input.vertexColor;
+    #endif
+    const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
+    const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
+    AlphaDiscard(albedo.a, cutoff);
+
     half3 sample_color = albedo.xyz;
-	
+    #if _ALPHAPREMULTIPLY_ON
+	sample_color *= albedo.a;
+    #endif
+
 
     half additional_lights_attenuation = 0;
 
@@ -122,15 +127,13 @@ half4 frag(const v2f input) : SV_Target
     const half3 ramp_color = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, ramp_uv).xyz;
     half3 fragment_color = sample_color * ramp_color;
     #else
-	const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
+    const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
     const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
     half3 fragment_color = lerp(shadow_color, sample_color, brightness);
     #endif
 
-	#ifdef _VERTEX_COLOR
-	fragment_color *= input.vertexColor;
-	#endif
-	fragment_color *= main_light.color;
+
+    fragment_color *= main_light.color;
 
 
     #ifdef _SPECULAR
@@ -139,22 +142,23 @@ half4 frag(const v2f input) : SV_Target
     #ifdef _FRESNEL
     fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, brightness);
     #endif
-    #ifdef _EMISSION
-    fragment_color += _EmissionColor;
-    #endif
 
-	#ifdef _ENVIRONMENT_LIGHTING_ENABLED
+    #ifdef _ENVIRONMENT_LIGHTING_ENABLED
 	const half environment_lighting_multiplier = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EnvironmentLightingMultiplier);
 	fragment_color += environment_lighting_multiplier * SampleSH(normal_ws);
-	#endif
+    #endif
+
+    #ifdef _EMISSION
+	fragment_color += _EmissionColor;
+    #endif
 
     #ifdef _FOG
     const float fog_factor = input.positionWSAndFogFactor.w;
     fragment_color = MixFog(fragment_color, fog_factor);
     #endif
 
-	const half surface = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Surface);
-	const half alpha = 1.0 * (1 - surface) + albedo.a * surface; 
+    const half surface = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Surface);
+    const half alpha = 1.0 * (1 - surface) + albedo.a * surface;
     return half4(max(fragment_color, 0), alpha);
 }
 
