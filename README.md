@@ -63,6 +63,9 @@ Add the following line to `Packages/manifest.json`:
 "com.deltation.toon-shader": "https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader",
 ```
 
+## Documentation
+[Forest Demo Breakdown](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown)
+
 ## Performance
 Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
