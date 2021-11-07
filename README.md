@@ -5,30 +5,51 @@ A toon shader compatible with the Universal Rendering Pipeline.
 ![Main](Showcase/main.png)
 
 ## Toon Shader Capabilities
+
+### Surface
+
+- Opaque/Transparent with blending modes:
+  - Alpha/Premultiply/Additive/Multiply
+- Alpha Clipping
+- Culling
+  - Back/Front/Off
+
+### Color
+
 - 2 or 3-step ramp with configurable thresholds and smoothness
 - Ramp textures
 - Main light
-- Additional lights (per-vertex or per-pixel, depending on URP settings)
+- Additional lights 
+  - per-vertex or per-pixel, depending on URP settings
+  - optional specular highlights
 - Casting and receiving shadows
 - Configurable shadow color
 - Emission
 - Rim lighting (Fresnel effect) and specular highlights with HDR color support (e.g. for bloom)
 - Fog
 - SSAO
-- Ambient Lighting
-- SRP Batcher compatibility
-- GPU Instancing
+- Environment Lighting
 - Vertex Color
 
+### Performance
+
+- SRP Batcher compatibility
+- GPU Instancing
+
 ## Toon Shader (Lite) Capabilities
+
+### Color
+
 - 2-step ramp with configurable threshold and smoothness
 - Main light (per-vertex or per-pixel)
 - Casting shadows
 - Configurable shadow color
 - Fog
+- Vertex Color
+
+### Performance
 - SRP Batcher compatibility
 - GPU Instancing
-- Vertex Color
 
 ## Installation
 ### Option 1
@@ -83,4 +104,8 @@ Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW
 ```
 
 ## Used Assets
+- [UnityFx.Outline](https://github.com/Arvtesh/UnityFx.Outline)
 - [Animated Mech Pack](https://quaternius.com/packs/animatedmech.html) by Quaternius
+- [Environment Pack: Free Forest Sample](https://assetstore.unity.com/packages/3d/vegetation/environment-pack-free-forest-sample-168396) by Supercyan
+- [Character Pack: Free Sample](https://assetstore.unity.com/packages/3d/characters/humanoids/character-pack-free-sample-79870) by Supercyan
+- [The Free Medieval and War Props](https://asststore.unity.com/packages/3d/props/the-free-medieval-and-war-props-174433) by Inguz Media
