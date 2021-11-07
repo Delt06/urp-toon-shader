@@ -55,7 +55,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "10.5.1",
+      "version": "10.3.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -75,19 +75,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
-      "version": "4.3.2",
+      "version": "4.3.1",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "10.5.1",
+      "version": "10.3.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "10.5.1",
-        "com.unity.searcher": "4.3.2"
+        "com.unity.render-pipelines.core": "10.3.2",
+        "com.unity.searcher": "4.3.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -131,6 +131,23 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.unityfx.outline": {
+      "version": "0.8.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
+    },
+    "com.unityfx.outline.urp": {
+      "version": "0.4.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unityfx.outline": "0.8.4",
+        "com.unity.render-pipelines.universal": "7.0.0"
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

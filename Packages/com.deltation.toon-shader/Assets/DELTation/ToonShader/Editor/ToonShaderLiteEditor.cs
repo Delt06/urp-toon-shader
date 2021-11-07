@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace DELTation.ToonShader.Editor
 {
+	// ReSharper disable once UnusedType.Global
 	public class ToonShaderLiteEditor : ToonShaderEditorBase
 	{
 		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,

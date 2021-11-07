@@ -5,27 +5,27 @@
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
 
 UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
-float4 _BaseMap_ST;
-half4 _ShadowTint;
-half4 _BaseColor;
+UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
+UNITY_DEFINE_INSTANCED_PROP(half4, _ShadowTint)
+UNITY_DEFINE_INSTANCED_PROP(half4, _BaseColor)
 
-half _Ramp0;
-half _Ramp1;
-half _RampSmoothness;
+UNITY_DEFINE_INSTANCED_PROP(half, _Ramp0)
+UNITY_DEFINE_INSTANCED_PROP(half, _Ramp1)
+UNITY_DEFINE_INSTANCED_PROP(half, _RampSmoothness)
 
-half3 _EmissionColor;
+UNITY_DEFINE_INSTANCED_PROP(half3, _EmissionColor)
 
-half4 _FresnelColor;
-half _FresnelSmoothness;
-half _FresnelThickness;
+UNITY_DEFINE_INSTANCED_PROP(half4, _FresnelColor)
+UNITY_DEFINE_INSTANCED_PROP(half, _FresnelSmoothness)
+UNITY_DEFINE_INSTANCED_PROP(half, _FresnelThickness)
 
-half4 _SpecularColor;
-half _SpecularSmoothness;
-half _SpecularThreshold;
-half _SpecularExponent;
+UNITY_DEFINE_INSTANCED_PROP(half4, _SpecularColor)
+UNITY_DEFINE_INSTANCED_PROP(half, _SpecularSmoothness)
+UNITY_DEFINE_INSTANCED_PROP(half, _SpecularThreshold)
+UNITY_DEFINE_INSTANCED_PROP(half, _SpecularExponent)
 
-half _AdditionalLightsMultiplier;
-half _EnvironmentLightingMultiplier;
+UNITY_DEFINE_INSTANCED_PROP(half, _Surface)
+UNITY_DEFINE_INSTANCED_PROP(half, _Cutoff)
 
 UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 

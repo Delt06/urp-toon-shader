@@ -1,18 +1,20 @@
 ﻿#ifndef TOON_SHADER_FORWARD_PASS_INCLUDED
 #define TOON_SHADER_FORWARD_PASS_INCLUDED
 
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl"
+
 struct appdata
 {
     float4 positionOS : POSITION;
     float3 normalOS : NORMAL;
     float4 tangentOS : TANGENT;
     float2 uv : TEXCOORD0;
-    
+
     #ifdef _VERTEX_COLOR
     half3 vertexColor : COLOR;
     #endif
-    
-	UNITY_VERTEX_INPUT_INSTANCE_ID
+
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct v2f
@@ -28,14 +30,19 @@ struct v2f
     #endif
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
-    half4 additional_lights_vertex : TEXCOORD4; // a is attenuation
+    half3 additional_lights_diffuse_color : TEXCOORD4;
+
+    #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
+    half3 additional_lights_specular_color : TEXCOORD5;
+    #endif
+
     #endif
 
     #ifdef _VERTEX_COLOR
     half3 vertexColor : COLOR;
     #endif
 
-	UNITY_VERTEX_INPUT_INSTANCE_ID
+    UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 #include "./ToonShaderUtils.hlsl"
@@ -43,13 +50,13 @@ struct v2f
 v2f vert(appdata input)
 {
     v2f output;
-	
-	UNITY_SETUP_INSTANCE_ID(input);
+
+    UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
 
     const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
     const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-	const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
     output.uv = apply_tiling_offset(input.uv, basemap_st);
     float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
     float3 position_ws = vertex_position_inputs.positionWS;
@@ -63,7 +70,14 @@ v2f vert(appdata input)
     output.positionCS = vertex_position_inputs.positionCS;
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
-    output.additional_lights_vertex = get_additional_lights_color_attenuation(position_ws);
+    half3 additional_lights_diffuse_color = 0, additional_lights_specular_color = 0;
+    additional_lights(output.positionCS, position_ws, output.normalWS, additional_lights_diffuse_color, additional_lights_specular_color);
+    output.additional_lights_diffuse_color = additional_lights_diffuse_color;
+
+    #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
+    output.additional_lights_specular_color = additional_lights_specular_color;
+    #endif
+
     #endif
 
     #ifdef _VERTEX_COLOR
@@ -75,7 +89,7 @@ v2f vert(appdata input)
 
 half4 frag(const v2f input) : SV_Target
 {
-	UNITY_SETUP_INSTANCE_ID(input);
+    UNITY_SETUP_INSTANCE_ID(input);
 
     const Light main_light = get_main_light(input);
     const half3 normal_ws = normalize(input.normalWS);
@@ -83,70 +97,82 @@ half4 frag(const v2f input) : SV_Target
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
-	const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).xyz;
-	
+    half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    #ifdef _VERTEX_COLOR
+    base_color.xyz *= input.vertexColor;
+    #endif
+    half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
+    const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
+    AlphaDiscard(albedo.a, cutoff);
 
-    half additional_lights_attenuation = 0;
-
-    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
-    half4 additional_lights_color_attenuation = 0;
+    half3 sample_color = albedo.xyz;
+    #if _ALPHAPREMULTIPLY_ON
+	albedo.xyz *= albedo.a;
     #endif
 
-    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
-    additional_lights_color_attenuation = input.additional_lights_vertex;
-    #elif defined(TOON_ADDITIONAL_LIGHTS)
-    additional_lights_color_attenuation = get_additional_lights_color_attenuation(position_ws);
+
+    const half4 position_cs = input.positionCS;
+
+    #ifdef _RAMP_MAP
+    const half4 shadow_tint = 0;
+    #else
+    const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
     #endif
 
-    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
-    half3 additional_lights_color = additional_lights_color_attenuation.xyz;
-	const float additional_lights_multiplier = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _AdditionalLightsMultiplier);
-    additional_lights_attenuation = additional_lights_color_attenuation.a * additional_lights_multiplier;
-    additional_lights_color *= get_ramp(additional_lights_attenuation);
-    sample_color += additional_lights_color;
-    #endif
 
     const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
-    const half brightness = get_brightness(input.positionCS, normal_ws, light_direction_ws,
-                                           main_light_attenuation);
-    #ifdef _RAMP_MAP
-    const half2 ramp_uv = half2(brightness, 0.5);
-    const half3 ramp_color = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, ramp_uv).xyz;
-    half3 fragment_color = sample_color * ramp_color;
-    #else
-	const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
-    const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
-    half3 fragment_color = lerp(shadow_color, sample_color, brightness);
+    // ReSharper disable once CppEntityAssignedButNoRead
+    half main_light_brightness;
+    // ReSharper disable once CppLocalVariableMayBeConst
+    half3 diffuse_color = get_ramp_color(position_cs, normal_ws, light_direction_ws, main_light.color,
+                                         main_light_attenuation, shadow_tint, main_light_brightness);
+    // ReSharper disable once CppInitializedValueIsAlwaysRewritten
+    half3 specular_color = 0;
+    #ifdef _SPECULAR
+    specular_color = get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
     #endif
 
-	#ifdef _VERTEX_COLOR
-	fragment_color *= input.vertexColor;
-	#endif
-	fragment_color *= main_light.color;
+    #if defined(TOON_ADDITIONAL_LIGHTS)
+    additional_lights(position_cs, position_ws, normal_ws, diffuse_color, specular_color);
+    #elif defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
+    diffuse_color += input.additional_lights_diffuse_color;
+    #endif
 
+    half3 fragment_color = albedo.xyz * diffuse_color;
 
     #ifdef _SPECULAR
-    fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
-    #endif
-    #ifdef _FRESNEL
-    fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, brightness);
-    #endif
-    #ifdef _EMISSION
-    fragment_color += _EmissionColor;
+    fragment_color += specular_color;
     #endif
 
-	#ifdef _ENVIRONMENT_LIGHTING_ENABLED
-	const half environment_lighting_multiplier = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EnvironmentLightingMultiplier);
-	fragment_color += environment_lighting_multiplier * SampleSH(normal_ws);
-	#endif
+    #ifdef _FRESNEL
+    fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, main_light_brightness);
+    #endif
+
+    #ifdef _ENVIRONMENT_LIGHTING_ENABLED
+    
+    half3 gi = albedo.xyz * SampleSH(normal_ws);
+
+    #if defined(_SCREEN_SPACE_OCCLUSION)
+    const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(position_cs);
+    const AmbientOcclusionFactor ao_factor = GetScreenSpaceAmbientOcclusion(normalized_screen_space_uv);
+    gi *= ao_factor.indirectAmbientOcclusion;
+    #endif
+    
+	fragment_color += gi;
+    #endif
+
+    #ifdef _EMISSION
+	fragment_color += UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EmissionColor);
+    #endif
 
     #ifdef _FOG
     const float fog_factor = input.positionWSAndFogFactor.w;
     fragment_color = MixFog(fragment_color, fog_factor);
     #endif
 
-    return half4(max(fragment_color, 0), 1);
+    const half surface = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Surface);
+    const half alpha = 1.0 * (1 - surface) + albedo.a * surface;
+    return half4(max(fragment_color, 0), alpha);
 }
 
 #endif
