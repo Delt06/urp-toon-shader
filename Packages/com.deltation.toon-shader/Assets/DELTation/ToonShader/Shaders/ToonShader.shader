@@ -33,6 +33,7 @@
         
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
+        [Toggle(_ADDITIONAL_LIGHTS_SPECULAR)] _AdditionalLightsSpecular ("Additonal Lights Specular", Float) = 0
         [Toggle(_ENVIRONMENT_LIGHTING_ENABLED)] _EnvironmentLightingEnabled ("Environment Lighting", Float) = 1
         [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
         
@@ -75,7 +76,9 @@
             #pragma shader_feature_local _FOG
             #pragma shader_feature_local _VERTEX_COLOR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED
-            #pragma shader_feature_local_fragment _SPECULAR
+            #pragma shader_feature_local _SPECULAR
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
+            
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _ENVIRONMENT_LIGHTING_ENABLED
@@ -105,6 +108,10 @@
 
             #if defined(_ADDITIONAL_LIGHTS_VERTEX) && defined(_ADDITIONAL_LIGHTS_ENABLED)
             #define TOON_ADDITIONAL_LIGHTS_VERTEX
+            #endif
+
+            #if defined(_ADDITIONAL_LIGHTS_SPECULAR) && defined(_SPECULAR)
+            #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
             
             #include "./ToonShaderInput.hlsl"

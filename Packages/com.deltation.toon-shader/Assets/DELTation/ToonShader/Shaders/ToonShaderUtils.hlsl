@@ -159,9 +159,10 @@ inline half3 get_ramp_color(const half4 position_cs, const half3 normal_ws, cons
 }
 
 inline void additional_lights(const half4 position_cs, const float3 position_ws, const half3 normal_ws,
-                              inout half3 diffuse_color)
+                              inout half3 diffuse_color, inout half3 specular_color)
 {
     const uint pixel_light_count = GetAdditionalLightsCount();
+    const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
     for (uint light_index = 0u; light_index < pixel_light_count; ++light_index)
     {
@@ -176,6 +177,10 @@ inline void additional_lights(const half4 position_cs, const float3 position_ws,
         ramp_color *= brightness;
         #endif
         diffuse_color += ramp_color;
+
+        #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
+        specular_color += get_specular_color(light.color, view_direction_ws, normal_ws, light.direction);
+        #endif
     }
 }
 

@@ -43,7 +43,7 @@ namespace DELTation.ToonShader.Editor
 			Label("Specular");
 			DrawSpecularProperties(materialEditor, properties, material);
 			MiscLabel();
-			DrawMiscProperties(materialEditor, properties);
+			DrawMiscProperties(materialEditor, properties, material);
 		}
 
 		private static void DrawSurfaceProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -284,11 +284,16 @@ namespace DELTation.ToonShader.Editor
 			}
 		}
 
-		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
 		{
 			DrawFogProperty(materialEditor, properties);
 
 			DrawProperty(materialEditor, properties, "_AdditionalLights");
+			if (material.IsKeywordEnabled("_ADDITIONAL_LIGHTS_ENABLED") &&
+			    material.IsKeywordEnabled("_SPECULAR"))
+				DrawProperty(materialEditor, properties, "_AdditionalLightsSpecular");
+
 			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
 
 

@@ -30,7 +30,12 @@ struct v2f
     #endif
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
-    half3 additional_lights_diffuse_color : TEXCOORD4; // a is attenuation
+    half3 additional_lights_diffuse_color : TEXCOORD4;
+
+    #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
+    half3 additional_lights_specular_color : TEXCOORD5;
+    #endif
+
     #endif
 
     #ifdef _VERTEX_COLOR
@@ -65,9 +70,14 @@ v2f vert(appdata input)
     output.positionCS = vertex_position_inputs.positionCS;
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
-    half3 additional_lights_diffuse_color;
-    additional_lights(output.positionCS, position_ws, output.normalWS, additional_lights_diffuse_color);
+    half3 additional_lights_diffuse_color = 0, additional_lights_specular_color = 0;
+    additional_lights(output.positionCS, position_ws, output.normalWS, additional_lights_diffuse_color, additional_lights_specular_color);
     output.additional_lights_diffuse_color = additional_lights_diffuse_color;
+
+    #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
+    output.additional_lights_specular_color = additional_lights_specular_color;
+    #endif
+
     #endif
 
     #ifdef _VERTEX_COLOR
@@ -116,9 +126,14 @@ half4 frag(const v2f input) : SV_Target
     // ReSharper disable once CppLocalVariableMayBeConst
     half3 diffuse_color = get_ramp_color(position_cs, normal_ws, light_direction_ws, main_light.color,
                                          main_light_attenuation, shadow_tint, main_light_brightness);
+    // ReSharper disable once CppInitializedValueIsAlwaysRewritten
+    half3 specular_color = 0;
+    #ifdef _SPECULAR
+    specular_color = get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
+    #endif
 
     #if defined(TOON_ADDITIONAL_LIGHTS)
-    additional_lights(position_cs, position_ws, normal_ws, diffuse_color);
+    additional_lights(position_cs, position_ws, normal_ws, diffuse_color, specular_color);
     #elif defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
     diffuse_color += input.additional_lights_diffuse_color;
     #endif
@@ -126,8 +141,9 @@ half4 frag(const v2f input) : SV_Target
     half3 fragment_color = albedo.xyz * diffuse_color;
 
     #ifdef _SPECULAR
-    fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);;
+    fragment_color += specular_color;
     #endif
+
     #ifdef _FRESNEL
     fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, main_light_brightness);
     #endif

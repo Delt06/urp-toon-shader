@@ -94,6 +94,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AdditionalLights: 1
+    - _AdditionalLightsSpecular: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
