@@ -1316,6 +1316,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bonfire_A_Small_Fire
       objectReference: {fileID: 0}
+    - target: {fileID: 5302000360476597912, guid: 5120c0b529bdd489e955a6f8f3d28426,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5302000360863237202, guid: 5120c0b529bdd489e955a6f8f3d28426,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5302000360957237576, guid: 5120c0b529bdd489e955a6f8f3d28426,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5911011194152670379, guid: 5120c0b529bdd489e955a6f8f3d28426,
         type: 3}
       propertyPath: m_LocalScale.x
