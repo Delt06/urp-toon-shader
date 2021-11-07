@@ -133,7 +133,7 @@ inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light
     #if defined(_SCREEN_SPACE_OCCLUSION)
     const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(position_cs);
     const AmbientOcclusionFactor ao_factor = GetScreenSpaceAmbientOcclusion(normalized_screen_space_uv);
-    brightness = min(brightness, brightness * ao_factor.directAmbientOcclusion * ao_factor.indirectAmbientOcclusion);
+    brightness = min(brightness, brightness * ao_factor.directAmbientOcclusion);
     #endif
 
     return get_ramp(brightness);

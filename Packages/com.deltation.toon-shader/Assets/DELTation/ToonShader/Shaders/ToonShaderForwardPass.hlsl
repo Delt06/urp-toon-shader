@@ -133,7 +133,16 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     #ifdef _ENVIRONMENT_LIGHTING_ENABLED
-	fragment_color += albedo.xyz * SampleSH(normal_ws);
+    
+    half3 gi = albedo.xyz * SampleSH(normal_ws);
+
+    #if defined(_SCREEN_SPACE_OCCLUSION)
+    const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(position_cs);
+    const AmbientOcclusionFactor ao_factor = GetScreenSpaceAmbientOcclusion(normalized_screen_space_uv);
+    gi *= ao_factor.indirectAmbientOcclusion;
+    #endif
+    
+	fragment_color += gi;
     #endif
 
     #ifdef _EMISSION
