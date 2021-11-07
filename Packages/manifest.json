@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "com.unityfx.outline": "0.8.4",
+    "com.unityfx.outline.urp": "0.4.0",
     "com.unity.collab-proxy": "1.3.9",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.ide.visualstudio": "2.0.7",
@@ -40,5 +42,14 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "Arvtesh",
+      "url": "https://registry.npmjs.org/",
+      "scopes": [
+        "com.unityfx"
+      ]
+    }
+  ]
 }
