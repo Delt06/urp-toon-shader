@@ -172,11 +172,11 @@ inline void additional_lights(const half4 position_cs, const float3 position_ws,
         half3 ramp_color = light.color;
 
         #ifdef _RAMP_MAP
-        ramp_color *= SAMPLE_RAMP_MAP(brightness) * step(0.001, attenuation);
+        ramp_color *= SAMPLE_RAMP_MAP(brightness);
         #else
         ramp_color *= brightness;
         #endif
-        diffuse_color += ramp_color;
+        diffuse_color += ramp_color * step(0.001, attenuation);
 
         #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
         specular_color += get_specular_color(light.color, view_direction_ws, normal_ws, light.direction);
