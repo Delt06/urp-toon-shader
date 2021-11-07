@@ -111,7 +111,7 @@ inline half get_ramp(half value)
     return (value + 1) * 0.5;
     #elif defined(_RAMP_TRIPLE)
     const half ramp0 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp0);
-    const half ramp1 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp0);
+    const half ramp1 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp1);
     const half ramp_smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _RampSmoothness);
     const half ramp0_value = smoothstep(ramp0, ramp0 + ramp_smoothness, value);
     const half ramp1_value = smoothstep(ramp1, ramp1 + ramp_smoothness, value);
@@ -122,6 +122,7 @@ inline half get_ramp(half value)
     return smoothstep(ramp0, ramp0 + ramp_smoothness, value);
     #endif
 }
+
 
 inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light_direction, half main_light_attenuation)
 {
@@ -136,6 +137,46 @@ inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light
     #endif
 
     return get_ramp(brightness);
+}
+
+#define SAMPLE_RAMP_MAP(brightness) SAMPLE_TEXTURE2D_LOD(_RampMap, sampler_RampMap, half2(brightness, 0.5), 0).rgb
+
+inline half3 get_ramp_color(const half4 position_cs, const half3 normal_ws, const half3 light_direction,
+                            const half3 light_color, const half light_attenuation, const half4 shadow_color_opacity,
+                            out half brightness)
+{
+    brightness = get_brightness(position_cs, normal_ws, light_direction, light_attenuation);
+    half3 ramp_color = light_color;
+
+    #ifdef _RAMP_MAP
+    ramp_color *= SAMPLE_RAMP_MAP(brightness);
+    #else
+    const half3 shadow_color = lerp(ramp_color, shadow_color_opacity.rgb, shadow_color_opacity.a);
+    ramp_color = lerp(shadow_color, ramp_color, brightness);
+    #endif
+
+    return ramp_color;
+}
+
+inline void additional_lights(const half4 position_cs, const float3 position_ws, const half3 normal_ws,
+                              inout half3 diffuse_color)
+{
+    const uint pixel_light_count = GetAdditionalLightsCount();
+
+    for (uint light_index = 0u; light_index < pixel_light_count; ++light_index)
+    {
+        const Light light = GetAdditionalLight(light_index, position_ws);
+        const half attenuation = light.distanceAttenuation * light.shadowAttenuation;
+        const half brightness = get_brightness(position_cs, normal_ws, light.direction, attenuation);
+        half3 ramp_color = light.color;
+
+        #ifdef _RAMP_MAP
+        ramp_color *= SAMPLE_RAMP_MAP(brightness) * step(0.001, attenuation);
+        #else
+        ramp_color *= brightness;
+        #endif
+        diffuse_color += ramp_color;
+    }
 }
 
 #endif

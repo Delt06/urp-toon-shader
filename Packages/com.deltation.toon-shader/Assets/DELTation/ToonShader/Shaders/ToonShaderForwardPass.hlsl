@@ -30,7 +30,7 @@ struct v2f
     #endif
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
-    half4 additional_lights_vertex : TEXCOORD4; // a is attenuation
+    half3 additional_lights_diffuse_color : TEXCOORD4; // a is attenuation
     #endif
 
     #ifdef _VERTEX_COLOR
@@ -65,7 +65,9 @@ v2f vert(appdata input)
     output.positionCS = vertex_position_inputs.positionCS;
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
-    output.additional_lights_vertex = get_additional_lights_color_attenuation(position_ws);
+    half3 additional_lights_diffuse_color;
+    additional_lights(output.positionCS, position_ws, output.normalWS, additional_lights_diffuse_color);
+    output.additional_lights_diffuse_color = additional_lights_diffuse_color;
     #endif
 
     #ifdef _VERTEX_COLOR
@@ -95,53 +97,39 @@ half4 frag(const v2f input) : SV_Target
 
     half3 sample_color = albedo.xyz;
     #if _ALPHAPREMULTIPLY_ON
-	sample_color *= albedo.a;
+	albedo.xyz *= albedo.a;
     #endif
 
 
-    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
-    half additional_lights_attenuation = 0;
-    #endif
+    const half4 position_cs = input.positionCS;
 
-    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
-    half4 additional_lights_color_attenuation = 0;
-    #endif
-
-    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
-    additional_lights_color_attenuation = input.additional_lights_vertex;
-    #elif defined(TOON_ADDITIONAL_LIGHTS)
-    additional_lights_color_attenuation = get_additional_lights_color_attenuation(position_ws);
-    #endif
-
-    #if defined(TOON_ADDITIONAL_LIGHTS_VERTEX) || defined(TOON_ADDITIONAL_LIGHTS)
-    half3 additional_lights_color = additional_lights_color_attenuation.xyz;
-    additional_lights_attenuation = additional_lights_color_attenuation.a;
-    additional_lights_color *= get_ramp(additional_lights_attenuation);
-    sample_color += albedo.xyz * additional_lights_color;
-    #endif
-
-    const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
-    const half brightness = get_brightness(input.positionCS, normal_ws, light_direction_ws,
-                                           main_light_attenuation);
     #ifdef _RAMP_MAP
-    const half2 ramp_uv = half2(brightness, 0.5);
-    const half3 ramp_color = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, ramp_uv).xyz;
-    half3 fragment_color = sample_color * ramp_color;
+    const half4 shadow_tint = 0;
     #else
     const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
-    const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
-    half3 fragment_color = lerp(shadow_color, sample_color, brightness);
     #endif
 
 
-    fragment_color *= main_light.color;
+    const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
+    // ReSharper disable once CppEntityAssignedButNoRead
+    half main_light_brightness;
+    // ReSharper disable once CppLocalVariableMayBeConst
+    half3 diffuse_color = get_ramp_color(position_cs, normal_ws, light_direction_ws, main_light.color,
+                                         main_light_attenuation, shadow_tint, main_light_brightness);
 
+    #if defined(TOON_ADDITIONAL_LIGHTS)
+    additional_lights(position_cs, position_ws, normal_ws, diffuse_color);
+    #elif defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
+    diffuse_color += input.additional_lights_diffuse_color;
+    #endif
+
+    half3 fragment_color = albedo.xyz * diffuse_color;
 
     #ifdef _SPECULAR
-    fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
+    fragment_color += get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);;
     #endif
     #ifdef _FRESNEL
-    fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, brightness);
+    fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, main_light_brightness);
     #endif
 
     #ifdef _ENVIRONMENT_LIGHTING_ENABLED
@@ -149,7 +137,7 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     #ifdef _EMISSION
-	fragment_color += _EmissionColor;
+	fragment_color += UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EmissionColor);
     #endif
 
     #ifdef _FOG
