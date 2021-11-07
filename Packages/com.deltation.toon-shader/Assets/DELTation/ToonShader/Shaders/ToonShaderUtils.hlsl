@@ -81,8 +81,9 @@ inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half
     specular = pow(specular, specular_exponent);
     const half4 specular_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularColor);
     const half specular_threshold = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularThreshold);
-    const half specular_smothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularSmoothness);
-    const half3 ramp = get_simple_ramp(light_color, specular_color.a, specular_threshold, specular_smothness, specular);
+    const half specular_smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularSmoothness);
+    const half3 ramp = get_simple_ramp(light_color, specular_color.a, specular_threshold, specular_smoothness,
+                                       specular);
     return specular_color.xyz * ramp;
     #endif
 }
