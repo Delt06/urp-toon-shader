@@ -101,7 +101,7 @@ half4 frag(const v2f input) : SV_Target
     #ifdef _VERTEX_COLOR
     base_color.xyz *= input.vertexColor;
     #endif
-    const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
+    half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
     const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
     AlphaDiscard(albedo.a, cutoff);
 
