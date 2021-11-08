@@ -18,6 +18,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 
 - 2 or 3-step ramp with configurable thresholds and smoothness
 - Ramp textures
+- Normal Maps
 - Main light
 - Additional lights 
   - per-vertex or per-pixel, depending on URP settings
@@ -112,3 +113,4 @@ Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW
 - [Environment Pack: Free Forest Sample](https://assetstore.unity.com/packages/3d/vegetation/environment-pack-free-forest-sample-168396) by Supercyan
 - [Character Pack: Free Sample](https://assetstore.unity.com/packages/3d/characters/humanoids/character-pack-free-sample-79870) by Supercyan
 - [The Free Medieval and War Props](https://asststore.unity.com/packages/3d/props/the-free-medieval-and-war-props-174433) by Inguz Media
+- [Stone](https://assetstore.unity.com/packages/3d/environments/landscapes/stone-62333) by Vsify
