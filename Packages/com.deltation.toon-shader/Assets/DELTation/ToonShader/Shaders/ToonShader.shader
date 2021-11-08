@@ -17,6 +17,9 @@
         _Ramp1 ("Ramp Threshold 1", Range(-1, 1)) = 0.5
         _RampSmoothness ("Ramp Smoothness", Range(0, 2)) = 0.005
         
+        [NoScaleOffset]
+        _BumpMap("Normal Map", 2D) = "bump" {}
+        
         [Toggle(_EMISSION)] _Emission ("Emission", Float) = 0
         [HDR] _EmissionColor ("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
         
@@ -73,6 +76,7 @@
             #pragma vertex vert
             #pragma fragment frag
 
+            #pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local _FOG
             #pragma shader_feature_local _VERTEX_COLOR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED

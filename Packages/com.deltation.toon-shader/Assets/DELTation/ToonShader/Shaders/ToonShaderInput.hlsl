@@ -33,5 +33,7 @@ TEXTURE2D(_BaseMap);
 SAMPLER(sampler_BaseMap);
 TEXTURE2D(_RampMap);
 SAMPLER(sampler_RampMap);
+TEXTURE2D(_BumpMap);
+SAMPLER(sampler_BumpMap);
 
 #endif

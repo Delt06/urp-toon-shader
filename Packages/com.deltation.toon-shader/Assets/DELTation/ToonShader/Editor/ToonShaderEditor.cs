@@ -36,6 +36,8 @@ namespace DELTation.ToonShader.Editor
 			DrawColorProperties(materialEditor, properties);
 			RampLabel();
 			DrawRampProperties(materialEditor, properties, material);
+			Label("Normal Map");
+			DrawNormalMapProperties(materialEditor, properties, material);
 			Label("Emission");
 			DrawEmissionProperties(materialEditor, properties, material);
 			Label("Rim");
@@ -44,6 +46,24 @@ namespace DELTation.ToonShader.Editor
 			DrawSpecularProperties(materialEditor, properties, material);
 			MiscLabel();
 			DrawMiscProperties(materialEditor, properties, material);
+		}
+
+		private static void DrawNormalMapProperties(MaterialEditor materialEditor, MaterialProperty[] properties, Material material)
+		{
+			EditorGUI.BeginChangeCheck();
+			const string bumpMapProperty = "_BumpMap";
+			DrawProperty(materialEditor, properties, bumpMapProperty);
+
+			if (EditorGUI.EndChangeCheck())
+			{
+				var property = FindProperty(bumpMapProperty, properties);
+				const string normalMapKeyword = "_NORMALMAP";
+				if (property.textureValue == null)
+					material.DisableKeyword(normalMapKeyword);
+				else
+					material.EnableKeyword(normalMapKeyword);
+				materialEditor.PropertiesChanged();
+			}
 		}
 
 		private static void DrawSurfaceProperties(MaterialEditor materialEditor, MaterialProperty[] properties)

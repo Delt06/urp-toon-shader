@@ -25,6 +25,7 @@ struct v2f
     half3 normalWS : TEXCOORD2;
     float4 positionCS : SV_POSITION;
 
+
     #ifdef _MAIN_LIGHT_SHADOWS
     float4 shadowCoord : TEXCOORD3;
     #endif
@@ -36,6 +37,11 @@ struct v2f
     half3 additional_lights_specular_color : TEXCOORD5;
     #endif
 
+    #endif
+
+    #ifdef _NORMALMAP
+    half3 tangentWS : TEXCOORD6;
+    half3 bitangentWS : TEXCOORD7;
     #endif
 
     #ifdef _VERTEX_COLOR
@@ -63,6 +69,12 @@ v2f vert(appdata input)
     output.positionWSAndFogFactor = float4(position_ws, fog_factor);
     output.normalWS = vertex_normal_inputs.normalWS;
 
+    #if _NORMALMAP
+    output.tangentWS = vertex_normal_inputs.tangentWS;
+    output.bitangentWS = vertex_normal_inputs.bitangentWS;
+    #endif
+
+
     #ifdef _MAIN_LIGHT_SHADOWS
     output.shadowCoord = GetShadowCoord(vertex_position_inputs);
     #endif
@@ -87,12 +99,32 @@ v2f vert(appdata input)
     return output;
 }
 
+half3 sample_normal(float2 uv, TEXTURE2D_PARAM(bumpMap, sampler_bumpMap), half scale = 1.0h)
+{
+    #ifdef _NORMALMAP
+    const half4 n = SAMPLE_TEXTURE2D(bumpMap, sampler_bumpMap, uv);
+    return UnpackNormal(n);
+    #else
+    return half3(0.0h, 0.0h, 1.0h);
+    #endif
+}
+
 half4 frag(const v2f input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
 
     const Light main_light = get_main_light(input);
-    const half3 normal_ws = normalize(input.normalWS);
+
+    #if _NORMALMAP
+    const half3 normal_ts = sample_normal(input.uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap));
+    half3 normal_ws = TransformTangentToWorld(normal_ts,
+                                              half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz)
+    );
+    #else
+    half3 normal_ws = input.normalWS;
+    #endif
+
+    normal_ws = NormalizeNormalPerPixel(normal_ws);
     const half3 light_direction_ws = normalize(main_light.direction);
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
