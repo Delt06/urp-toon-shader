@@ -64,19 +64,34 @@ inline half3 get_simple_ramp(half3 color, half opacity, half thickness, half smo
     return color * smoothstep(1 - thickness, 1 - thickness + smoothness, value);
 }
 
+float get_aniso_specular(const float3 view_direction_ws, const float3 tangent_ws, const half3 light_direction_ws)
+{
+    const float l_dot_t = dot(light_direction_ws, tangent_ws);
+    const float v_dot_t = dot(view_direction_ws, tangent_ws);
+    const half specular = saturate((sqrt(1 - l_dot_t * l_dot_t) * sqrt(1 - v_dot_t * v_dot_t) -
+        l_dot_t * v_dot_t));
+    return max(0, specular);
+}
+
 inline half get_specular(half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws)
 {
     const half3 half_vector = normalize(view_direction_ws + light_direction_ws);
     return saturate(dot(normal_ws, half_vector));
 }
 
-inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws)
+inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half3 tangent_ws,
+                                half3 light_direction_ws)
 {
     #ifndef _SPECULAR
     return 0;
 
     #else
+    #if _ANISO_SPECULAR
+    half specular = get_aniso_specular(view_direction_ws, cross(normal_ws, tangent_ws), light_direction_ws);
+    #else
     half specular = get_specular(view_direction_ws, normal_ws, light_direction_ws);
+    #endif
+    
     const half specular_exponent = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularExponent);
     specular = pow(specular, specular_exponent);
     const half4 specular_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularColor);
@@ -160,10 +175,12 @@ inline half3 get_ramp_color(const half4 position_cs, const half3 normal_ws, cons
 }
 
 inline void additional_lights(const half4 position_cs, const float3 position_ws, const half3 normal_ws,
-                              inout half3 diffuse_color, inout half3 specular_color)
+                              const half3 tangent_ws, inout half3 diffuse_color, inout half3 specular_color)
 {
     const uint pixel_light_count = GetAdditionalLightsCount();
+    #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
+    #endif
 
     for (uint light_index = 0u; light_index < pixel_light_count; ++light_index)
     {
@@ -181,7 +198,7 @@ inline void additional_lights(const half4 position_cs, const float3 position_ws,
         diffuse_color += ramp_color * attenuation_step;
 
         #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
-        specular_color += get_specular_color(light.color, view_direction_ws, normal_ws, light.direction) *
+        specular_color += get_specular_color(light.color, view_direction_ws, normal_ws, tangent_ws, light.direction) *
             attenuation_step;
         #endif
     }

@@ -3,6 +3,8 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl"
 
+#define REQUIRE_TANGENT_INTERPOLATOR defined(_NORMALMAP) || defined(_SPECULAR) && defined(_ANISO_SPECULAR)
+
 struct appdata
 {
     float4 positionOS : POSITION;
@@ -39,8 +41,11 @@ struct v2f
 
     #endif
 
-    #ifdef _NORMALMAP
+    #if REQUIRE_TANGENT_INTERPOLATOR
     half3 tangentWS : TEXCOORD6;
+    #endif
+
+    #ifdef _NORMALMAP
     half3 bitangentWS : TEXCOORD7;
     #endif
 
@@ -69,8 +74,11 @@ v2f vert(appdata input)
     output.positionWSAndFogFactor = float4(position_ws, fog_factor);
     output.normalWS = vertex_normal_inputs.normalWS;
 
-    #if _NORMALMAP
+    #if REQUIRE_TANGENT_INTERPOLATOR
     output.tangentWS = vertex_normal_inputs.tangentWS;
+    #endif
+
+    #ifdef _NORMALMAP
     output.bitangentWS = vertex_normal_inputs.bitangentWS;
     #endif
 
@@ -83,7 +91,7 @@ v2f vert(appdata input)
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
     half3 additional_lights_diffuse_color = 0, additional_lights_specular_color = 0;
-    additional_lights(output.positionCS, position_ws, output.normalWS, additional_lights_diffuse_color, additional_lights_specular_color);
+    additional_lights(output.positionCS, position_ws, output.normalWS, vertex_normal_inputs.tangentWS, additional_lights_diffuse_color, additional_lights_specular_color);
     output.additional_lights_diffuse_color = additional_lights_diffuse_color;
 
     #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
@@ -115,10 +123,16 @@ half4 frag(const v2f input) : SV_Target
 
     const Light main_light = get_main_light(input);
 
+    #if REQUIRE_TANGENT_INTERPOLATOR
+    const half3 tangent_ws = input.tangentWS;
+    #else
+    const half3 tangent_ws = 0;
+    #endif
+
     #if _NORMALMAP
     const half3 normal_ts = sample_normal(input.uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap));
     half3 normal_ws = TransformTangentToWorld(normal_ts,
-                                              half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz)
+                                              half3x3(tangent_ws, input.bitangentWS, input.normalWS)
     );
     #else
     half3 normal_ws = input.normalWS;
@@ -161,11 +175,11 @@ half4 frag(const v2f input) : SV_Target
     // ReSharper disable once CppInitializedValueIsAlwaysRewritten
     half3 specular_color = 0;
     #ifdef _SPECULAR
-    specular_color = get_specular_color(main_light.color, view_direction_ws, normal_ws, light_direction_ws);
+    specular_color = get_specular_color(main_light.color, view_direction_ws, normal_ws, tangent_ws, light_direction_ws);
     #endif
 
     #if defined(TOON_ADDITIONAL_LIGHTS)
-    additional_lights(position_cs, position_ws, normal_ws, diffuse_color, specular_color);
+    additional_lights(position_cs, position_ws, normal_ws, tangent_ws, diffuse_color, specular_color);
     #elif defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
     diffuse_color += input.additional_lights_diffuse_color;
     #endif

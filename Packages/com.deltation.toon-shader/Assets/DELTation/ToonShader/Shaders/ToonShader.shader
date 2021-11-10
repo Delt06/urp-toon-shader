@@ -29,6 +29,7 @@
         [HDR] _FresnelColor ("Rim Color", Color) = (1.0, 1.0, 1.0, 1.0)
         
         [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 1
+        [Toggle(_ANISO_SPECULAR)] _AnisoSpecular("Anisotropic Specular", Float) = 0
         _SpecularThreshold ("Specular Threshold", Range(0, 1)) = 0.8
         _SpecularExponent ("Specular Exponent", Range(0, 1000)) = 200
         _SpecularSmoothness ("Specular Smoothness", Range(0, 1)) = 0.025
@@ -81,6 +82,7 @@
             #pragma shader_feature_local _VERTEX_COLOR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED
             #pragma shader_feature_local _SPECULAR
+            #pragma shader_feature_local _ANISO_SPECULAR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
             
             #pragma shader_feature_local_fragment _FRESNEL
