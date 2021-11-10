@@ -97,6 +97,7 @@ Material:
     - _AdditionalLights: 1
     - _AdditionalLightsSpecular: 0
     - _AlphaClip: 0
+    - _AnisoSpecular: 0
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -132,7 +133,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecSource: 0
     - _Specular: 0
-    - _SpecularExponent: 5
+    - _SpecularExponent: 46
     - _SpecularHighlights: 0
     - _SpecularSmoothness: 1
     - _SpecularThreshold: 0.371
@@ -149,5 +150,5 @@ Material:
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowTint: {r: 0, g: 0, b: 0, a: 0.3764706}
     - _SpecColor: {r: 0.18382353, g: 0.18517517, b: 0.18517517, a: 0.078125}
-    - _SpecularColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
+    - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

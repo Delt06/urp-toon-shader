@@ -48,7 +48,8 @@ namespace DELTation.ToonShader.Editor
 			DrawMiscProperties(materialEditor, properties, material);
 		}
 
-		private static void DrawNormalMapProperties(MaterialEditor materialEditor, MaterialProperty[] properties, Material material)
+		private static void DrawNormalMapProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
 		{
 			EditorGUI.BeginChangeCheck();
 			const string bumpMapProperty = "_BumpMap";
@@ -297,6 +298,7 @@ namespace DELTation.ToonShader.Editor
 
 			if (material.IsKeywordEnabled("_SPECULAR"))
 			{
+				DrawProperty(materialEditor, properties, "_AnisoSpecular");
 				DrawProperty(materialEditor, properties, "_SpecularColor");
 				DrawProperty(materialEditor, properties, "_SpecularThreshold");
 				DrawProperty(materialEditor, properties, "_SpecularExponent");

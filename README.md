@@ -27,6 +27,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Configurable shadow color
 - Emission
 - Rim lighting (Fresnel effect) and specular highlights with HDR color support (e.g. for bloom)
+- Anisotropic specular (e.g. for hair)
 - Fog
 - SSAO
 - Environment Lighting
