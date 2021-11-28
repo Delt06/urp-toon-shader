@@ -22,6 +22,7 @@ struct v2f
 };
 
 #include "./ToonShaderUtils.hlsl"
+#include "./ToonShaderUtilsV2f.hlsl"
 
 float4 get_shadow_position_h_clip(appdata input)
 {

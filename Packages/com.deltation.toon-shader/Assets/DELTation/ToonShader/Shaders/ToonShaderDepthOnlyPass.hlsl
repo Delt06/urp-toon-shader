@@ -17,6 +17,7 @@ struct v2f
 };
 
 #include "./ToonShaderUtils.hlsl"
+#include "./ToonShaderUtilsV2f.hlsl"
 
 v2f DepthOnlyVertex(appdata input)
 {

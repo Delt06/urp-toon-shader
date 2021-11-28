@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -10,7 +11,7 @@ using UnityBlendMode = UnityEngine.Rendering.BlendMode;
 
 namespace DELTation.ToonShader.Editor
 {
-	// ReSharper disable once UnusedType.Global
+	[UsedImplicitly]
 	public class ToonShaderEditor : ToonShaderEditorBase
 	{
 		private const int QueueOffsetRange = 50;
