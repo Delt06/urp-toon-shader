@@ -121,11 +121,12 @@
             #endif
             
             #include "./ToonShaderInput.hlsl"
+            #include "./ToonShaderForwardPass_AppData.hlsl"
             #include "./ToonShaderForwardPass.hlsl"
             
             ENDHLSL
         }
-        
+                
         Pass
         {
             Name "ShadowCaster"

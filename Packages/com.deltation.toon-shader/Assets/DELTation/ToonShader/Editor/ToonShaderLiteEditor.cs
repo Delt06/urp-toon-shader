@@ -1,9 +1,10 @@
-﻿using UnityEditor;
+﻿using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 
 namespace DELTation.ToonShader.Editor
 {
-	// ReSharper disable once UnusedType.Global
+	[UsedImplicitly]
 	public class ToonShaderLiteEditor : ToonShaderEditorBase
 	{
 		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,

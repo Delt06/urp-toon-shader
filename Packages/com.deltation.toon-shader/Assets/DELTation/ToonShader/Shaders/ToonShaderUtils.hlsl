@@ -19,16 +19,6 @@ inline float2 apply_tiling_offset(const float2 uv, const float4 map_st)
     return uv * map_st.xy + map_st.zw;
 }
 
-inline void alpha_discard(v2f input)
-{
-    #ifdef _ALPHATEST_ON
-    const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-    const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
-    const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
-    AlphaDiscard(albedo.a, cutoff);
-    #endif
-}
-
 inline half4 get_additional_lights_color_attenuation(const float3 position_ws)
 {
     half4 color_attenuation = 0;
@@ -42,19 +32,6 @@ inline half4 get_additional_lights_color_attenuation(const float3 position_ws)
     }
 
     return color_attenuation;
-}
-
-inline Light get_main_light(in v2f input)
-{
-    float4 shadow_coord;
-    #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    shadow_coord = input.shadowCoord;
-    #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-    shadow_coord = TransformWorldToShadowCoord(input.positionWSAndFogFactor.xyz);
-    #else
-    shadow_coord = float4(0, 0, 0, 0);
-    #endif
-    return GetMainLight(shadow_coord);
 }
 
 inline half3 get_simple_ramp(half3 color, half opacity, half thickness, half smoothness, half value)

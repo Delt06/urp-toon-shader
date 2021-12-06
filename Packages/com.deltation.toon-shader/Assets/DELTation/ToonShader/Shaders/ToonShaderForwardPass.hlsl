@@ -5,20 +5,6 @@
 
 #define REQUIRE_TANGENT_INTERPOLATOR defined(_NORMALMAP) || defined(_SPECULAR) && defined(_ANISO_SPECULAR)
 
-struct appdata
-{
-    float4 positionOS : POSITION;
-    float3 normalOS : NORMAL;
-    float4 tangentOS : TANGENT;
-    float2 uv : TEXCOORD0;
-
-    #ifdef _VERTEX_COLOR
-    half3 vertexColor : COLOR;
-    #endif
-
-    UNITY_VERTEX_INPUT_INSTANCE_ID
-};
-
 struct v2f
 {
     float2 uv : TEXCOORD0;
@@ -57,6 +43,7 @@ struct v2f
 };
 
 #include "./ToonShaderUtils.hlsl"
+#include "./ToonShaderUtilsV2f.hlsl"
 
 v2f vert(appdata input)
 {
@@ -64,6 +51,10 @@ v2f vert(appdata input)
 
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
+
+    #ifdef TOON_SHADER_HOOK_VERTEX_INPUT
+    TOON_SHADER_HOOK_VERTEX_INPUT(input);
+    #endif
 
     const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
     const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
@@ -148,6 +139,9 @@ half4 frag(const v2f input) : SV_Target
     base_color.xyz *= input.vertexColor;
     #endif
     half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
+    #ifdef TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+    TOON_SHADER_HOOK_FRAGMENT_ALBEDO(input.uv, albedo);
+    #endif
     const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
     AlphaDiscard(albedo.a, cutoff);
 
@@ -218,7 +212,7 @@ half4 frag(const v2f input) : SV_Target
 
     const half surface = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Surface);
     const half alpha = 1.0 * (1 - surface) + albedo.a * surface;
-    return half4(max(fragment_color, 0), alpha);
+    return half4(max(fragment_color, 0), alpha); 
 }
 
 #endif
