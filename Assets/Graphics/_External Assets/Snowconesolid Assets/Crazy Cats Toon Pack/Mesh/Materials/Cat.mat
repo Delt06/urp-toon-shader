@@ -9,8 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Cat
   m_Shader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ALPHACLIP_ON _ANISO_SPECULAR _SPECULAR
-    _ZWRITE_ON
+  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ALPHACLIP_ON _SPECULAR _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -89,7 +88,7 @@ Material:
     - _AdditionalLights: 1
     - _AdditionalLightsSpecular: 0
     - _AlphaClip: 0
-    - _AnisoSpecular: 1
+    - _AnisoSpecular: 0
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
