@@ -7,6 +7,8 @@
         [MainColor]
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
+        [Toggle(_PURE_SHADOW_COLOR)]
+        _PureShadowColor ("Pure Shadow Color", Float) = 0
         
         [Toggle(_RAMP_MAP)]
         _UseRampMap("Use Ramp Texture", Float) = 0
@@ -88,8 +90,8 @@
             
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
-            #pragma shader_feature_local_fragment _RAMP_MAP
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
+            #pragma multi_compile_local_fragment _ _RAMP_MAP _PURE_SHADOW_COLOR
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON

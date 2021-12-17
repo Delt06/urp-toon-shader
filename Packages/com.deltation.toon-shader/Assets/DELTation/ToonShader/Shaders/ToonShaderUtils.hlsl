@@ -142,7 +142,13 @@ inline half3 get_ramp_color(const half4 position_cs, const half3 normal_ws, cons
     half3 ramp_color = light_color;
 
     #ifdef _RAMP_MAP
+    
+    #ifdef _PURE_SHADOW_COLOR
     ramp_color *= SAMPLE_RAMP_MAP(brightness);
+    #else
+    ramp_color *= SAMPLE_RAMP_MAP(brightness);
+    #endif
+    
     #else
     const half3 shadow_color = lerp(ramp_color, shadow_color_opacity.rgb, shadow_color_opacity.a);
     ramp_color = lerp(shadow_color, ramp_color, brightness);
@@ -152,7 +158,7 @@ inline half3 get_ramp_color(const half4 position_cs, const half3 normal_ws, cons
 }
 
 inline void additional_lights(const half4 position_cs, const float3 position_ws, const half3 normal_ws,
-                              const half3 tangent_ws, inout half3 diffuse_color, inout half3 specular_color)
+                              const half3 tangent_ws, inout half3 diffuse_color, inout half3 specular_color, const half3 albedo = half3(1, 1, 1))
 {
     const uint pixel_light_count = GetAdditionalLightsCount();
     #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
@@ -164,7 +170,7 @@ inline void additional_lights(const half4 position_cs, const float3 position_ws,
         const Light light = GetAdditionalLight(light_index, position_ws);
         const half attenuation = light.distanceAttenuation * light.shadowAttenuation;
         const half brightness = get_brightness(position_cs, normal_ws, light.direction, attenuation);
-        half3 ramp_color = light.color;
+        half3 ramp_color = light.color * albedo; 
 
         #ifdef _RAMP_MAP
         ramp_color *= SAMPLE_RAMP_MAP(brightness);

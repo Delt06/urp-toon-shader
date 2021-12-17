@@ -44,7 +44,7 @@ struct v2f
     DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 8);
     #endif
 
-    
+
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -170,13 +170,18 @@ half4 frag(const v2f input) : SV_Target
     const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
     #endif
 
-
     const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
     // ReSharper disable once CppEntityAssignedButNoRead
     half main_light_brightness;
     // ReSharper disable once CppLocalVariableMayBeConst
-    half3 diffuse_color = get_ramp_color(position_cs, normal_ws, light_direction_ws, main_light.color,
-                                         main_light_attenuation, shadow_tint, main_light_brightness);
+    half3 diffuse_color = get_ramp_color(position_cs, normal_ws, light_direction_ws,
+                                         #ifdef _PURE_SHADOW_COLOR
+                                         main_light.color * albedo.rgb,
+                                         #else
+                                         main_light.color,
+                                         #endif
+                                         main_light_attenuation, shadow_tint, main_light_brightness
+    );
     // ReSharper disable once CppInitializedValueIsAlwaysRewritten
     half3 specular_color = 0;
     #ifdef _SPECULAR
@@ -184,12 +189,24 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     #if defined(TOON_ADDITIONAL_LIGHTS)
-    additional_lights(position_cs, position_ws, normal_ws, tangent_ws, diffuse_color, specular_color);
+    additional_lights(position_cs, position_ws, normal_ws, tangent_ws, diffuse_color, specular_color
+    #ifdef _PURE_SHADOW_COLOR
+        , albedo.rgb
+    #endif
+        );
     #elif defined(TOON_ADDITIONAL_LIGHTS_VERTEX)
-    diffuse_color += input.additional_lights_diffuse_color;
+    diffuse_color += input.additional_lights_diffuse_color
+    #ifdef _PURE_SHADOW_COLOR
+        * albedo.rgb
+    #endif
+    ;
     #endif
 
-    half3 fragment_color = albedo.xyz * diffuse_color;
+    half3 fragment_color = diffuse_color;
+
+    #ifndef _PURE_SHADOW_COLOR
+    fragment_color *= albedo.rgb;
+    #endif
 
     #ifdef _SPECULAR
     fragment_color += specular_color;
@@ -200,7 +217,7 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     #ifdef _ENVIRONMENT_LIGHTING_ENABLED
-    
+
     half3 gi = albedo.xyz * SAMPLE_GI(input.staticLightmapUV, input.vertexSH, input.normalWS);
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
@@ -208,8 +225,8 @@ half4 frag(const v2f input) : SV_Target
     const AmbientOcclusionFactor ao_factor = GetScreenSpaceAmbientOcclusion(normalized_screen_space_uv);
     gi *= ao_factor.indirectAmbientOcclusion;
     #endif
-    
-	fragment_color += gi;
+
+    fragment_color += gi;
     #endif
 
     #ifdef _EMISSION
@@ -223,7 +240,7 @@ half4 frag(const v2f input) : SV_Target
 
     const half surface = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Surface);
     const half alpha = 1.0 * (1 - surface) + albedo.a * surface;
-    return half4(max(fragment_color, 0), alpha); 
+    return half4(max(fragment_color, 0), alpha);
 }
 
 #endif
