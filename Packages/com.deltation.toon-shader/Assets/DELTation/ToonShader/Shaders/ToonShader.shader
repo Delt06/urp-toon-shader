@@ -7,6 +7,8 @@
         [MainColor]
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
+        [Toggle(_PURE_SHADOW_COLOR)]
+        _PureShadowColor ("Pure Shadow Color", Float) = 0
         
         [Toggle(_RAMP_MAP)]
         _UseRampMap("Use Ramp Texture", Float) = 0
@@ -84,20 +86,20 @@
             #pragma shader_feature_local _SPECULAR
             #pragma shader_feature_local _ANISO_SPECULAR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
+            #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
             
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
-            #pragma shader_feature_local_fragment _ENVIRONMENT_LIGHTING_ENABLED
-            #pragma shader_feature_local_fragment _RAMP_MAP
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
+            #pragma multi_compile_local_fragment _ _RAMP_MAP _PURE_SHADOW_COLOR
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             
-            // URP
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION

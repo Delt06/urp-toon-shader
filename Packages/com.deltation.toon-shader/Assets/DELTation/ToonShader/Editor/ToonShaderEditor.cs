@@ -256,6 +256,7 @@ namespace DELTation.ToonShader.Editor
 			}
 			else
 			{
+				DrawProperty(materialEditor, properties, "_PureShadowColor");
 				DrawShadowTintProperty(materialEditor, properties);
 				DrawProperty(materialEditor, properties, "_RampTriple");
 				DrawRampProperty0(materialEditor, properties);
