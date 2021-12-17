@@ -2,6 +2,7 @@
 #define TOON_SHADER_FORWARD_PASS_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 #define REQUIRE_TANGENT_INTERPOLATOR defined(_NORMALMAP) || defined(_SPECULAR) && defined(_ANISO_SPECULAR)
 
@@ -39,6 +40,11 @@ struct v2f
     half3 vertexColor : COLOR;
     #endif
 
+    #ifdef _ENVIRONMENT_LIGHTING_ENABLED
+    DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 8);
+    #endif
+
+    
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -93,6 +99,11 @@ v2f vert(appdata input)
 
     #ifdef _VERTEX_COLOR
     output.vertexColor = input.vertexColor;
+    #endif
+
+    #ifdef _ENVIRONMENT_LIGHTING_ENABLED
+    OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+    OUTPUT_SH(output.normalWS, output.vertexSH);
     #endif
 
     return output;
@@ -190,7 +201,7 @@ half4 frag(const v2f input) : SV_Target
 
     #ifdef _ENVIRONMENT_LIGHTING_ENABLED
     
-    half3 gi = albedo.xyz * SampleSH(normal_ws);
+    half3 gi = albedo.xyz * SAMPLE_GI(input.staticLightmapUV, input.vertexSH, input.normalWS);
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
     const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(position_cs);

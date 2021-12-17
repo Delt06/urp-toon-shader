@@ -10,6 +10,10 @@ struct appdata
     float4 tangentOS : TANGENT;
     float2 uv : TEXCOORD0;
 
+    #if defined(_ENVIRONMENT_LIGHTING_ENABLED) && defined(LIGHTMAP_ON)
+    float2 staticLightmapUV : TEXCOORD1;
+    #endif
+
     #ifdef _VERTEX_COLOR
     half3 vertexColor : COLOR;
     #endif
