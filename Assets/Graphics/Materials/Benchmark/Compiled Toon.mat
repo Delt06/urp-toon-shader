@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Compiled
+  m_Name: Compiled Toon
   m_Shader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
   m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG
     _FRESNEL _RAMP_TRIPLE _SPECULAR _ZWRITE_ON
@@ -124,7 +124,7 @@ Material:
     - _QueueOffset: 0
     - _Ramp0: 0
     - _Ramp1: 0.5
-    - _RampSmoothness: 0.492
+    - _RampSmoothness: 0
     - _RampTriple: 1
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
