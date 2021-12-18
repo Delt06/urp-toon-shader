@@ -23,7 +23,7 @@ Material:
   m_Name: Compiled Toon (Lite)
   m_Shader: {fileID: 4800000, guid: 78ba6c2256ec3954188411a3a2382dc8, type: 3}
   m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG
-    _FRESNEL _RAMP_TRIPLE _SPECULAR _TOON_RECEIVE_SHADOWS _TOON_VERTEX_LIT _ZWRITE_ON
+    _FRESNEL _RAMP_TRIPLE _SPECULAR _TOON_RECEIVE_SHADOWS _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -138,7 +138,7 @@ Material:
     - _Surface: 0
     - _UseRampMap: 0
     - _VertexColor: 0
-    - _VertexLit: 1
+    - _VertexLit: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

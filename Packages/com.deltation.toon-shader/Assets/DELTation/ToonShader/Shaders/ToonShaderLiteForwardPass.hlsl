@@ -82,7 +82,7 @@ v2f vert(appdata input)
     #ifdef _TOON_VERTEX_LIT
     output.mainLightColorAndBrightness =
         get_main_light_color_and_brightness(position_cs, normal_ws
-                                            #ifdef LITE_MAIN_LGHT_SHADOWS
+                                            #ifdef LITE_MAIN_LIGHT_SHADOWS
                 , get_shadow_coord(position_ws)
                                             #endif
         );
