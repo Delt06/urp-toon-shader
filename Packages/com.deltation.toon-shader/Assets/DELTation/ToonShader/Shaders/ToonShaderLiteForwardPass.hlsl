@@ -81,7 +81,8 @@ v2f vert(appdata input)
 
     #ifdef _TOON_VERTEX_LIT
     output.mainLightColorAndBrightness =
-        get_main_light_color_and_brightness(position_cs, normal_ws
+        get_main_light_color_and_brightness(position_cs,
+                                            normalize(normal_ws)
                                             #ifdef LITE_MAIN_LIGHT_SHADOWS
                 , get_shadow_coord(position_ws)
                                             #endif
@@ -118,7 +119,8 @@ half4 frag(const v2f input) : SV_Target
     const half4 main_light_color_and_brightness = input.mainLightColorAndBrightness;
     #else
     
-	const half4 main_light_color_and_brightness = get_main_light_color_and_brightness(input.positionCS, input.normalWS
+	const half4 main_light_color_and_brightness = get_main_light_color_and_brightness(input.positionCS,
+	    normalize(input.normalWS)
     #ifdef LITE_MAIN_LIGHT_SHADOWS
 	    , input.shadowCoord
     #endif
