@@ -17,6 +17,7 @@ namespace DELTation.ToonShader.Editor
 			DrawRampSmoothnessProperty(materialEditor, properties);
 			MiscLabel();
 			DrawProperty(materialEditor, properties, "_VertexLit");
+			DrawProperty(materialEditor, properties, "_ReceiveShadows");
 			DrawFogProperty(materialEditor, properties);
 			DrawVertexColorProperty(materialEditor, properties);
 		}

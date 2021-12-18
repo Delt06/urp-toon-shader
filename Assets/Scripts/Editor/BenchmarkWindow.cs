@@ -29,6 +29,14 @@ namespace Editor
 					"Local Keywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG _FRESNEL _RAMP_TRIPLE _SPECULAR"
 				);
 
+			if (GUILayout.Button("Analyze Toon (Lite)"))
+				Analyze(
+					Shader.Find("DELTation/Toon Shader (Lite)"),
+					"Compiled-DELTation-Toon Shader (Lite).shader",
+					"Global Keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE",
+					"Local Keywords: _FOG _TOON_RECEIVE_SHADOWS"
+				);
+
 			if (GUILayout.Button("Analyze Lit"))
 				Analyze(
 					Shader.Find(ShaderUtils.GetShaderPath(ShaderPathID.Lit)),
@@ -54,7 +62,8 @@ namespace Editor
 				);
 		}
 
-		private void Analyze(Shader shader, string compiledShaderName, string globalKeywords, string localKeywords)
+		private static void Analyze(Shader shader, string compiledShaderName, string globalKeywords,
+			string localKeywords)
 		{
 			OpenCompiledShader(shader);
 
@@ -131,7 +140,7 @@ namespace Editor
 			process.Start();
 		}
 
-		[MenuItem("Window/Analysis/Shader Performance")]
+		[MenuItem("Window/Analysis/Shader Benchmark")]
 		public static void Open() => CreateInstance<BenchmarkWindow>().Show();
 	}
 }

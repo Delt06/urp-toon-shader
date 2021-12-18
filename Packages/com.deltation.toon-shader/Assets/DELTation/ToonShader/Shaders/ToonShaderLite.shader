@@ -12,6 +12,7 @@
         _RampSmoothness ("Ramp Smoothness", Range(0, 2)) = 0.005
 
 		[Toggle(_TOON_VERTEX_LIT)] _VertexLit ("Vertex Lighting", Float) = 0
+        [Toggle(_TOON_RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
         [Toggle(_FOG)] _Fog ("Fog", Float) = 1
         [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
     }
@@ -32,6 +33,10 @@
             #pragma shader_feature_local _FOG
             #pragma shader_feature_local _VERTEX_COLOR
             #pragma shader_feature_local _TOON_VERTEX_LIT
+            #pragma shader_feature_local _TOON_RECEIVE_SHADOWS
+
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             
             // Unity
             #pragma multi_compile_fog
