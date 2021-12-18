@@ -57,6 +57,11 @@ inline half4 get_main_light_color_and_brightness(in const float4 position_cs, in
     return half4(main_light.color, brightness);
 }
 
+inline half4 get_shadow_coord(float3 position_ws)
+{
+    return TransformWorldToShadowCoord(position_ws);
+}
+
 v2f vert(appdata input)
 {
     v2f output;
@@ -67,27 +72,25 @@ v2f vert(appdata input)
     const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
     output.uv = apply_tiling_offset(input.uv, basemap_st);
 
-    const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
-    const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-
-
-    float4 position_cs = vertex_position_inputs.positionCS;
+    const float3 position_ws = TransformObjectToWorld(input.positionOS.xyz);
+    const float4 position_cs = TransformWorldToHClip(position_ws);
     output.positionCS = position_cs;
 
     output.fogFactor = get_fog_factor(position_cs.z);
+    const half3 normal_ws = TransformObjectToWorldDir(input.normalOS, true);
 
     #ifdef _TOON_VERTEX_LIT
     output.mainLightColorAndBrightness =
-        get_main_light_color_and_brightness(position_cs, vertex_normal_inputs.normalWS
-                                            #ifdef LITE_MAIN_LIGHT_SHADOWS
-                , GetShadowCoord(vertex_position_inputs)
+        get_main_light_color_and_brightness(position_cs, normal_ws
+                                            #ifdef LITE_MAIN_LGHT_SHADOWS
+                , get_shadow_coord(position_ws)
                                             #endif
         );
     #else
-	output.normalWS = vertex_normal_inputs.normalWS;
+	output.normalWS = normal_ws;
 
     #ifdef LITE_MAIN_LIGHT_SHADOWS
-    output.shadowCoord = GetShadowCoord(vertex_position_inputs);
+    output.shadowCoord = get_shadow_coord(position_ws);
     #endif
 
     #endif
@@ -108,7 +111,7 @@ half4 frag(const v2f input) : SV_Target
     #ifdef _VERTEX_COLOR
     base_color.xyz *= input.vertexColor;
     #endif
-    half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).rgb;
+    const half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).rgb;
 
 
     #ifdef _TOON_VERTEX_LIT
