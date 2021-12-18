@@ -35,6 +35,7 @@
             #pragma shader_feature_local _TOON_VERTEX_LIT
             #pragma shader_feature_local _TOON_RECEIVE_SHADOWS
 
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             

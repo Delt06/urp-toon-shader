@@ -57,7 +57,7 @@ inline half4 get_main_light_color_and_brightness(in const float4 position_cs, in
     return half4(main_light.color, brightness);
 }
 
-inline half4 get_shadow_coord(float3 position_ws)
+inline float4 get_shadow_coord(const float3 position_ws)
 {
     return TransformWorldToShadowCoord(position_ws);
 }
@@ -77,7 +77,7 @@ v2f vert(appdata input)
     output.positionCS = position_cs;
 
     output.fogFactor = get_fog_factor(position_cs.z);
-    const half3 normal_ws = TransformObjectToWorldDir(input.normalOS, true);
+    const half3 normal_ws = TransformObjectToWorldDir(input.normalOS);
 
     #ifdef _TOON_VERTEX_LIT
     output.mainLightColorAndBrightness =
