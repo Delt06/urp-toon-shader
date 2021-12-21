@@ -119,6 +119,8 @@ half3 sample_normal(float2 uv, TEXTURE2D_PARAM(bumpMap, sampler_bumpMap), half s
     #endif
 }
 
+#include "./ToonShaderAlbedo.hlsl"
+
 half4 frag(const v2f input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
@@ -146,17 +148,7 @@ half4 frag(const v2f input) : SV_Target
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
-    half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-    #ifdef _VERTEX_COLOR
-    base_color.xyz *= input.vertexColor;
-    #endif
-    half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
-    #ifdef TOON_SHADER_HOOK_FRAGMENT_ALBEDO
-    TOON_SHADER_HOOK_FRAGMENT_ALBEDO(input.uv, albedo);
-    #endif
-    const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
-    AlphaDiscard(albedo.a, cutoff);
-
+    half4 albedo = get_albedo_and_alpha_discard(input);
     half3 sample_color = albedo.xyz;
     #if _ALPHAPREMULTIPLY_ON
 	albedo.xyz *= albedo.a;

@@ -161,6 +161,39 @@
         
         Pass
         {
+            Name "Meta"
+            Tags{"LightMode" = "Meta"}
+
+            Cull Off
+
+            HLSLPROGRAM
+
+            #pragma vertex MetaPassVertex
+            #pragma fragment MetaPassFragment
+
+            #pragma shader_feature_local _NORMALMAP
+            #pragma shader_feature_local _VERTEX_COLOR
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED
+            #pragma shader_feature_local _SPECULAR
+            #pragma shader_feature_local _ANISO_SPECULAR
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
+            #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
+            
+            #pragma shader_feature_local_fragment _FRESNEL
+            #pragma shader_feature_local_fragment _EMISSION
+            #pragma shader_feature_local_fragment _RAMP_TRIPLE
+            #pragma multi_compile_local_fragment _ _RAMP_MAP _PURE_SHADOW_COLOR
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            #include "./ToonShaderInput.hlsl"
+            #include "./ToonShaderMetaPass.hlsl"
+
+            ENDHLSL
+        }
+        
+        Pass
+        {
             Name "DepthOnly"
             Tags{"LightMode" = "DepthOnly"}
 
