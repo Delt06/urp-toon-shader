@@ -5,7 +5,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderVariablesFunctions.hlsl"
 
-#if defined(_ENVIRONMENT_LIGHTING_ENABLED) && (defined(SHADOWS_SHADOWMASK) && defined(LIGHTMAP_ON) || !defined (LIGHTMAP_ON))
+#if defined(_SHADOW_MASK) && (defined(SHADOWS_SHADOWMASK) && defined(LIGHTMAP_ON) || !defined (LIGHTMAP_ON))
 #define USE_SHADOW_MASK
 #endif
 

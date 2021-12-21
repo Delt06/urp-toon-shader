@@ -319,6 +319,7 @@ namespace DELTation.ToonShader.Editor
 				DrawProperty(materialEditor, properties, "_AdditionalLightsSpecular");
 
 			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
+			DrawProperty(materialEditor, properties, "_ShadowMask");
 
 
 			DrawVertexColorProperty(materialEditor, properties);
