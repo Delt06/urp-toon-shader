@@ -41,6 +41,7 @@
         [Toggle(_ADDITIONAL_LIGHTS_ENABLED)] _AdditionalLights ("Additonal Lights", Float) = 1
         [Toggle(_ADDITIONAL_LIGHTS_SPECULAR)] _AdditionalLightsSpecular ("Additonal Lights Specular", Float) = 0
         [Toggle(_ENVIRONMENT_LIGHTING_ENABLED)] _EnvironmentLightingEnabled ("Environment Lighting", Float) = 1
+        [Toggle(_SHADOW_MASK)] _ShadowMask ("Baked Shadows", Float) = 0
         [Toggle(_VERTEX_COLOR)] _VertexColor ("Vertex Color", Float) = 0
         
         [Slider(0, 1)]
@@ -87,11 +88,13 @@
             #pragma shader_feature_local _ANISO_SPECULAR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
             #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
+            #pragma shader_feature_local _SHADOW_MASK
             
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
-            #pragma multi_compile_local_fragment _ _RAMP_MAP _PURE_SHADOW_COLOR
+            #pragma shader_feature_local_fragment _RAMP_MAP
+            #pragma shader_feature_local_fragment _PURE_SHADOW_COLOR
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
@@ -99,12 +102,16 @@
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
+            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
+            #pragma multi_compile _ SHADOWS_SHADOWMASK
+            
             
             // Unity
+            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
+            #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
 
 			#pragma multi_compile_instancing
@@ -151,6 +158,39 @@
 
             #include "./ToonShaderInput.hlsl"
             #include "./ToonShaderShadowCasterPass.hlsl"
+
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Name "Meta"
+            Tags{"LightMode" = "Meta"}
+
+            Cull Off
+
+            HLSLPROGRAM
+
+            #pragma vertex MetaPassVertex
+            #pragma fragment MetaPassFragment
+
+            #pragma shader_feature_local _NORMALMAP
+            #pragma shader_feature_local _VERTEX_COLOR
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED
+            #pragma shader_feature_local _SPECULAR
+            #pragma shader_feature_local _ANISO_SPECULAR
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
+            #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
+            
+            #pragma shader_feature_local_fragment _FRESNEL
+            #pragma shader_feature_local_fragment _EMISSION
+            #pragma shader_feature_local_fragment _RAMP_TRIPLE
+            #pragma multi_compile_local_fragment _ _RAMP_MAP _PURE_SHADOW_COLOR
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            #include "./ToonShaderInput.hlsl"
+            #include "./ToonShaderMetaPass.hlsl"
 
             ENDHLSL
         }

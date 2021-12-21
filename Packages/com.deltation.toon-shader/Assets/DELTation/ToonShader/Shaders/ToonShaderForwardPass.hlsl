@@ -78,7 +78,15 @@ v2f vert(appdata input)
     #ifdef _NORMALMAP
     output.bitangentWS = vertex_normal_inputs.bitangentWS;
     #endif
+    
+    #ifdef _VERTEX_COLOR
+    output.vertexColor = input.vertexColor;
+    #endif
 
+    #ifdef _ENVIRONMENT_LIGHTING_ENABLED
+    OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+    OUTPUT_SH(output.normalWS, output.vertexSH);
+    #endif
 
     #ifdef _MAIN_LIGHT_SHADOWS
     output.shadowCoord = GetShadowCoord(vertex_position_inputs);
@@ -88,22 +96,14 @@ v2f vert(appdata input)
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
     half3 additional_lights_diffuse_color = 0, additional_lights_specular_color = 0;
-    additional_lights(output.positionCS, position_ws, output.normalWS, vertex_normal_inputs.tangentWS, additional_lights_diffuse_color, additional_lights_specular_color);
+    DECLARE_SHADOW_MASK
+    additional_lights(output.positionCS, position_ws, output.normalWS, vertex_normal_inputs.tangentWS, additional_lights_diffuse_color, additional_lights_specular_color SHADOW_MASK_ARG);
     output.additional_lights_diffuse_color = additional_lights_diffuse_color;
 
     #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
     output.additional_lights_specular_color = additional_lights_specular_color;
     #endif
 
-    #endif
-
-    #ifdef _VERTEX_COLOR
-    output.vertexColor = input.vertexColor;
-    #endif
-
-    #ifdef _ENVIRONMENT_LIGHTING_ENABLED
-    OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
-    OUTPUT_SH(output.normalWS, output.vertexSH);
     #endif
 
     return output;
@@ -119,11 +119,14 @@ half3 sample_normal(float2 uv, TEXTURE2D_PARAM(bumpMap, sampler_bumpMap), half s
     #endif
 }
 
+#include "./ToonShaderAlbedo.hlsl"
+
 half4 frag(const v2f input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
 
-    const Light main_light = get_main_light(input);
+    DECLARE_SHADOW_MASK(input)
+    const Light main_light = get_main_light(input SHADOW_MASK_ARG);
 
     #if REQUIRE_TANGENT_INTERPOLATOR
     const half3 tangent_ws = input.tangentWS;
@@ -145,17 +148,7 @@ half4 frag(const v2f input) : SV_Target
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
 
-    half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
-    #ifdef _VERTEX_COLOR
-    base_color.xyz *= input.vertexColor;
-    #endif
-    half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
-    #ifdef TOON_SHADER_HOOK_FRAGMENT_ALBEDO
-    TOON_SHADER_HOOK_FRAGMENT_ALBEDO(input.uv, albedo);
-    #endif
-    const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
-    AlphaDiscard(albedo.a, cutoff);
-
+    half4 albedo = get_albedo_and_alpha_discard(input);
     half3 sample_color = albedo.xyz;
     #if _ALPHAPREMULTIPLY_ON
 	albedo.xyz *= albedo.a;
@@ -190,6 +183,7 @@ half4 frag(const v2f input) : SV_Target
 
     #if defined(TOON_ADDITIONAL_LIGHTS)
     additional_lights(position_cs, position_ws, normal_ws, tangent_ws, diffuse_color, specular_color
+        SHADOW_MASK_ARG
     #ifdef _PURE_SHADOW_COLOR
         , albedo.rgb
     #endif

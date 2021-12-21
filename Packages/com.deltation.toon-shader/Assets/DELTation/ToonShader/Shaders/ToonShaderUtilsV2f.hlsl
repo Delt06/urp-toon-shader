@@ -15,7 +15,7 @@ inline void alpha_discard(v2f input)
     #endif
 }
 
-inline Light get_main_light(in v2f input)
+inline Light get_main_light(in v2f input SHADOW_MASK_PARAM)
 {
     float4 shadow_coord;
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
@@ -25,7 +25,12 @@ inline Light get_main_light(in v2f input)
     #else
     shadow_coord = float4(0, 0, 0, 0);
     #endif
+
+    #ifdef USE_SHADOW_MASK
+    return GetMainLight(shadow_coord, input.positionWSAndFogFactor.xyz, shadow_mask);
+    #else
     return GetMainLight(shadow_coord);
+    #endif
 }
 
 #endif
