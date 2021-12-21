@@ -24,13 +24,16 @@ A toon shader compatible with the Universal Rendering Pipeline.
   - per-vertex or per-pixel, depending on URP settings
   - optional specular highlights
 - Casting and receiving shadows
-- Configurable shadow color
+- Configurable shadow color (both in multiplicative and "pure" modes)
 - Emission
 - Rim lighting (Fresnel effect) and specular highlights with HDR color support (e.g. for bloom)
 - Anisotropic specular (e.g. for hair)
 - Fog
 - SSAO
 - Environment Lighting
+- Baked lights and shadows 
+  - Dynamically receive via light probes 
+  - Contribute to bake process ("meta" pass)
 - Vertex Color
 
 ### Performance
@@ -73,11 +76,11 @@ Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
 > The results are obtained with Mali Offline Compiler.
 
-Shader Type               | Vertex Shader Cycles (L/S) | Fragment Shader Cycles (L/S)
---------------------------|----------------------------|-----------------------------
-Lit                       | 9                          | 15
-URP Toon Shader           | 12                         | 10
-Toony Colors Pro (Hybrid) | 7                          | 15
+| Shader Type               | Vertex Shader Cycles (L/S) | Fragment Shader Cycles (L/S)|
+|---------------------------|----------------------------|-----------------------------|
+| Lit                       | 9                          | 15                          |
+| URP Toon Shader           | 12                         | 10                          |
+| Toony Colors Pro (Hybrid) | 7                          | 15                          |
 
 > L/S = Load/Store.
 
