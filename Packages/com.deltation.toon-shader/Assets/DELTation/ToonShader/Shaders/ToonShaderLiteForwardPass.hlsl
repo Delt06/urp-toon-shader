@@ -48,7 +48,12 @@ struct v2f
 inline half4 get_main_light_color_and_brightness(in const float4 position_cs, in const half3 normal_ws,
                                                  const float4 shadow_coords = 0)
 {
+    #ifdef TOON_SHADER_LITE_HOOK_MAIN_LIGHT
+    const Light main_light = TOON_SHADER_LITE_HOOK_MAIN_LIGHT(shadow_coords);
+    #else
     const Light main_light = GetMainLight(shadow_coords);
+    #endif
+    
     const half3 light_direction_ws = normalize(main_light.direction);
     const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
     const half brightness = get_brightness(position_cs, normal_ws, light_direction_ws,
@@ -59,7 +64,11 @@ inline half4 get_main_light_color_and_brightness(in const float4 position_cs, in
 
 inline float4 get_shadow_coord(const float3 position_ws)
 {
+    #ifdef TOON_SHADER_LITE_HOOK_GET_SHADOW_COORD
+    return TOON_SHADER_LITE_HOOK_GET_SHADOW_COORD(position_ws);
+    #else
     return TransformWorldToShadowCoord(position_ws);
+    #endif
 }
 
 v2f vert(appdata input)
