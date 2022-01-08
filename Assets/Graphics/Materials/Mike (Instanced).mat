@@ -9,8 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Mike (Instanced)
   m_Shader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG
-    _FRESNEL _MULTI_COMPILE_PROPERTIES _RAMP_TRIPLE _SPECULAR _TOON_MAIN_LIGHT_VERTEX
+  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _FOG _MULTI_COMPILE_PROPERTIES _TOON_MAIN_LIGHT_VERTEX
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -87,7 +86,9 @@ Material:
     m_Floats:
     - _AdditionalLights: 1
     - _AdditionalLightsMultiplier: 0.28
+    - _AdditionalLightsSpecular: 0
     - _AlphaClip: 0
+    - _AnisoSpecular: 0
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -98,11 +99,11 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _Emission: 0
-    - _EnvironmentLightingEnabled: 1
+    - _EnvironmentLightingEnabled: 0
     - _EnvironmentLightingMultiplier: 0.5
     - _EnvironmentReflections: 1
     - _Fog: 1
-    - _Fresnel: 1
+    - _Fresnel: 0
     - _FresnelSmoothness: 0.1
     - _FresnelThickness: 0.194
     - _GlossMapScale: 0
@@ -113,15 +114,17 @@ Material:
     - _MultiCompileProperties: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _PureShadowColor: 0
     - _QueueOffset: 0
     - _Ramp0: 0.1
     - _Ramp1: 0.401
-    - _RampSmoothness: 0.062
-    - _RampTriple: 1
+    - _RampSmoothness: 0.456
+    - _RampTriple: 0
     - _ReceiveShadows: 1
+    - _ShadowMask: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
-    - _Specular: 1
+    - _Specular: 0
     - _SpecularExponent: 918
     - _SpecularHighlights: 1
     - _SpecularSmoothness: 0.057
