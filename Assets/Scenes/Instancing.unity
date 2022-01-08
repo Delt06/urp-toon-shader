@@ -361,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b6e0fad98a94757a097ea8458ca169d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _instances: 100
+  _instances: 1023
   Material: {fileID: 2100000, guid: de9f1fa17e124654281ef05c0400c450, type: 2}
   Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1287462454
@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b6e0fad98a94757a097ea8458ca169d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _instances: 100
+  _instances: 1023
   Material: {fileID: 2100000, guid: de9f1fa17e124654281ef05c0400c450, type: 2}
   Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1313597871
@@ -453,7 +453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b6e0fad98a94757a097ea8458ca169d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _instances: 100
+  _instances: 1023
   Material: {fileID: 2100000, guid: de9f1fa17e124654281ef05c0400c450, type: 2}
   Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &2138565393
