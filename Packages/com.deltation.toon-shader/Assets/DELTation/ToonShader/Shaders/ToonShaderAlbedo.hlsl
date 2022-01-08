@@ -7,7 +7,7 @@
 inline half4 get_albedo_and_alpha_discard(const v2f input)
 {
 	// ReSharper disable once CppLocalVariableMayBeConst
-	half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+	half4 base_color = _BaseColor;
     
 #ifdef _VERTEX_COLOR
 	base_color.rgb *= input.vertexColor;
@@ -17,7 +17,7 @@ inline half4 get_albedo_and_alpha_discard(const v2f input)
 #ifdef TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 	TOON_SHADER_HOOK_FRAGMENT_ALBEDO(input.uv, albedo);
 #endif
-	const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
+	const half cutoff = _Cutoff;
 	AlphaDiscard(albedo.a, cutoff);
 	return albedo;
 }

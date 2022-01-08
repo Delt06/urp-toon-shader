@@ -133,15 +133,15 @@ inline half get_ramp(half value)
     #ifdef _RAMP_MAP
     return (value + 1) * 0.5;
     #elif defined(_RAMP_TRIPLE)
-    const half ramp0 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp0);
-    const half ramp1 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp1);
-    const half ramp_smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _RampSmoothness);
+    const half ramp0 = _Ramp0;
+    const half ramp1 = _Ramp1;
+    const half ramp_smoothness = _RampSmoothness;
     const half ramp0_value = smoothstep(ramp0, ramp0 + ramp_smoothness, value);
     const half ramp1_value = smoothstep(ramp1, ramp1 + ramp_smoothness, value);
     return (ramp0_value + ramp1_value) * 0.5;
     #else
-    const half ramp0 = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Ramp0);
-    const half ramp_smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _RampSmoothness);
+    const half ramp0 = _Ramp0;  
+    const half ramp_smoothness = _RampSmoothness;
     return smoothstep(ramp0, ramp0 + ramp_smoothness, value);
     #endif
 }

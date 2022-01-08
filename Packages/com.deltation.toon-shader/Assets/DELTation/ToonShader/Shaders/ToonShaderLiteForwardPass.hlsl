@@ -78,7 +78,7 @@ v2f vert(appdata input)
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_TRANSFER_INSTANCE_ID(input, output);
 
-    const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    const float4 basemap_st = _BaseMap_ST;
     output.uv = apply_tiling_offset(input.uv, basemap_st);
 
     const float3 position_ws = TransformObjectToWorld(input.positionOS.xyz);
@@ -117,7 +117,7 @@ half4 frag(const v2f input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
 
-    half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    half4 base_color = _BaseColor;
     #ifdef _VERTEX_COLOR
     base_color.xyz *= input.vertexColor;
     #endif
@@ -137,7 +137,7 @@ half4 frag(const v2f input) : SV_Target
     
     #endif
 
-    const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
+    const half4 shadow_tint = _ShadowTint;
     const half3 shadow_color = lerp(sample_color, shadow_tint.xyz, shadow_tint.a);
     half3 fragment_color = lerp(shadow_color, sample_color, main_light_color_and_brightness.w);
 

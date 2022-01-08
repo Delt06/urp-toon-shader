@@ -1,11 +1,19 @@
-﻿Shader "DELTation/Toon Shader (Fur)"
+// Shader is mostly a copy of the ToonShader
+Shader "DELTation/Toon Shader Custom Instanced"
 {
     Properties
     {
         [MainTexture]
         _BaseMap ("Texture", 2D) = "white" {}
-        [MainColor]
+        
+        // No longer main color, used only for Material Editor compatibility
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
+        
+        // New base color property, with white as default value to preview in Material Editor
+        [MainColor]
+        i_BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
+        
+        
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         [Toggle(_PURE_SHADOW_COLOR)]
         _PureShadowColor ("Pure Shadow Color", Float) = 0
@@ -60,12 +68,6 @@
         // Editmode props
         [HideInInspector] _QueueOffset("Queue Offset", Float) = 0.0
         
-        _FurLength ("Fur Length", Range(0, 1)) = 0.1
-        _FurStep ("Fur Step", Range(0, 1)) = 0.1
-        
-        _FurNoise ("Fur Noise", 2D) = "white" {}
-        [NoScaleOffset]
-        _FurMask ("Fur Mask", 2D) = "white" {}
     }
     SubShader
     {
@@ -94,11 +96,13 @@
             #pragma shader_feature_local _ANISO_SPECULAR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
             #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
+            #pragma shader_feature_local _SHADOW_MASK
             
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
-            #pragma multi_compile_local_fragment _ _RAMP_MAP _PURE_SHADOW_COLOR
+            #pragma shader_feature_local_fragment _RAMP_MAP
+            #pragma shader_feature_local_fragment _PURE_SHADOW_COLOR
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
@@ -132,23 +136,124 @@
             #if defined(_ADDITIONAL_LIGHTS_SPECULAR) && defined(_SPECULAR)
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
-            
+
+            // change default input #include to new one (the same in other passes)
+            #include "./ToonShaderCustomInstancedInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
-            
-
-            #include "./ToonShaderFurUtils_Input.hlsl"
-            #define TOON_SHADER_HOOK_INPUT_BUFFER TOON_SHADER_FUR_INPUT_BUFFER
-            #define TOON_SHADER_HOOK_INPUT_TEXTURES TOON_SHADER_FUR_INPUT_TEXTURES
-            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
-
-            #include "./ToonShaderFurUtils.hlsl"
-            #define TOON_SHADER_HOOK_VERTEX_INPUT fur_hook_vertex_input
-            #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO fur_hook_fragment_albedo
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass.hlsl"
             
             ENDHLSL
         }
+                
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags{"LightMode" = "ShadowCaster"}
+
+            ZWrite On
+            ZTest LEqual
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma target 2.0
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            #pragma vertex ShadowPassVertex
+            #pragma fragment ShadowPassFragment
+
+            #pragma multi_compile_instancing
+
+            #include "./ToonShaderCustomInstancedInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass.hlsl"
+
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Name "Meta"
+            Tags{"LightMode" = "Meta"}
+
+            Cull Off
+
+            HLSLPROGRAM
+
+            #pragma vertex MetaPassVertex
+            #pragma fragment MetaPassFragment
+
+            #pragma shader_feature_local _NORMALMAP
+            #pragma shader_feature_local _VERTEX_COLOR
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_ENABLED
+            #pragma shader_feature_local _SPECULAR
+            #pragma shader_feature_local _ANISO_SPECULAR
+            #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
+            #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
+            
+            #pragma shader_feature_local_fragment _FRESNEL
+            #pragma shader_feature_local_fragment _EMISSION
+            #pragma shader_feature_local_fragment _RAMP_TRIPLE
+            #pragma multi_compile_local_fragment _ _RAMP_MAP _PURE_SHADOW_COLOR
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            #include "./ToonShaderCustomInstancedInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderMetaPass.hlsl"
+
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Name "DepthOnly"
+            Tags{"LightMode" = "DepthOnly"}
+
+            ZWrite On
+            ColorMask 0
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            
+            #pragma target 2.0
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
+            #pragma multi_compile_instancing
+           
+
+            #include "./ToonShaderCustomInstancedInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
+            
+            ENDHLSL
+        }
+        
+        Pass
+        {
+            Name "DepthNormals"
+            Tags{"LightMode" = "DepthNormals"}
+
+            ZWrite On
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma target 2.0
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            #pragma vertex DepthNormalsVertex
+            #pragma fragment DepthNormalsFragment
+
+            #pragma multi_compile_instancing
+
+            #include "./ToonShaderCustomInstancedInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass.hlsl"
+            ENDHLSL
+        }
     }
     
-    CustomEditor "DELTation.ToonShader.Editor.Fur.ToonShaderFurEditor"
+    CustomEditor "DELTation.ToonShader.Editor.ToonShaderEditor"
 }

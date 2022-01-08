@@ -8,7 +8,7 @@ public class InstancingDemo : MonoBehaviour
 	public Material Material;
 	public Mesh Mesh;
 
-	private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+	private static readonly int BaseColorId = Shader.PropertyToID("i_BaseColor");
 
 	// https://catlikecoding.com/unity/tutorials/custom-srp/draw-calls/
 	private Matrix4x4[] _matrices;

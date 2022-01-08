@@ -46,7 +46,7 @@ v2f ShadowPassVertex(const appdata input)
     UNITY_SETUP_INSTANCE_ID(input);
 
     output.position_cs = get_shadow_position_h_clip(input);
-    const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    const float4 basemap_st = _BaseMap_ST;
     output.uv = apply_tiling_offset(input.uv, basemap_st);
     return output;
 }
