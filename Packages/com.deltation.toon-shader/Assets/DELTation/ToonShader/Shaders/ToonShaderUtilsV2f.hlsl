@@ -8,9 +8,9 @@
 inline void alpha_discard(v2f input)
 {
     #ifdef _ALPHATEST_ON
-    const half4 base_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
+    const half4 base_color = _BaseColor;
     const half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color;
-    const half cutoff = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Cutoff);
+    const half cutoff = _Cutoff;
     AlphaDiscard(albedo.a, cutoff);
     #endif
 }

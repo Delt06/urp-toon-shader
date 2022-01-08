@@ -2,36 +2,46 @@
 #define TOON_SHADER_INPUT_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
+#include "./ToonShaderInstancing.hlsl"
 
-UNITY_INSTANCING_BUFFER_START(UnityPerMaterial)
-UNITY_DEFINE_INSTANCED_PROP(float4, _BaseMap_ST)
-UNITY_DEFINE_INSTANCED_PROP(half4, _ShadowTint)
-UNITY_DEFINE_INSTANCED_PROP(half4, _BaseColor)
+#define TOON_SHADER_CBUFFER_START CBUFFER_START(UnityPerMaterial)
 
-UNITY_DEFINE_INSTANCED_PROP(half, _Ramp0)
-UNITY_DEFINE_INSTANCED_PROP(half, _Ramp1)
-UNITY_DEFINE_INSTANCED_PROP(half, _RampSmoothness)
+#ifdef TOON_SHADER_CUSTOM_INSTANCING_BUFFER 
+TOON_SHADER_INSTANCING_BUFFER_START
+TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+TOON_SHADER_INSTANCING_BUFFER_END
+#endif
 
-UNITY_DEFINE_INSTANCED_PROP(half3, _EmissionColor)
+#ifdef TOON_SHADER_CUSTOM_CBUFFER
 
-UNITY_DEFINE_INSTANCED_PROP(half4, _FresnelColor)
-UNITY_DEFINE_INSTANCED_PROP(half, _FresnelSmoothness)
-UNITY_DEFINE_INSTANCED_PROP(half, _FresnelThickness)
+TOON_SHADER_CBUFFER_START
+TOON_SHADER_CUSTOM_CBUFFER
+CBUFFER_END
 
-UNITY_DEFINE_INSTANCED_PROP(half4, _SpecularColor)
-UNITY_DEFINE_INSTANCED_PROP(half, _SpecularSmoothness)
-UNITY_DEFINE_INSTANCED_PROP(half, _SpecularThreshold)
-UNITY_DEFINE_INSTANCED_PROP(half, _SpecularExponent)
+#else
 
-UNITY_DEFINE_INSTANCED_PROP(half, _Surface)
-UNITY_DEFINE_INSTANCED_PROP(half, _Cutoff)
+TOON_SHADER_CBUFFER_START
+float4 _BaseColor;
+float4 _BaseMap_ST;
+half4 _ShadowTint;
+
+half _Ramp0;
+half _Ramp1;
+half _RampSmoothness;
+half3 _EmissionColor;
+half4 _FresnelColor;
+half _FresnelSmoothness;
+half _FresnelThickness;
+half4 _SpecularColor;
+half _SpecularSmoothness;
+half _SpecularThreshold;
+half _SpecularExponent;
+half _Surface;
+half _Cutoff;
 
 #ifdef TOON_SHADER_HOOK_INPUT_BUFFER
 TOON_SHADER_HOOK_INPUT_BUFFER
 #endif
-
-UNITY_INSTANCING_BUFFER_END(UnityPerMaterial)
 
 TEXTURE2D(_BaseMap);
 SAMPLER(sampler_BaseMap);
@@ -42,6 +52,9 @@ SAMPLER(sampler_BumpMap);
 
 #ifdef TOON_SHADER_HOOK_INPUT_TEXTURES
 TOON_SHADER_HOOK_INPUT_TEXTURES
+#endif
+
+CBUFFER_END
 #endif
 
 #endif

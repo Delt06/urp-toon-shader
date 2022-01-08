@@ -64,7 +64,7 @@ v2f vert(appdata input)
 
     const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);
     const VertexNormalInputs vertex_normal_inputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-    const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    const float4 basemap_st = _BaseMap_ST;
     output.uv = apply_tiling_offset(input.uv, basemap_st);
     float fog_factor = get_fog_factor(vertex_position_inputs.positionCS.z);
     float3 position_ws = vertex_position_inputs.positionWS;
@@ -160,7 +160,7 @@ half4 frag(const v2f input) : SV_Target
     #ifdef _RAMP_MAP
     const half4 shadow_tint = 0;
     #else
-    const half4 shadow_tint = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _ShadowTint);
+    const half4 shadow_tint = _ShadowTint;
     #endif
 
     const half main_light_attenuation = main_light.shadowAttenuation * main_light.distanceAttenuation;
@@ -224,7 +224,7 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     #ifdef _EMISSION
-	fragment_color += UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _EmissionColor);
+	fragment_color += _EmissionColor;
     #endif
 
     #ifdef _FOG
@@ -232,7 +232,7 @@ half4 frag(const v2f input) : SV_Target
     fragment_color = MixFog(fragment_color, fog_factor);
     #endif
 
-    const half surface = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _Surface);
+    const half surface = _Surface;
     const half alpha = 1.0 * (1 - surface) + albedo.a * surface;
     return half4(max(fragment_color, 0), alpha);
 }

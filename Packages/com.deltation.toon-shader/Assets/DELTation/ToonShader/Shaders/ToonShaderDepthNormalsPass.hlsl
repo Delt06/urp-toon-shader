@@ -31,7 +31,7 @@ v2f DepthNormalsVertex(appdata input)
 
     const VertexNormalInputs normal_input = GetVertexNormalInputs(input.normal, input.tangent_os);
     output.normal_ws = NormalizeNormalPerVertex(normal_input.normalWS);
-    const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    const float4 basemap_st = _BaseMap_ST;
     output.uv = apply_tiling_offset(input.uv, basemap_st);
 
     return output;

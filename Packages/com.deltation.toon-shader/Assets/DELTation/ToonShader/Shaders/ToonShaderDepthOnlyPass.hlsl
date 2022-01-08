@@ -25,7 +25,7 @@ v2f DepthOnlyVertex(appdata input)
     UNITY_SETUP_INSTANCE_ID(input);
 
     output.position_cs = TransformObjectToHClip(input.position.xyz);
-    const float4 basemap_st = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseMap_ST);
+    const float4 basemap_st = _BaseMap_ST;
     output.uv = apply_tiling_offset(input.uv, basemap_st);
     return output;
 }

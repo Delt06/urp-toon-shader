@@ -1,11 +1,19 @@
-﻿Shader "DELTation/Toon Shader"
+// Shader is mostly a copy of the ToonShader
+Shader "DELTation/Toon Shader Custom Instanced"
 {
     Properties
     {
         [MainTexture]
         _BaseMap ("Texture", 2D) = "white" {}
-        [MainColor]
+        
+        // No longer main color, used only for Material Editor compatibility
         _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
+        
+        // New base color property, with white as default value to preview in Material Editor
+        [MainColor]
+        i_BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
+        
+        
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         [Toggle(_PURE_SHADOW_COLOR)]
         _PureShadowColor ("Pure Shadow Color", Float) = 0
@@ -128,8 +136,9 @@
             #if defined(_ADDITIONAL_LIGHTS_SPECULAR) && defined(_SPECULAR)
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
-            
-            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
+
+            // change default input #include to new one (the same in other passes)
+            #include "./ToonShaderCustomInstancedInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass.hlsl"
             
@@ -156,7 +165,7 @@
 
             #pragma multi_compile_instancing
 
-            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
+            #include "./ToonShaderCustomInstancedInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass.hlsl"
 
             ENDHLSL
@@ -189,7 +198,7 @@
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
 
-            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
+            #include "./ToonShaderCustomInstancedInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderMetaPass.hlsl"
 
             ENDHLSL
@@ -216,7 +225,7 @@
             #pragma multi_compile_instancing
            
 
-            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
+            #include "./ToonShaderCustomInstancedInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
             
             ENDHLSL
@@ -240,7 +249,7 @@
 
             #pragma multi_compile_instancing
 
-            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
+            #include "./ToonShaderCustomInstancedInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass.hlsl"
             ENDHLSL
         }

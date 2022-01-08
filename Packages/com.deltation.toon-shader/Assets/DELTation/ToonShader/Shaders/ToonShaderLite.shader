@@ -44,8 +44,8 @@
 
 			#pragma multi_compile_instancing
             
-            #include "./ToonShaderLiteInput.hlsl"
-            #include "./ToonShaderLiteForwardPass.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderLiteInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderLiteForwardPass.hlsl"
             
             ENDHLSL
         }
@@ -68,8 +68,8 @@
 
             #pragma multi_compile_instancing
 
-            #include "./ToonShaderLiteInput.hlsl"
-            #include "./ToonShaderShadowCasterPass.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderLiteInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass.hlsl"
 
             ENDHLSL
         }
@@ -92,8 +92,8 @@
 
             #pragma multi_compile_instancing
 
-            #include "./ToonShaderLiteInput.hlsl"
-            #include "./ToonShaderDepthOnlyPass.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderLiteInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
             
             ENDHLSL
         }
@@ -114,8 +114,8 @@
 
             #pragma multi_compile_instancing
 
-            #include "./ToonShaderLiteInput.hlsl"
-            #include "./ToonShaderDepthNormalsPass.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderLiteInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass.hlsl"
             
             ENDHLSL
         }
