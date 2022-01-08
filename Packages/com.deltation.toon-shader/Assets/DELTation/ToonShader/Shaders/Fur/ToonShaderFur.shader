@@ -132,18 +132,18 @@
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
             
-            #include "../ToonShaderForwardPass_AppData.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
             
 
             #include "./ToonShaderFurUtils_Input.hlsl"
             #define TOON_SHADER_HOOK_INPUT_BUFFER TOON_SHADER_FUR_INPUT_BUFFER
             #define TOON_SHADER_HOOK_INPUT_TEXTURES TOON_SHADER_FUR_INPUT_TEXTURES
-            #include "../ToonShaderInput.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
 
             #include "./ToonShaderFurUtils.hlsl"
             #define TOON_SHADER_HOOK_VERTEX_INPUT fur_hook_vertex_input
             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO fur_hook_fragment_albedo
-            #include "../ToonShaderForwardPass.hlsl"
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass.hlsl"
             
             ENDHLSL
         }
