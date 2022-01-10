@@ -2,7 +2,7 @@
   "name": "com.deltation.toon-shader",
   "displayName": "Toon Shader",
   "description": "Stylized toon shader for URP.",
-  "version": "0.4.2",
+  "version": "0.4.6",
   "unity": "2020.3",
   "dependencies": {
     "com.unity.render-pipelines.universal": "10.3.2"
