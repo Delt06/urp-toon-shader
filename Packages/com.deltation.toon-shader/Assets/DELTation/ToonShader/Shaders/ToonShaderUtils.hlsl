@@ -80,14 +80,14 @@ float get_aniso_specular(const float3 view_direction_ws, const float3 tangent_ws
     return max(0, specular);
 }
 
-inline half get_specular(const float3 view_direction_ws, const float3 normal_ws, const float3 light_direction_ws)
+inline half get_specular(half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws)
 {
-    const float3 half_vector = normalize(view_direction_ws + light_direction_ws);
+    const half3 half_vector = normalize(view_direction_ws + light_direction_ws);
     return saturate(dot(normal_ws, half_vector));
 }
 
-inline half3 get_specular_color(half3 light_color, float3 view_direction_ws, float3 normal_ws, float3 tangent_ws,
-                                float3 light_direction_ws)
+inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half3 tangent_ws,
+                                half3 light_direction_ws)
 {
     #ifndef _SPECULAR
     return 0;
