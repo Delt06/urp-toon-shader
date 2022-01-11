@@ -143,7 +143,8 @@ half4 frag(const v2f input) : SV_Target
     half3 normal_ws = input.normalWS;
     #endif
 
-    normal_ws = NormalizeNormalPerPixel(normal_ws);
+    normal_ws = normalize(normal_ws);
+    
     const half3 light_direction_ws = normalize(main_light.direction);
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
