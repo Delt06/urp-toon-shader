@@ -11,7 +11,7 @@ struct v2f
     float2 uv : TEXCOORD0;
     // xyz components are for positionWS, w is for fog factor
     float4 positionWSAndFogFactor : TEXCOORD1;
-    float3 normalWS : TEXCOORD2;
+    half3 normalWS : TEXCOORD2;
     float4 positionCS : SV_POSITION;
 
 
@@ -29,11 +29,11 @@ struct v2f
     #endif
 
     #if REQUIRE_TANGENT_INTERPOLATOR
-    float3 tangentWS : TEXCOORD6;
+    half3 tangentWS : TEXCOORD6;
     #endif
 
     #ifdef _NORMALMAP
-    float3 bitangentWS : TEXCOORD7;
+    half3 bitangentWS : TEXCOORD7;
     #endif
 
     #ifdef _VERTEX_COLOR
