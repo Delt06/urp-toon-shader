@@ -99,11 +99,11 @@ inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half
     half specular = get_specular(view_direction_ws, normal_ws, light_direction_ws);
     #endif
     
-    const half specular_exponent = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularExponent);
+    const half specular_exponent = _SpecularExponent;
     specular = pow(specular, specular_exponent);
-    const half4 specular_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularColor);
-    const half specular_threshold = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularThreshold);
-    const half specular_smoothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _SpecularSmoothness);
+    const half4 specular_color = _SpecularColor;
+    const half specular_threshold = _SpecularThreshold;
+    const half specular_smoothness = _SpecularSmoothness;
     const half3 ramp = get_simple_ramp(light_color, specular_color.a, specular_threshold, specular_smoothness,
                                        specular);
     return specular_color.xyz * ramp;
@@ -121,9 +121,9 @@ inline half3 get_fresnel_color(half3 light_color, half3 view_direction_ws, half3
     return 0;
     #else
     const half fresnel = get_fresnel(view_direction_ws, normal_ws);
-    const half4 fresnel_color = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _FresnelColor);
-    const half fresnel_thickness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _FresnelThickness);
-    const half fresnel_smothness = UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _FresnelSmoothness);
+    const half4 fresnel_color = _FresnelColor;
+    const half fresnel_thickness = _FresnelThickness;
+    const half fresnel_smothness = _FresnelSmoothness;
     return fresnel_color.xyz * get_simple_ramp(light_color, fresnel_color.a, fresnel_thickness, fresnel_smothness, brightness * fresnel);
     #endif
 }
