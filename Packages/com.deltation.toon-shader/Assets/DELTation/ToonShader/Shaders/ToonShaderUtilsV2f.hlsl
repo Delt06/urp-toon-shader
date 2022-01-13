@@ -29,7 +29,16 @@ inline Light get_main_light(in v2f input SHADOW_MASK_PARAM)
     #ifdef USE_SHADOW_MASK
     return GetMainLight(shadow_coord, input.positionWSAndFogFactor.xyz, shadow_mask);
     #else
-    return GetMainLight(shadow_coord);
+    
+    // ReSharper disable once CppLocalVariableMayBeConst
+    Light light = GetMainLight(shadow_coord);
+    
+    #ifdef MAIN_LIGHT_CALCULATE_SHADOWS
+    light.shadowAttenuation = lerp(light.shadowAttenuation, 1, GetShadowFade(input.positionWSAndFogFactor.xyz));
+    #endif
+    
+    return light;
+    
     #endif
 }
 
