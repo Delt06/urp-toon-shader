@@ -84,9 +84,9 @@ Add the following line to `Packages/manifest.json`:
 
 ## Examples
 
-![Toony Tiny City Demo](Showcase/toony_tiny_city_demo.jpg)
+<img src="Showcase/toony_tiny_city_demo.jpg" alt="Toony Tiny City Demo" width="400">
 
-![Anime Character: Arisa](Showcase/anime-character-arisa.jpg)
+<img src="Showcase/anime-character-arisa.jpg" alt="Anime Character: Arisa" width="400">
 
 ## Performance Benchmark
 Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
