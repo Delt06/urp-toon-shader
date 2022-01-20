@@ -4,6 +4,17 @@ A toon shader compatible with the Universal Rendering Pipeline.
 
 ![Main](Showcase/main.png)
 
+### Table of Contents
+
+[Toon Shader Capabilities](#toon-shader-capabilities)  
+[Toon Shader (Lite) Capabilities](#toon-shader-lite-capabilities)
+[Installation](#installation)  
+[Documentation](#documentation)  
+[Examples](#examples)  
+[Performance](#performance)  
+[Used Assets](#used-assets)  
+
+
 ## Toon Shader Capabilities
 
 ### Surface
@@ -71,6 +82,10 @@ Add the following line to `Packages/manifest.json`:
 ## Documentation
 [Forest Demo Breakdown](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown)
 
+## Examples
+
+![Toony Tiny City Demo](Showcase/toony_tiny_city_demo.jpg)
+
 ## Performance
 Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
@@ -118,4 +133,5 @@ Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW
 - [Character Pack: Free Sample](https://assetstore.unity.com/packages/3d/characters/humanoids/character-pack-free-sample-79870) by Supercyan
 - [The Free Medieval and War Props](https://asststore.unity.com/packages/3d/props/the-free-medieval-and-war-props-174433) by Inguz Media
 - [Stone](https://assetstore.unity.com/packages/3d/environments/landscapes/stone-62333) by Vsify
-- [Hair Shader 1.0](https://assetstore.unity.com/packages/tools/hair-shader-1-0-117773) by RRFreelance / PiXelBurner 
+- [Hair Shader 1.0](https://assetstore.unity.com/packages/tools/hair-shader-1-0-117773) by RRFreelance / PiXelBurner
+- [Toony Tiny City Demo](https://assetstore.unity.com/packages/3d/environments/urban/toony-tiny-city-demo-176087) by Marcelo Barrio
