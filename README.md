@@ -8,6 +8,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 
 [Toon Shader Capabilities](#toon-shader-capabilities)  
 [Toon Shader (Lite) Capabilities](#toon-shader-lite-capabilities)  
+[Inverted Hull Outline](#inverted-hull-outline)  
 [Installation](#installation)  
 [Documentation](#documentation)  
 [Examples](#examples)  
@@ -66,6 +67,12 @@ A toon shader compatible with the Universal Rendering Pipeline.
 ### Performance
 - SRP Batcher compatibility
 - GPU Instancing
+
+## Inverted Hull Outline
+
+A simple and performant outline shader. Renders outlines of objects on certain layers via a Renderer Feature.
+
+<img src="Showcase/inverted_hull_outline.jpg" alt="Inverted Hull Outline" width="300">
 
 ## Installation
 ### Option 1
