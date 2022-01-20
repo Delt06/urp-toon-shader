@@ -18,6 +18,8 @@ A toon shader compatible with the Universal Rendering Pipeline.
 
 ## Toon Shader Capabilities
 
+<img src="Showcase/toon_icon.jpg" alt="Toon Icon" width="150">
+
 ### Surface
 
 - Opaque/Transparent with blending modes:
@@ -54,6 +56,8 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - GPU Instancing
 
 ## Toon Shader (Lite) Capabilities
+
+<img src="Showcase/toon_lite_icon.jpg" alt="Toon Lite Icon" width="150">
 
 ### Color
 
