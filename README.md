@@ -11,7 +11,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 [Installation](#installation)  
 [Documentation](#documentation)  
 [Examples](#examples)  
-[Performance](#performance)  
+[Performance Benchmark](#performance-benchmark)  
 [Used Assets](#used-assets)  
 
 
@@ -86,7 +86,7 @@ Add the following line to `Packages/manifest.json`:
 
 ![Toony Tiny City Demo](Showcase/toony_tiny_city_demo.jpg)
 
-## Performance
+## Performance Benchmark
 Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
 > The results are obtained with Mali Offline Compiler.
