@@ -88,6 +88,8 @@ Add the following line to `Packages/manifest.json`:
 
 <img src="Showcase/anime-character-arisa.jpg" alt="Anime Character: Arisa" width="400">
 
+<img src="Showcase/fur.jpg" alt="fur" width="400">
+
 ## Performance Benchmark
 Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
