@@ -1,4 +1,4 @@
-﻿Shader "DELTation/Inverse Hull Outline"
+﻿Shader "DELTation/Inverted Hull Outline"
 {
 	Properties
 	{

@@ -54,11 +54,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Inverse Hull Outline
+  m_Name: Inverted Hull Outline
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: Inverse Hull Outline
+    passTag: Inverted Hull Outline
     Event: 250
     filterSettings:
       RenderQueueType: 0

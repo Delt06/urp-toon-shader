@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Inverse Hull Outline
+  m_Name: Inverted Hull Outline
   m_Shader: {fileID: 4800000, guid: ff7f2aca5d3f42edbad9a22bab9bebe6, type: 3}
   m_ShaderKeywords: CLIP_SPACE
   m_LightmapFlags: 4
