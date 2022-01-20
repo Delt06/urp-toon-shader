@@ -99,6 +99,8 @@ Add the following line to `Packages/manifest.json`:
 
 <img src="Showcase/anime-character-arisa.jpg" alt="Anime Character: Arisa" width="400">
 
+<img src="Showcase/warrior.jpg" alt="warrior" width="400">
+
 <img src="Showcase/fur.jpg" alt="fur" width="400">
 
 ## Performance Benchmark
@@ -144,6 +146,7 @@ Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW
 ## Used Assets
 - [UnityFx.Outline](https://github.com/Arvtesh/UnityFx.Outline)
 - [Animated Mech Pack](https://quaternius.com/packs/animatedmech.html) by Quaternius
+- [RPG Character Pack](https://quaternius.com/packs/rpgcharacters.html) by Quaternius
 - [Environment Pack: Free Forest Sample](https://assetstore.unity.com/packages/3d/vegetation/environment-pack-free-forest-sample-168396) by Supercyan
 - [Character Pack: Free Sample](https://assetstore.unity.com/packages/3d/characters/humanoids/character-pack-free-sample-79870) by Supercyan
 - [The Free Medieval and War Props](https://asststore.unity.com/packages/3d/props/the-free-medieval-and-war-props-174433) by Inguz Media
