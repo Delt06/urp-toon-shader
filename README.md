@@ -7,7 +7,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 ### Table of Contents
 
 [Toon Shader Capabilities](#toon-shader-capabilities)  
-[Toon Shader (Lite) Capabilities](#toon-shader-lite-capabilities)
+[Toon Shader (Lite) Capabilities](#toon-shader-lite-capabilities)  
 [Installation](#installation)  
 [Documentation](#documentation)  
 [Examples](#examples)  
