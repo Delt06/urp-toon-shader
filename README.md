@@ -86,6 +86,8 @@ Add the following line to `Packages/manifest.json`:
 
 ![Toony Tiny City Demo](Showcase/toony_tiny_city_demo.jpg)
 
+![Anime Character: Arisa](Showcase/anime-character-arisa.jpg)
+
 ## Performance Benchmark
 Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
@@ -135,3 +137,4 @@ Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW
 - [Stone](https://assetstore.unity.com/packages/3d/environments/landscapes/stone-62333) by Vsify
 - [Hair Shader 1.0](https://assetstore.unity.com/packages/tools/hair-shader-1-0-117773) by RRFreelance / PiXelBurner
 - [Toony Tiny City Demo](https://assetstore.unity.com/packages/3d/environments/urban/toony-tiny-city-demo-176087) by Marcelo Barrio
+- [Anime Character : Arisa](https://assetstore.unity.com/packages/3d/characters/anime-character-arisa-free-remakev2-contain-vrm-164251) by 戴永翔 Dai Yong Xiang
