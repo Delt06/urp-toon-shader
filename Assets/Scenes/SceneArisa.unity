@@ -227,8 +227,28 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7984682471639096682, guid: ed2908b5df9f6fd4891905c2e119ee0b,
         type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984682471639096682, guid: ed2908b5df9f6fd4891905c2e119ee0b,
+        type: 3}
       propertyPath: field of view
       value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984682471639096682, guid: ed2908b5df9f6fd4891905c2e119ee0b,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.5834839
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984682471639096682, guid: ed2908b5df9f6fd4891905c2e119ee0b,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.3972499
+      objectReference: {fileID: 0}
+    - target: {fileID: 7984682471639096682, guid: ed2908b5df9f6fd4891905c2e119ee0b,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.745283
       objectReference: {fileID: 0}
     - target: {fileID: 7984682471639096687, guid: ed2908b5df9f6fd4891905c2e119ee0b,
         type: 3}
