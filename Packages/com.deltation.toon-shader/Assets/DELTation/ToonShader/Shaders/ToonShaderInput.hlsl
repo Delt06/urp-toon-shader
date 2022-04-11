@@ -2,7 +2,7 @@
 #define TOON_SHADER_INPUT_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-#include "./ToonShaderInstancing.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInstancing.hlsl"
 
 #define TOON_SHADER_CBUFFER_START CBUFFER_START(UnityPerMaterial)
 

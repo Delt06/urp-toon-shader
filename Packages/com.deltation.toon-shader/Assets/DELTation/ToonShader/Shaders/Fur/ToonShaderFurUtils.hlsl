@@ -1,7 +1,7 @@
 ﻿#ifndef TOON_SHADER_FUR_UTILS
 #define TOON_SHADER_FUR_UTILS
 
-#include "../ToonShaderUtils.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderUtils.hlsl"
 
 void fur_hook_vertex_input(inout appdata input)
 {

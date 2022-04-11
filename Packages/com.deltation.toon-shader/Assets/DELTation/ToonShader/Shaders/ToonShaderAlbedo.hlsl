@@ -2,7 +2,7 @@
 #define TOON_SHADER_ALBEDO_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-#include "./ToonShaderInput.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
 
 inline half4 get_albedo_and_alpha_discard(const v2f input)
 {

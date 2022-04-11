@@ -27,7 +27,7 @@ struct v2f
     #endif
 };
 
-#include "./ToonShaderAlbedo.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderAlbedo.hlsl"
 
 v2f MetaPassVertex(appdata input)
 {

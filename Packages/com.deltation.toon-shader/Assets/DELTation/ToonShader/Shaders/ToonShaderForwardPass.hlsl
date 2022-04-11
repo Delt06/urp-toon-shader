@@ -48,8 +48,8 @@ struct v2f
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
-#include "./ToonShaderUtils.hlsl"
-#include "./ToonShaderUtilsV2f.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderUtils.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderUtilsV2f.hlsl"
 
 v2f vert(appdata input)
 {
@@ -119,7 +119,7 @@ half3 sample_normal(float2 uv, TEXTURE2D_PARAM(bumpMap, sampler_bumpMap), half s
     #endif
 }
 
-#include "./ToonShaderAlbedo.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderAlbedo.hlsl"
 
 half4 frag(const v2f input) : SV_Target
 {

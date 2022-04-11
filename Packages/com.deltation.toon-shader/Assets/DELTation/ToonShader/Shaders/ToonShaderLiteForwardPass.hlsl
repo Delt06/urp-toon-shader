@@ -43,7 +43,7 @@ struct v2f
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
-#include "./ToonShaderUtils.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderUtils.hlsl"
 
 inline half4 get_main_light_color_and_brightness(in const float4 position_cs, in const half3 normal_ws,
                                                  const float4 shadow_coords = 0)

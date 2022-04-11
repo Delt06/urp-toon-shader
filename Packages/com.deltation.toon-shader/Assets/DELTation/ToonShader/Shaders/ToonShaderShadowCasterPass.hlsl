@@ -21,8 +21,8 @@ struct v2f
     float2 uv : TEXCOORD0;
 };
 
-#include "./ToonShaderUtils.hlsl"
-#include "./ToonShaderUtilsV2f.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderUtils.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderUtilsV2f.hlsl"
 
 float4 get_shadow_position_h_clip(appdata input)
 {
