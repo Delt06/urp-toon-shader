@@ -66,7 +66,6 @@ namespace Editor
 
 		private static void Analyze(Shader shader, string compiledShaderName, string keywords)
 		{
-			Debug.LogWarning(keywords);
 			OpenCompiledShader(shader);
 
 			var allText = File.ReadAllLines(Path.Combine(Application.dataPath, "..", "Temp", compiledShaderName));
@@ -94,6 +93,7 @@ namespace Editor
 					.ToArray();
 				AnalyzeShader(fragmentShaderLines, "temp_shader.frag");
 
+				Debug.LogWarning(keywords);
 				return;
 			}
 

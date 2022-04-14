@@ -1,8 +1,26 @@
 ﻿#ifndef TOON_SHADER_LITE_FORWARD_PASS
 #define TOON_SHADER_LITE_FORWARD_PASS
 
-#if defined(_TOON_RECEIVE_SHADOWS) && defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+#if defined(_TOON_VERTEX_LIT)
+#define LITE_VERTEX_LIT
+
+#if defined(SHADER_API_GLES) || defined(SHADER_API_GLES3)
+#define LITE_DISABLE_VS_SHADOWS
+#endif
+
+#endif
+
+#if defined(_TOON_RECEIVE_SHADOWS) && (defined(_MAIN_LIGHT_SHADOWS) || defined(_MAIN_LIGHT_SHADOWS_CASCADE))
 #define LITE_MAIN_LIGHT_SHADOWS
+
+#if !defined(LITE_VERTEX_LIT) && defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+#define LITE_REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
+#endif
+
+#if defined(LITE_MAIN_LIGHT_SHADOWS) && !defined(LITE_VERTEX_LIT)
+#define LITE_REQUIRES_VERTEX_POSITION_WS_INTERPOLATOR
+#endif
+
 #endif
 
 struct appdata
@@ -26,7 +44,7 @@ struct v2f
 
     float fogFactor : TEXCOORD1;
 
-    #ifdef _TOON_VERTEX_LIT
+    #ifdef LITE_VERTEX_LIT
     half4 mainLightColorAndBrightness : TEXCOORD2;
     #else
 	half3 normalWS : TEXCOORD2;
@@ -36,8 +54,12 @@ struct v2f
     half3 vertexColor : COLOR;
     #endif
 
-    #if defined(LITE_MAIN_LIGHT_SHADOWS) && !defined(_TOON_VERTEX_LIT)
+    #if defined(LITE_REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     float4 shadowCoord : TEXCOORD3;
+    #endif
+    
+    #if defined(LITE_REQUIRES_VERTEX_POSITION_WS_INTERPOLATOR)
+    float3 positionWS : TEXCOORD4;
     #endif
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -46,12 +68,25 @@ struct v2f
 #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderUtils.hlsl"
 
 inline half4 get_main_light_color_and_brightness(in const float4 position_cs, in const half3 normal_ws,
+                                                const float3 position_ws = 0,
                                                  const float4 shadow_coords = 0)
 {
-    #ifdef TOON_SHADER_LITE_HOOK_MAIN_LIGHT
-    const Light main_light = TOON_SHADER_LITE_HOOK_MAIN_LIGHT(shadow_coords);
+    #if defined(LITE_VERTEX_LIT) && defined(LITE_DISABLE_VS_SHADOWS)
+    
+    Light main_light = GetMainLight();
+    
     #else
-    const Light main_light = GetMainLight(shadow_coords);
+    
+    #if defined(TOON_SHADER_LITE_HOOK_MAIN_LIGHT)
+    Light main_light = TOON_SHADER_LITE_HOOK_MAIN_LIGHT(shadow_coords);
+    #else
+    Light main_light = GetMainLight(shadow_coords);
+    #endif
+
+    #ifdef LITE_MAIN_LIGHT_SHADOWS
+    main_light.shadowAttenuation = lerp(main_light.shadowAttenuation, 1, GetShadowFade(position_ws));
+    #endif
+    
     #endif
     
     const half3 light_direction_ws = normalize(main_light.direction);
@@ -88,19 +123,23 @@ v2f vert(appdata input)
     output.fogFactor = get_fog_factor(position_cs.z);
     const half3 normal_ws = TransformObjectToWorldDir(input.normalOS);
 
-    #ifdef _TOON_VERTEX_LIT
+    #ifdef LITE_VERTEX_LIT
     output.mainLightColorAndBrightness =
         get_main_light_color_and_brightness(position_cs,
                                             normalize(normal_ws)
                                             #ifdef LITE_MAIN_LIGHT_SHADOWS
-                , get_shadow_coord(position_ws)
+                , position_ws, get_shadow_coord(position_ws)
                                             #endif
         );
     #else
 	output.normalWS = normal_ws;
 
-    #ifdef LITE_MAIN_LIGHT_SHADOWS
+    #ifdef LITE_REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
     output.shadowCoord = get_shadow_coord(position_ws);
+    #endif
+
+    #if defined(LITE_REQUIRES_VERTEX_POSITION_WS_INTERPOLATOR)
+    output.positionWS = position_ws;
     #endif
 
     #endif
@@ -122,17 +161,18 @@ half4 frag(const v2f input) : SV_Target
     base_color.xyz *= input.vertexColor;
     #endif
     const half3 sample_color = (SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * base_color).rgb;
-
-
-    #ifdef _TOON_VERTEX_LIT
+    
+    #ifdef LITE_VERTEX_LIT
     const half4 main_light_color_and_brightness = input.mainLightColorAndBrightness;
     #else
     
 	const half4 main_light_color_and_brightness = get_main_light_color_and_brightness(input.positionCS,
 	    normalize(input.normalWS)
-    #ifdef LITE_MAIN_LIGHT_SHADOWS
-	    , input.shadowCoord
-    #endif
+	    #if defined(LITE_REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+        , input.positionWS, input.shadowCoord 
+        #elif defined(LITE_MAIN_LIGHT_SHADOWS)
+        , input.positionWS, TransformWorldToShadowCoord(input.positionWS) 
+        #endif
 	    );
     
     #endif
