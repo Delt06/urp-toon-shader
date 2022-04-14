@@ -93,7 +93,7 @@ namespace Editor
 					.ToArray();
 				AnalyzeShader(fragmentShaderLines, "temp_shader.frag");
 
-				Debug.LogWarning(keywords);
+				Debug.Log(keywords);
 				return;
 			}
 
