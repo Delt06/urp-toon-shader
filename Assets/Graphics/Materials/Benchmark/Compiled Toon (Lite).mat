@@ -15,15 +15,23 @@ MonoBehaviour:
   version: 4
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Compiled Toon (Lite)
   m_Shader: {fileID: 4800000, guid: 78ba6c2256ec3954188411a3a2382dc8, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG
-    _FRESNEL _RAMP_TRIPLE _SPECULAR _TOON_RECEIVE_SHADOWS _ZWRITE_ON
+  m_ValidKeywords:
+  - _FOG
+  - _TOON_RECEIVE_SHADOWS
+  m_InvalidKeywords:
+  - _ADDITIONAL_LIGHTS_ENABLED
+  - _ENVIRONMENT_LIGHTING_ENABLED
+  - _FRESNEL
+  - _RAMP_TRIPLE
+  - _SPECULAR
+  - _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -93,6 +101,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AdditionalLights: 1
     - _AdditionalLightsSpecular: 0

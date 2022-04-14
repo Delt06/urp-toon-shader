@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Debug = UnityEngine.Debug;
 
 namespace Editor
 {
@@ -19,66 +20,63 @@ namespace Editor
 		private const string MaliocPath =
 			"C:\\Program Files\\Arm\\Arm Mobile Studio 2021.1\\mali_offline_compiler\\malioc.exe";
 
+
 		private void OnGUI()
 		{
 			if (GUILayout.Button("Analyze Toon"))
 				Analyze(
 					Shader.Find("DELTation/Toon Shader"),
 					"Compiled-DELTation-Toon Shader.shader",
-					"Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT",
-					"Local Keywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG _FRESNEL _RAMP_TRIPLE _SPECULAR"
+					BuildKeywordsLine("FOG_LINEAR", "_ADDITIONAL_LIGHTS", "_ADDITIONAL_LIGHTS_ENABLED",
+						"_ADDITIONAL_LIGHT_SHADOWS", "_ENVIRONMENT_LIGHTING_ENABLED", "_FOG", "_FRESNEL",
+						"_MAIN_LIGHT_SHADOWS_CASCADE", "_RAMP_TRIPLE", "_SHADOWS_SOFT", "_SPECULAR"
+					)
 				);
 
 			if (GUILayout.Button("Analyze Toon (Lite)"))
 				Analyze(
 					Shader.Find("DELTation/Toon Shader (Lite)"),
 					"Compiled-DELTation-Toon Shader (Lite).shader",
-					"Global Keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE",
-					"Local Keywords: _FOG _TOON_RECEIVE_SHADOWS"
+					"Global Keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE"
 				);
 
 			if (GUILayout.Button("Analyze Lit"))
 				Analyze(
 					Shader.Find(ShaderUtils.GetShaderPath(ShaderPathID.Lit)),
 					"Compiled-Universal Render Pipeline-Lit.shader",
-					"Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT",
-					"Local Keywords: <none>"
+					"Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT"
 				);
 
 			if (GUILayout.Button("Analyze Simple Lit"))
 				Analyze(
 					Shader.Find(ShaderUtils.GetShaderPath(ShaderPathID.SimpleLit)),
 					"Compiled-Universal Render Pipeline-Simple Lit.shader",
-					"Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT",
-					"Local Keywords: <none>"
+					"Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT"
 				);
 
 			if (GUILayout.Button("Analyze TCP2 Hybrid"))
 				Analyze(
 					Shader.Find("Toony Colors Pro 2/Hybrid Shader"),
 					"Compiled-Toony Colors Pro 2-Hybrid Shader.shader",
-					"Global Keywords: FOG_LINEAR TCP2_HYBRID_URP _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT",
-					"Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW_LIGHT_COLOR"
+					"Global Keywords: FOG_LINEAR TCP2_HYBRID_URP _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT"
 				);
 		}
 
-		private static void Analyze(Shader shader, string compiledShaderName, string globalKeywords,
-			string localKeywords)
+		private string BuildKeywordsLine(params string[] keywords) => "Keywords: " + string.Join(" ", keywords);
+
+		private static void Analyze(Shader shader, string compiledShaderName, string keywords)
 		{
+			Debug.LogWarning(keywords);
 			OpenCompiledShader(shader);
 
 			var allText = File.ReadAllLines(Path.Combine(Application.dataPath, "..", "Temp", compiledShaderName));
 
-			for (var index = 0; index < allText.Length - 1; index++)
+			for (var index = 0; index < allText.Length; index++)
 			{
 				var thisLine = allText[index];
-				var nextLine = allText[index + 1];
 
 				if (thisLine.Trim() !=
-				    globalKeywords)
-					continue;
-				if (nextLine.Trim() !=
-				    localKeywords)
+				    keywords)
 					continue;
 
 				var vertexIndex = Array.IndexOf(allText, IfDefVertex, index);
@@ -96,8 +94,11 @@ namespace Editor
 					.ToArray();
 				AnalyzeShader(fragmentShaderLines, "temp_shader.frag");
 
-				break;
+				return;
 			}
+
+			Debug.LogWarning("Did not find a shader variant with keywords:");
+			Debug.LogWarning(keywords);
 		}
 
 		private static void OpenCompiledShader(Shader shader)

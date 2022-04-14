@@ -110,7 +110,7 @@ Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
 | Shader Type               | Vertex Shader Cycles (L/S) | Fragment Shader Cycles (L/S)|
 |---------------------------|----------------------------|-----------------------------|
-| Lit                       | 9                          | 15                          |
+| Lit                       | 7                          | 15                          |
 | URP Toon Shader           | 12                         | 10                          |
 | Toony Colors Pro (Hybrid) | 7                          | 15                          |
 
@@ -125,6 +125,9 @@ Driver: r25p0-00rel0
 ```
 
 ### Enabled keywords
+
+**TODO**: update for 2021.3
+
 Lit:
 ```
 Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE  _SHADOWS_SOFT
@@ -133,9 +136,10 @@ Local Keywords: _EMISSION
 
 URP Toon Shader:
 ```
-Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT 
-Local Keywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG _FRESNEL _RAMP_TRIPLE _SPECULAR
+Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHTS_ENABLED _ADDITIONAL_LIGHT_SHADOWS _ENVIRONMENT_LIGHTING_ENABLED _FOG _FRESNEL _MAIN_LIGHT_SHADOWS_CASCADE _RAMP_TRIPLE _SHADOWS_SOFT _SPECULAR
 ```
+
+**TODO**: update for 2021.3
 
 Toony Colors Pro (Hybrid)
 ```

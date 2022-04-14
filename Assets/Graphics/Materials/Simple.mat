@@ -24,6 +24,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
   m_ValidKeywords:
   - _ADDITIONAL_LIGHTS_ENABLED
+  - _ADDITIONAL_LIGHTS_SPECULAR
   - _FOG
   - _FRESNEL
   - _SPECULAR
@@ -101,7 +102,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AdditionalLights: 1
-    - _AdditionalLightsSpecular: 0
+    - _AdditionalLightsSpecular: 1
     - _AlphaClip: 0
     - _AnisoSpecular: 0
     - _Blend: 0
