@@ -110,8 +110,8 @@ Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
 
 | Shader Type               | Vertex Shader Cycles (L/S) | Fragment Shader Cycles (L/S)|
 |---------------------------|----------------------------|-----------------------------|
-| Lit                       | 7                          | 15                          |
-| URP Toon Shader           | 12                         | 10                          |
+| Lit                       | 9                          | 15                          |
+| URP Toon Shader           | 8                          | 10                          |
 | Toony Colors Pro (Hybrid) | 7                          | 15                          |
 
 > L/S = Load/Store.
