@@ -96,7 +96,7 @@ v2f vert(appdata input)
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
     half3 additional_lights_diffuse_color = 0, additional_lights_specular_color = 0;
-    DECLARE_SHADOW_MASK
+    DECLARE_SHADOW_MASK(output)
     additional_lights(output.positionCS, position_ws, output.normalWS, vertex_normal_inputs.tangentWS, additional_lights_diffuse_color, additional_lights_specular_color SHADOW_MASK_ARG);
     output.additional_lights_diffuse_color = additional_lights_diffuse_color;
 

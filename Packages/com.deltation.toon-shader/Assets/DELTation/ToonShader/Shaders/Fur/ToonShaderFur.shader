@@ -121,7 +121,7 @@
 			#pragma multi_compile_instancing
             
 
-            #if (defined(_ADDITIONAL_LIGHTS) || defined(_ADDITIONAL_LIGHTS_VERTEX)) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
+            #if defined(_ADDITIONAL_LIGHTS) && defined(_ADDITIONAL_LIGHTS_ENABLED) 
             #define TOON_ADDITIONAL_LIGHTS
             #endif
 

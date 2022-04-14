@@ -11,7 +11,7 @@
 
 #ifndef USE_SHADOW_MASK
 
-#define DECLARE_SHADOW_MASK(input)
+#define DECLARE_SHADOW_MASK(input) ;
 
 #else
 
@@ -25,7 +25,7 @@
 
 #endif
 
-#endif 
+#endif
 
 #ifdef USE_SHADOW_MASK
 #define SHADOW_MASK_ARG , shadow_mask
