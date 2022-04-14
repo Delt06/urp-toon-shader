@@ -18,7 +18,7 @@ namespace DELTation.ToonShader.Editor
 
 		private static readonly Dictionary<(UnityBlendMode src, UnityBlendMode dst), BlendMode>
 			UnityBlendModeToBlendMode =
-				new Dictionary<(UnityBlendMode src, UnityBlendMode dst), BlendMode>
+				new()
 				{
 					[(UnityBlendMode.SrcAlpha, UnityBlendMode.OneMinusSrcAlpha)] = BlendMode.Alpha,
 					[(UnityBlendMode.One, UnityBlendMode.OneMinusSrcAlpha)] = BlendMode.Premultiply,
@@ -138,6 +138,11 @@ namespace DELTation.ToonShader.Editor
 			else
 				material.DisableKeyword(alphaTestOnKeyword);
 
+			const string surfaceTypeTransparentKeyword = "_SURFACE_TYPE_TRANSPARENT";
+			if (surfaceType == SurfaceType.Transparent)
+				material.EnableKeyword(surfaceTypeTransparentKeyword);
+			else
+				material.DisableKeyword(surfaceTypeTransparentKeyword);
 
 			if (surfaceType == SurfaceType.Opaque)
 			{
@@ -186,6 +191,8 @@ namespace DELTation.ToonShader.Editor
 					case BlendMode.Multiply:
 						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
 						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 
 				material.SetOverrideTag("RenderType", "Transparent");

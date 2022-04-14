@@ -88,7 +88,7 @@ v2f vert(appdata input)
     OUTPUT_SH(output.normalWS, output.vertexSH);
     #endif
 
-    #ifdef _MAIN_LIGHT_SHADOWS
+    #ifdef REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
     output.shadowCoord = GetShadowCoord(vertex_position_inputs);
     #endif
 

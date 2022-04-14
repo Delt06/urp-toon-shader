@@ -181,7 +181,8 @@
             #pragma shader_feature_local _ANISO_SPECULAR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
             #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
-            
+
+            #pragma shader_feature_local_fragment _SURFACE_TYPE_TRANSPARENT
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
