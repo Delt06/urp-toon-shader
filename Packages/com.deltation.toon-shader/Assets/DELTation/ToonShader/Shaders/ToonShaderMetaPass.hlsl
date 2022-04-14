@@ -44,7 +44,6 @@ half4 MetaPassFragment(const v2f input) : SV_Target
 {
     MetaInput meta_input;
     meta_input.Albedo = get_albedo_and_alpha_discard(input).rgb;
-    meta_input.SpecularColor = 0;
 
     #ifdef _EMISSION
     meta_input.Emission = _EmissionColor;

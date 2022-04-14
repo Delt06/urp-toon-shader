@@ -49,14 +49,14 @@ inline float2 apply_tiling_offset(const float2 uv, const float4 map_st)
     return uv * map_st.xy + map_st.zw;
 }
 
-inline half4 get_additional_lights_color_attenuation(const float3 position_ws)
+inline half4 get_additional_lights_color_attenuation(const float3 position_ws SHADOW_MASK_PARAM)
 {
     half4 color_attenuation = 0;
 
     const int additional_lights_count = GetAdditionalLightsCount();
     for (int i = 0; i < additional_lights_count; ++i)
     {
-        const Light light = GetAdditionalLight(i, position_ws);
+        const Light light = GetAdditionalLight(i, position_ws SHADOW_MASK_ARG);
         const half attenuation = light.distanceAttenuation * light.shadowAttenuation;
         color_attenuation += half4(light.color, attenuation);
     }
@@ -195,13 +195,20 @@ inline void additional_lights(const half4 position_cs, const float3 position_ws,
                               )
 {
     const uint pixel_light_count = GetAdditionalLightsCount();
-    #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
-    const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
-    #endif
+        #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
+        const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
+        #endif
 
-    for (uint light_index = 0u; light_index < pixel_light_count; ++light_index)
-    {
-        const Light light = GetAdditionalLight(light_index, position_ws SHADOW_MASK_ARG);
+    LIGHT_LOOP_BEGIN(pixel_light_count)
+        const Light light = GetAdditionalLight(lightIndex, position_ws
+        #ifdef _ADDITIONAL_LIGHT_SHADOWS
+            #ifdef USE_SHADOW_MASK
+                SHADOW_MASK_ARG
+            #else
+                , 0
+            #endif
+        #endif
+            );
         const half attenuation = light.distanceAttenuation * light.shadowAttenuation;
         const half brightness = get_brightness(position_cs, normal_ws, light.direction, attenuation);
         half3 ramp_color = light.color * albedo; 
@@ -218,7 +225,7 @@ inline void additional_lights(const half4 position_cs, const float3 position_ws,
         specular_color += get_specular_color(light.color, view_direction_ws, normal_ws, tangent_ws, light.direction) *
             attenuation_step;
         #endif
-    }
+    LIGHT_LOOP_END
 }
 
 #endif
