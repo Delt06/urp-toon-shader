@@ -1,6 +1,6 @@
 # URP Toon Shader for Unity
 A toon shader compatible with the Universal Rendering Pipeline.
-> Developed and verified with Unity 2020.3.0f1 LTS and URP package 10.3.2
+> Developed and verified with Unity 2021.3.0f1 LTS and URP package 12.1.6
 
 ![Main](Showcase/main.png)
 
