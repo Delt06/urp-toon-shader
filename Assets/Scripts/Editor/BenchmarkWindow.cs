@@ -53,13 +53,6 @@ namespace Editor
 					"Compiled-Universal Render Pipeline-Simple Lit.shader",
 					"Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT"
 				);
-
-			if (GUILayout.Button("Analyze TCP2 Hybrid"))
-				Analyze(
-					Shader.Find("Toony Colors Pro 2/Hybrid Shader"),
-					"Compiled-Toony Colors Pro 2-Hybrid Shader.shader",
-					"Global Keywords: FOG_LINEAR TCP2_HYBRID_URP _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT"
-				);
 		}
 
 		private string BuildKeywordsLine(params string[] keywords) => "Keywords: " + string.Join(" ", keywords);
