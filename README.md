@@ -1,5 +1,8 @@
 # URP Toon Shader for Unity
-A toon shader compatible with the Universal Rendering Pipeline.
+A toon shader compatible with the Universal Render Pipeline.
+
+### Unity Version
+
 > Developed and verified with Unity 2021.3.0f1 LTS and URP package 12.1.6
 
 ![Main](Showcase/main.png)
@@ -81,16 +84,37 @@ A simple and performant outline shader. Renders outlines of objects on certain l
 <img src="Showcase/inverted_hull_outline.jpg" alt="Inverted Hull Outline" width="300">
 
 ## Installation
+
+For the latest version (Unity compatibility is specified [here](#unity-version)):
+
 ### Option 1
 - Open Package Manager through Window/Package Manager
 - Click "+" and choose "Add package from git URL..."
-- Insert the URL: https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader
+- Insert the URL:
+
+```
+https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader
+```
 
 ### Option 2
 Add the following line to `Packages/manifest.json`:
 ```
 "com.deltation.toon-shader": "https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader",
 ```
+
+### Specific Unity Version
+
+If you want to explicitly specify a Unity version, you should use a URL of the following form:
+
+```
+https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader#<UNITY-VERSION>
+```
+
+where `<UNITY-VERSION>` may be either of the following:
+- `2021.3`
+- `2020.3`
+
+By default, the shader is updated only for LTS versions of Unity. 
 
 ## Documentation
 [Forest Demo Breakdown](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown)
