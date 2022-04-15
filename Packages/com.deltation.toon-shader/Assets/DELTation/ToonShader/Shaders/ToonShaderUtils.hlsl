@@ -11,7 +11,7 @@
 
 #ifndef USE_SHADOW_MASK
 
-#define DECLARE_SHADOW_MASK(input)
+#define DECLARE_SHADOW_MASK(input) ;
 
 #else
 
@@ -25,7 +25,7 @@
 
 #endif
 
-#endif 
+#endif
 
 #ifdef USE_SHADOW_MASK
 #define SHADOW_MASK_ARG , shadow_mask
@@ -49,17 +49,16 @@ inline float2 apply_tiling_offset(const float2 uv, const float4 map_st)
     return uv * map_st.xy + map_st.zw;
 }
 
-inline half4 get_additional_lights_color_attenuation(const float3 position_ws)
+inline half4 get_additional_lights_color_attenuation(const float3 position_ws SHADOW_MASK_PARAM)
 {
     half4 color_attenuation = 0;
 
-    const int additional_lights_count = GetAdditionalLightsCount();
-    for (int i = 0; i < additional_lights_count; ++i)
-    {
-        const Light light = GetAdditionalLight(i, position_ws);
+    const uint additional_lights_count = GetAdditionalLightsCount();
+    LIGHT_LOOP_BEGIN(additional_lights_count)
+        const Light light = GetAdditionalLight(lightIndex, position_ws SHADOW_MASK_ARG);
         const half attenuation = light.distanceAttenuation * light.shadowAttenuation;
         color_attenuation += half4(light.color, attenuation);
-    }
+    LIGHT_LOOP_END
 
     return color_attenuation;
 }
@@ -80,14 +79,14 @@ float get_aniso_specular(const float3 view_direction_ws, const float3 tangent_ws
     return max(0, specular);
 }
 
-inline half get_specular(half3 view_direction_ws, half3 normal_ws, half3 light_direction_ws)
+inline half get_specular(float3 view_direction_ws, float3 normal_ws, float3 light_direction_ws)
 {
     const half3 half_vector = normalize(view_direction_ws + light_direction_ws);
     return saturate(dot(normal_ws, half_vector));
 }
 
-inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half3 tangent_ws,
-                                half3 light_direction_ws)
+inline half3 get_specular_color(half3 light_color, float3 view_direction_ws, float3 normal_ws, float3 tangent_ws,
+                                float3 light_direction_ws)
 {
     #ifndef _SPECULAR
     return 0;
@@ -110,12 +109,12 @@ inline half3 get_specular_color(half3 light_color, half3 view_direction_ws, half
     #endif
 }
 
-inline half get_fresnel(half3 view_direction_ws, half3 normal_ws)
+inline half get_fresnel(float3 view_direction_ws, float3 normal_ws)
 {
     return 1 - saturate(dot(view_direction_ws, normal_ws));
 }
 
-inline half3 get_fresnel_color(half3 light_color, half3 view_direction_ws, half3 normal_ws, half brightness)
+inline half3 get_fresnel_color(float3 light_color, float3 view_direction_ws, float3 normal_ws, half brightness)
 {
     #ifndef _FRESNEL
     return 0;
@@ -146,12 +145,18 @@ inline half get_ramp(half value)
     #endif
 }
 
-
-inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light_direction, half main_light_attenuation)
+inline half get_brightness_lambert_base(const half3 normal_ws, const half3 light_direction, const half main_light_attenuation)
 {
     const half dot_value = dot(normal_ws, light_direction);
+    const half brightness = min(dot_value, dot_value * main_light_attenuation);
+    return brightness;
+}
+
+
+inline half get_brightness(const half4 position_cs, const half3 normal_ws, const half3 light_direction, const half main_light_attenuation)
+{
     // ReSharper disable once CppLocalVariableMayBeConst
-    half brightness = min(dot_value, dot_value * main_light_attenuation);
+    half brightness = get_brightness_lambert_base(normal_ws, light_direction, main_light_attenuation);
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
     const float2 normalized_screen_space_uv = GetNormalizedScreenSpaceUV(position_cs);
@@ -159,6 +164,12 @@ inline half get_brightness(const half4 position_cs, half3 normal_ws, half3 light
     brightness = min(brightness, brightness * ao_factor.directAmbientOcclusion);
     #endif
 
+    return get_ramp(brightness);
+}
+
+inline half get_brightness_vs(const half3 normal_ws, const half3 light_direction, const half main_light_attenuation)
+{
+    const half brightness = get_brightness_lambert_base(normal_ws, light_direction, main_light_attenuation);
     return get_ramp(brightness);
 }
 
@@ -187,23 +198,31 @@ inline half3 get_ramp_color(const half4 position_cs, const half3 normal_ws, cons
     return ramp_color;
 }
 
-inline void additional_lights(const half4 position_cs, const float3 position_ws, const half3 normal_ws,
+inline void additional_lights(const float3 position_ws, const half3 normal_ws,
                               const half3 tangent_ws, inout half3 diffuse_color, inout half3 specular_color
                               SHADOW_MASK_PARAM
                               , const half3 albedo = half3(1, 1, 1)
                               
                               )
 {
-    const uint pixel_light_count = GetAdditionalLightsCount();
     #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
     const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
     #endif
 
-    for (uint light_index = 0u; light_index < pixel_light_count; ++light_index)
-    {
-        const Light light = GetAdditionalLight(light_index, position_ws SHADOW_MASK_ARG);
+    const uint pixel_light_count = GetAdditionalLightsCount();
+
+    LIGHT_LOOP_BEGIN(pixel_light_count)
+        const Light light = GetAdditionalLight(lightIndex, position_ws
+        #ifdef _ADDITIONAL_LIGHT_SHADOWS
+            #ifdef USE_SHADOW_MASK
+                SHADOW_MASK_ARG
+            #else
+                , 0
+            #endif
+        #endif
+            );
         const half attenuation = light.distanceAttenuation * light.shadowAttenuation;
-        const half brightness = get_brightness(position_cs, normal_ws, light.direction, attenuation);
+        const half brightness = get_brightness_vs(normal_ws, light.direction, attenuation);
         half3 ramp_color = light.color * albedo; 
 
         #ifdef _RAMP_MAP
@@ -218,7 +237,7 @@ inline void additional_lights(const half4 position_cs, const float3 position_ws,
         specular_color += get_specular_color(light.color, view_direction_ws, normal_ws, tangent_ws, light.direction) *
             attenuation_step;
         #endif
-    }
+    LIGHT_LOOP_END
 }
 
 #endif

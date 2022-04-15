@@ -8,6 +8,8 @@
 .idea/
 *.iml
 
+ProjectSettings/RiderScriptEditorPersistedState.asset
+
 # User-specific files
 *.rsuser
 *.suo

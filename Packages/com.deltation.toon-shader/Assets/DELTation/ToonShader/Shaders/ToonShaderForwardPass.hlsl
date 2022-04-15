@@ -11,11 +11,11 @@ struct v2f
     float2 uv : TEXCOORD0;
     // xyz components are for positionWS, w is for fog factor
     float4 positionWSAndFogFactor : TEXCOORD1;
-    half3 normalWS : TEXCOORD2;
+    float3 normalWS : TEXCOORD2;
     float4 positionCS : SV_POSITION;
 
 
-    #ifdef _MAIN_LIGHT_SHADOWS
+    #ifdef REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
     float4 shadowCoord : TEXCOORD3;
     #endif
 
@@ -29,11 +29,11 @@ struct v2f
     #endif
 
     #if REQUIRE_TANGENT_INTERPOLATOR
-    half3 tangentWS : TEXCOORD6;
+    float3 tangentWS : TEXCOORD6;
     #endif
 
     #ifdef _NORMALMAP
-    half3 bitangentWS : TEXCOORD7;
+    float3 bitangentWS : TEXCOORD7;
     #endif
 
     #ifdef _VERTEX_COLOR
@@ -88,7 +88,7 @@ v2f vert(appdata input)
     OUTPUT_SH(output.normalWS, output.vertexSH);
     #endif
 
-    #ifdef _MAIN_LIGHT_SHADOWS
+    #ifdef REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
     output.shadowCoord = GetShadowCoord(vertex_position_inputs);
     #endif
 
@@ -96,8 +96,8 @@ v2f vert(appdata input)
 
     #ifdef TOON_ADDITIONAL_LIGHTS_VERTEX
     half3 additional_lights_diffuse_color = 0, additional_lights_specular_color = 0;
-    DECLARE_SHADOW_MASK
-    additional_lights(output.positionCS, position_ws, output.normalWS, vertex_normal_inputs.tangentWS, additional_lights_diffuse_color, additional_lights_specular_color SHADOW_MASK_ARG);
+    DECLARE_SHADOW_MASK(output)
+    additional_lights(position_ws, output.normalWS, vertex_normal_inputs.tangentWS, additional_lights_diffuse_color, additional_lights_specular_color SHADOW_MASK_ARG);
     output.additional_lights_diffuse_color = additional_lights_diffuse_color;
 
     #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
@@ -129,25 +129,25 @@ half4 frag(const v2f input) : SV_Target
     const Light main_light = get_main_light(input SHADOW_MASK_ARG);
 
     #if REQUIRE_TANGENT_INTERPOLATOR
-    const half3 tangent_ws = input.tangentWS;
+    const float3 tangent_ws = input.tangentWS;
     #else
-    const half3 tangent_ws = 0;
+    const float3 tangent_ws = 0;
     #endif
 
     #if _NORMALMAP
-    const half3 normal_ts = sample_normal(input.uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap));
-    half3 normal_ws = TransformTangentToWorld(normal_ts,
+    const float3 normal_ts = sample_normal(input.uv, TEXTURE2D_ARGS(_BumpMap, sampler_BumpMap));
+    float3 normal_ws = TransformTangentToWorld(normal_ts,
                                               half3x3(tangent_ws, input.bitangentWS, input.normalWS)
     );
     #else
-    half3 normal_ws = input.normalWS;
+    float3 normal_ws = input.normalWS;
     #endif
 
     normal_ws = normalize(normal_ws);
     
-    const half3 light_direction_ws = normalize(main_light.direction);
+    const float3 light_direction_ws = normalize(main_light.direction);
     const float3 position_ws = input.positionWSAndFogFactor.xyz;
-    const half3 view_direction_ws = SafeNormalize(GetCameraPositionWS() - position_ws);
+    const float3 view_direction_ws = normalize(GetWorldSpaceViewDir(position_ws));
 
     half4 albedo = get_albedo_and_alpha_discard(input);
     half3 sample_color = albedo.xyz;
@@ -183,7 +183,7 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     #if defined(TOON_ADDITIONAL_LIGHTS)
-    additional_lights(position_cs, position_ws, normal_ws, tangent_ws, diffuse_color, specular_color
+    additional_lights(position_ws, normal_ws, tangent_ws, diffuse_color, specular_color
         SHADOW_MASK_ARG
     #ifdef _PURE_SHADOW_COLOR
         , albedo.rgb

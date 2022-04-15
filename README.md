@@ -1,6 +1,9 @@
 # URP Toon Shader for Unity
-A toon shader compatible with the Universal Rendering Pipeline.
-> Developed and verified with Unity 2020.3.0f1 LTS and URP package 10.3.2
+A toon shader compatible with the Universal Render Pipeline.
+
+### Unity Version
+
+> Developed and verified with Unity 2021.3.0f1 LTS and URP package 12.1.6
 
 ![Main](Showcase/main.png)
 
@@ -37,6 +40,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Additional lights 
   - per-vertex or per-pixel, depending on URP settings
   - optional specular highlights
+  - shadows
 - Casting and receiving shadows
 - Configurable shadow color (both in multiplicative and "pure" modes)
 - Emission
@@ -49,6 +53,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
   - Dynamically receive via light probes 
   - Contribute to bake process ("meta" pass)
 - Vertex Color
+- Screen-Space Shadows
 
 ### Performance
 
@@ -79,16 +84,37 @@ A simple and performant outline shader. Renders outlines of objects on certain l
 <img src="Showcase/inverted_hull_outline.jpg" alt="Inverted Hull Outline" width="300">
 
 ## Installation
+
+For the latest version (Unity compatibility is specified [here](#unity-version)):
+
 ### Option 1
 - Open Package Manager through Window/Package Manager
 - Click "+" and choose "Add package from git URL..."
-- Insert the URL: https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader
+- Insert the URL:
+
+```
+https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader
+```
 
 ### Option 2
 Add the following line to `Packages/manifest.json`:
 ```
 "com.deltation.toon-shader": "https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader",
 ```
+
+### Specific Unity Version
+
+If you want to explicitly specify a Unity version, you should use a URL of the following form:
+
+```
+https://github.com/Delt06/urp-toon-shader.git?path=Packages/com.deltation.toon-shader#<UNITY-VERSION>
+```
+
+where `<UNITY-VERSION>` may be either of the following:
+- `2021.3`
+- `2020.3`
+
+By default, the shader is updated only for LTS versions of Unity. 
 
 ## Documentation
 [Forest Demo Breakdown](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown)
@@ -102,46 +128,6 @@ Add the following line to `Packages/manifest.json`:
 <img src="Showcase/warrior.jpg" alt="warrior" width="400">
 
 <img src="Showcase/fur.jpg" alt="fur" width="400">
-
-## Performance Benchmark
-Lit vs. URP Toon Shader vs. Toony Colors Pro (Hybrid)
-
-> The results are obtained with Mali Offline Compiler.
-
-| Shader Type               | Vertex Shader Cycles (L/S) | Fragment Shader Cycles (L/S)|
-|---------------------------|----------------------------|-----------------------------|
-| Lit                       | 9                          | 15                          |
-| URP Toon Shader           | 12                         | 10                          |
-| Toony Colors Pro (Hybrid) | 7                          | 15                          |
-
-> L/S = Load/Store.
-
-
-### Configuration
-```
-Hardware: Mali-G78 r1p1
-Architecture: Valhall
-Driver: r25p0-00rel0
-```
-
-### Enabled keywords
-Lit:
-```
-Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE  _SHADOWS_SOFT
-Local Keywords: _EMISSION
-```
-
-URP Toon Shader:
-```
-Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT 
-Local Keywords: _ADDITIONAL_LIGHTS_ENABLED _ENVIRONMENT_LIGHTING_ENABLED _FOG _FRESNEL _RAMP_TRIPLE _SPECULAR
-```
-
-Toony Colors Pro (Hybrid)
-```
-Global Keywords: FOG_LINEAR TCP2_HYBRID_URP _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT 
-Local Keywords: TCP2_REFLECTIONS_FRESNEL TCP2_RIM_LIGHTING_LIGHTMASK TCP2_SHADOW_LIGHT_COLOR
-```
 
 ## Used Assets
 - [UnityFx.Outline](https://github.com/Arvtesh/UnityFx.Outline)

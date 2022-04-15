@@ -20,6 +20,8 @@ inline Light get_main_light(in v2f input SHADOW_MASK_PARAM)
     float4 shadow_coord;
     #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     shadow_coord = input.shadowCoord;
+    #elif defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
+    shadow_coord = ComputeScreenPos(input.positionCS);
     #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
     shadow_coord = TransformWorldToShadowCoord(input.positionWSAndFogFactor.xyz);
     #else
