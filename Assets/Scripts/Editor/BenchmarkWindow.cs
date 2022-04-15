@@ -37,7 +37,7 @@ namespace Editor
 				Analyze(
 					Shader.Find("DELTation/Toon Shader (Lite)"),
 					"Compiled-DELTation-Toon Shader (Lite).shader",
-					"Global Keywords: FOG_LINEAR _MAIN_LIGHT_SHADOWS_CASCADE"
+					BuildKeywordsLine("FOG_LINEAR", "_FOG", "_MAIN_LIGHT_SHADOWS_CASCADE", "_SHADOWS_SOFT", "_TOON_RECEIVE_SHADOWS")
 				);
 
 			if (GUILayout.Button("Analyze Lit"))
