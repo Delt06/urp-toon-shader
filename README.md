@@ -37,6 +37,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
 - Additional lights 
   - per-vertex or per-pixel, depending on URP settings
   - optional specular highlights
+  - shadows
 - Casting and receiving shadows
 - Configurable shadow color (both in multiplicative and "pure" modes)
 - Emission
@@ -49,6 +50,7 @@ A toon shader compatible with the Universal Rendering Pipeline.
   - Dynamically receive via light probes 
   - Contribute to bake process ("meta" pass)
 - Vertex Color
+- Screen-Space Shadows
 
 ### Performance
 
