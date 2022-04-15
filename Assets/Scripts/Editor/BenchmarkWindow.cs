@@ -37,7 +37,9 @@ namespace Editor
 				Analyze(
 					Shader.Find("DELTation/Toon Shader (Lite)"),
 					"Compiled-DELTation-Toon Shader (Lite).shader",
-					BuildKeywordsLine("FOG_LINEAR", "_FOG", "_MAIN_LIGHT_SHADOWS_CASCADE", "_SHADOWS_SOFT", "_TOON_RECEIVE_SHADOWS")
+					BuildKeywordsLine("FOG_LINEAR", "_FOG", "_MAIN_LIGHT_SHADOWS_CASCADE", "_SHADOWS_SOFT",
+						"_TOON_RECEIVE_SHADOWS"
+					)
 				);
 
 			if (GUILayout.Button("Analyze Lit"))
@@ -51,7 +53,9 @@ namespace Editor
 				Analyze(
 					Shader.Find(ShaderUtils.GetShaderPath(ShaderPathID.SimpleLit)),
 					"Compiled-Universal Render Pipeline-Simple Lit.shader",
-					"Global Keywords: FOG_LINEAR _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _SHADOWS_SOFT"
+					BuildKeywordsLine("FOG_LINEAR", "_ADDITIONAL_LIGHTS", "_ADDITIONAL_LIGHT_SHADOWS",
+						"_MAIN_LIGHT_SHADOWS_CASCADE", "_SHADOWS_SOFT", "_SPECULAR_COLOR"
+					)
 				);
 		}
 
