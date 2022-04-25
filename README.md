@@ -5,7 +5,7 @@ A toon shader compatible with the Universal Render Pipeline.
 
 > Developed and verified with Unity 2021.3.0f1 LTS and URP package 12.1.6
 
-![Main](Showcase/main.png)
+![Main](Showcase/main.jpg)
 
 ### Table of Contents
 
