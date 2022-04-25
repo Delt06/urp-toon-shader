@@ -203,19 +203,7 @@ half4 frag(const v2f input) : SV_Target
     #ifndef _PURE_SHADOW_COLOR
     fragment_color *= albedo.rgb;
     #endif
-
-    #ifdef _SPECULAR
-    fragment_color += specular_color;
-    #endif
-
-    #ifdef _FRESNEL
-    fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, main_light_brightness);
-    #endif
-
-    #ifdef _REFLECTIONS
-    add_reflections(fragment_color, view_direction_ws, normal_ws, position_ws);
-    #endif
-
+ 
     #ifdef _ENVIRONMENT_LIGHTING_ENABLED
 
     half3 gi = albedo.xyz * SAMPLE_GI(input.staticLightmapUV, input.vertexSH, input.normalWS);
@@ -227,6 +215,18 @@ half4 frag(const v2f input) : SV_Target
     #endif
 
     fragment_color += gi;
+    #endif
+
+    #ifdef _REFLECTIONS
+    add_reflections(fragment_color, view_direction_ws, normal_ws, position_ws, albedo.rgb);
+    #endif
+
+    #ifdef _SPECULAR
+    fragment_color += specular_color;
+    #endif
+
+    #ifdef _FRESNEL
+    fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, main_light_brightness);
     #endif
 
     #ifdef _EMISSION
