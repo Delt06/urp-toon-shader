@@ -7,11 +7,12 @@ namespace DELTation.ToonShader.Editor.Fur
 	[UsedImplicitly]
 	public class ToonShaderFurEditor : ToonShaderEditor
 	{
-		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties, Material material)
+		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
 		{
 			base.DrawProperties(materialEditor, properties, material);
-			
-			Label("Fur");
+			if (!Foldout("Fur")) return;
+
 			DrawProperty(materialEditor, properties, "_FurLength");
 			DrawProperty(materialEditor, properties, "_FurStep");
 			DrawProperty(materialEditor, properties, "_FurNoise");

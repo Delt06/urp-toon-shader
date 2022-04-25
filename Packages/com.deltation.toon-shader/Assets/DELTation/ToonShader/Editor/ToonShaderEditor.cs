@@ -31,24 +31,24 @@ namespace DELTation.ToonShader.Editor
 		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
 		{
-			Label("Surface Options");
-			DrawSurfaceProperties(materialEditor, properties);
-			Label("Color");
-			DrawColorProperties(materialEditor, properties);
-			RampLabel();
-			DrawRampProperties(materialEditor, properties, material);
-			Label("Normal Map");
-			DrawNormalMapProperties(materialEditor, properties, material);
-			Label("Emission");
-			DrawEmissionProperties(materialEditor, properties, material);
-			Label("Rim");
-			DrawRimProperties(materialEditor, properties, material);
-			Label("Specular");
-			DrawSpecularProperties(materialEditor, properties, material);
-			Label("Reflections");
-			DrawReflectionProperties(materialEditor, properties, material);
-			MiscLabel();
-			DrawMiscProperties(materialEditor, properties, material);
+			if (Foldout("Surface Options"))
+				DrawSurfaceProperties(materialEditor, properties);
+			if (Foldout("Color", true))
+				DrawColorProperties(materialEditor, properties);
+			if (RampFoldout())
+				DrawRampProperties(materialEditor, properties, material);
+			if (Foldout("Normal Map", true))
+				DrawNormalMapProperties(materialEditor, properties, material);
+			if (Foldout("Emission", true))
+				DrawEmissionProperties(materialEditor, properties, material);
+			if (Foldout("Rim"))
+				DrawRimProperties(materialEditor, properties, material);
+			if (Foldout("Specular"))
+				DrawSpecularProperties(materialEditor, properties, material);
+			if (Foldout("Reflections"))
+				DrawReflectionProperties(materialEditor, properties, material);
+			if (MiscFoldout())
+				DrawMiscProperties(materialEditor, properties, material);
 		}
 
 		private static void DrawNormalMapProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
@@ -146,6 +146,7 @@ namespace DELTation.ToonShader.Editor
 			else
 				material.DisableKeyword(surfaceTypeTransparentKeyword);
 
+			const string alphapremultiplyOnKeyword = "_ALPHAPREMULTIPLY_ON";
 			if (surfaceType == SurfaceType.Opaque)
 			{
 				if (alphaClip)
@@ -164,7 +165,7 @@ namespace DELTation.ToonShader.Editor
 				material.SetInt("_SrcBlend", (int)UnityBlendMode.One);
 				material.SetInt("_DstBlend", (int)UnityBlendMode.Zero);
 				material.SetInt("_ZWrite", 1);
-				material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+				material.DisableKeyword(alphapremultiplyOnKeyword);
 				material.SetShaderPassEnabled("ShadowCaster", true);
 			}
 			else
@@ -182,16 +183,16 @@ namespace DELTation.ToonShader.Editor
 				switch (blendMode)
 				{
 					case BlendMode.Alpha:
-						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+						material.DisableKeyword(alphapremultiplyOnKeyword);
 						break;
 					case BlendMode.Premultiply:
-						material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+						material.EnableKeyword(alphapremultiplyOnKeyword);
 						break;
 					case BlendMode.Additive:
-						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+						material.DisableKeyword(alphapremultiplyOnKeyword);
 						break;
 					case BlendMode.Multiply:
-						material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+						material.DisableKeyword(alphapremultiplyOnKeyword);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
