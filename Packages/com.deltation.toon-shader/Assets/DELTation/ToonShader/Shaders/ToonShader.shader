@@ -60,6 +60,11 @@
         // Editmode props
         [HideInInspector] _QueueOffset("Queue Offset", Float) = 0.0
         
+        [Toggle(_REFLECTIONS)] _Reflections("Reflections", Float) = 0.0
+        [Toggle(_REFLECTION_PROBES)] _ReflectionProbes("Reflection Probes", Float) = 0.0
+        _ReflectionSmoothness ("Smoothness", Range(0, 1)) = 0.5
+        _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
+        
     }
     SubShader
     {
@@ -98,12 +103,17 @@
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
+
+            #pragma shader_feature_local_fragment _REFLECTIONS
+            #pragma shader_feature_local_fragment _REFLECTION_PROBES
             
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
             
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK

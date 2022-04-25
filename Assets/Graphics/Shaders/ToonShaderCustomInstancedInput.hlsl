@@ -25,6 +25,8 @@ half _SpecularThreshold; \
 half _SpecularExponent; \
 half _Surface; \
 half _Cutoff; \
+half _ReflectionSmoothness; \
+half _ReflectionBlend; \
 \
 TEXTURE2D(_BaseMap); \
 SAMPLER(sampler_BaseMap); \

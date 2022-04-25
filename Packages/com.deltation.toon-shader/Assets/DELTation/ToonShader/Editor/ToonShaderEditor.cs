@@ -45,6 +45,8 @@ namespace DELTation.ToonShader.Editor
 			DrawRimProperties(materialEditor, properties, material);
 			Label("Specular");
 			DrawSpecularProperties(materialEditor, properties, material);
+			Label("Reflections");
+			DrawReflectionProperties(materialEditor, properties, material);
 			MiscLabel();
 			DrawMiscProperties(materialEditor, properties, material);
 		}
@@ -313,6 +315,17 @@ namespace DELTation.ToonShader.Editor
 				DrawProperty(materialEditor, properties, "_SpecularExponent");
 				DrawProperty(materialEditor, properties, "_SpecularSmoothness");
 			}
+		}
+
+		private static void DrawReflectionProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
+		{
+			DrawProperty(materialEditor, properties, "_Reflections");
+			if (!material.IsKeywordEnabled("_REFLECTIONS")) return;
+
+			DrawProperty(materialEditor, properties, "_ReflectionSmoothness");
+			DrawProperty(materialEditor, properties, "_ReflectionBlend");
+			DrawProperty(materialEditor, properties, "_ReflectionProbes");
 		}
 
 		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties,

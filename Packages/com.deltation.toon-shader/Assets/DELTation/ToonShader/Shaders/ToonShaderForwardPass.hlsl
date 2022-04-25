@@ -120,6 +120,7 @@ half3 sample_normal(float2 uv, TEXTURE2D_PARAM(bumpMap, sampler_bumpMap), half s
 }
 
 #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderAlbedo.hlsl"
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderReflections.hlsl"
 
 half4 frag(const v2f input) : SV_Target
 {
@@ -209,6 +210,10 @@ half4 frag(const v2f input) : SV_Target
 
     #ifdef _FRESNEL
     fragment_color += get_fresnel_color(main_light.color, view_direction_ws, normal_ws, main_light_brightness);
+    #endif
+
+    #ifdef _REFLECTIONS
+    add_reflections(fragment_color, view_direction_ws, normal_ws, position_ws);
     #endif
 
     #ifdef _ENVIRONMENT_LIGHTING_ENABLED

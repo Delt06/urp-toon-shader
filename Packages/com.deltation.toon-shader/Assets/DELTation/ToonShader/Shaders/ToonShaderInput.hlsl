@@ -39,6 +39,9 @@ half _SpecularExponent;
 half _Surface;
 half _Cutoff;
 
+half _ReflectionSmoothness;
+half _ReflectionBlend;
+
 #ifdef TOON_SHADER_HOOK_INPUT_BUFFER
 TOON_SHADER_HOOK_INPUT_BUFFER
 #endif
