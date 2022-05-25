@@ -230,12 +230,11 @@ inline void additional_lights(const float3 position_ws, const half3 normal_ws,
         #else
         ramp_color *= brightness;
         #endif
-        const half attenuation_step = step(0.001, attenuation);
-        diffuse_color += ramp_color * attenuation_step;
+        diffuse_color += ramp_color;
 
         #ifdef TOON_ADDITIONAL_LIGHTS_SPECULAR
         specular_color += get_specular_color(light.color, view_direction_ws, normal_ws, tangent_ws, light.direction) *
-            attenuation_step;
+            attenuation;
         #endif
     LIGHT_LOOP_END
 }
