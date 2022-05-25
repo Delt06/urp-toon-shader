@@ -180,6 +180,7 @@ half4 frag(const v2f input) : SV_Target
     half3 specular_color = 0;
     #ifdef _SPECULAR
     specular_color = get_specular_color(main_light.color, view_direction_ws, normal_ws, tangent_ws, light_direction_ws);
+    specular_color *= main_light_attenuation;
     #endif
 
     #if defined(TOON_ADDITIONAL_LIGHTS)
