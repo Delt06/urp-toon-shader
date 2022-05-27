@@ -7,17 +7,7 @@
 
 float3 _LightDirection;
 
-struct appdata
-{
-    float4 position_os : POSITION;
-    float3 normal_os : NORMAL;
-    float2 uv : TEXCOORD0;
-    UNITY_VERTEX_INPUT_INSTANCE_ID
-
-    #ifdef TOON_SHADER_HOOK_APP_DATA
-    TOON_SHADER_HOOK_APP_DATA
-    #endif
-};
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass_AppData.hlsl"
 
 struct v2f
 {
