@@ -20,8 +20,8 @@ struct v2f
 
 float4 get_shadow_position_h_clip(appdata input)
 {
-    const float3 position_ws = TransformObjectToWorld(input.position_os.xyz);
-    const float3 normal_ws = TransformObjectToWorldNormal(input.normal_os);
+    const float3 position_ws = TransformObjectToWorld(input.positionOS.xyz);
+    const float3 normal_ws = TransformObjectToWorldNormal(input.normalOS);
 
     float4 position_cs = TransformWorldToHClip(ApplyShadowBias(position_ws, normal_ws, _LightDirection));
 
