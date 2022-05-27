@@ -10,6 +10,10 @@ struct appdata
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
     UNITY_VERTEX_INPUT_INSTANCE_ID
+
+    #ifdef TOON_SHADER_HOOK_APP_DATA
+    TOON_SHADER_HOOK_APP_DATA
+    #endif
 };
 
 struct v2f
@@ -26,6 +30,10 @@ v2f DepthNormalsVertex(appdata input)
 {
     v2f output;
     UNITY_SETUP_INSTANCE_ID(input);
+
+    #ifdef TOON_SHADER_HOOK_VERTEX_INPUT
+    TOON_SHADER_HOOK_VERTEX_INPUT(input);
+    #endif
 
     output.position_cs = TransformObjectToHClip(input.position_os.xyz);
     output.normal_ws = TransformObjectToWorldNormal(input.normal);
