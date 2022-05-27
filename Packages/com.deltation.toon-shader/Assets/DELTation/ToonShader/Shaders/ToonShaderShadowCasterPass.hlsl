@@ -34,7 +34,7 @@ float4 get_shadow_position_h_clip(appdata input)
     return position_cs;
 }
 
-v2f ShadowPassVertex(const appdata input)
+v2f ShadowPassVertex(appdata input)
 {
     v2f output;
     UNITY_SETUP_INSTANCE_ID(input);
