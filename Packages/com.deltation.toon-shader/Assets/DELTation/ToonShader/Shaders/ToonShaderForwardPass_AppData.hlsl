@@ -17,6 +17,10 @@ struct appdata
     #ifdef _VERTEX_COLOR
     half3 vertexColor : COLOR;
     #endif
+    
+    #ifdef TOON_SHADER_HOOK_APP_DATA
+    TOON_SHADER_HOOK_APP_DATA
+    #endif
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
