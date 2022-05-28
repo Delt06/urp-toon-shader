@@ -1,20 +1,7 @@
 ﻿#ifndef TOON_SHADER_DEPTH_NORMALS_PASS
 #define TOON_SHADER_DEPTH_NORMALS_PASS
 
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-struct appdata
-{
-    float4 position_os : POSITION;
-    float4 tangent_os : TANGENT;
-    float3 normal : NORMAL;
-    float2 uv : TEXCOORD0;
-    UNITY_VERTEX_INPUT_INSTANCE_ID
-
-    #ifdef TOON_SHADER_HOOK_APP_DATA
-    TOON_SHADER_HOOK_APP_DATA
-    #endif
-};
+#include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass_AppData.hlsl"
 
 struct v2f
 {
