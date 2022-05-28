@@ -21,7 +21,7 @@ v2f DepthOnlyVertex(appdata input)
     TOON_SHADER_HOOK_VERTEX_INPUT(input);
     #endif
 
-    output.position_cs = TransformObjectToHClip(input.position.xyz);
+    output.position_cs = TransformObjectToHClip(input.positionOS.xyz);
     const float4 basemap_st = _BaseMap_ST;
     output.uv = apply_tiling_offset(input.uv, basemap_st);
     return output;

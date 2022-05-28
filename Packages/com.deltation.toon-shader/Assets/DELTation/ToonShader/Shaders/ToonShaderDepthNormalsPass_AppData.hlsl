@@ -5,9 +5,9 @@
 
 struct appdata
 {
-    float4 position_os : POSITION;
-    float4 tangent_os : TANGENT;
-    float3 normal : NORMAL;
+    float4 positionOS : POSITION;
+    float4 tangentOS : TANGENT;
+    float3 normalOS : NORMAL;
     float2 uv : TEXCOORD0;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 

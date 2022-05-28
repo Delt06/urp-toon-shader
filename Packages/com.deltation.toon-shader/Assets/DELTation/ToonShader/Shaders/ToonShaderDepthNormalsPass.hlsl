@@ -22,8 +22,8 @@ v2f DepthNormalsVertex(appdata input)
     TOON_SHADER_HOOK_VERTEX_INPUT(input);
     #endif
 
-    output.position_cs = TransformObjectToHClip(input.position_os.xyz);
-    output.normal_ws = TransformObjectToWorldNormal(input.normal);
+    output.position_cs = TransformObjectToHClip(input.positionOS.xyz);
+    output.normal_ws = TransformObjectToWorldNormal(input.normalOS);
     const float4 basemap_st = _BaseMap_ST;
     output.uv = apply_tiling_offset(input.uv, basemap_st);
 
