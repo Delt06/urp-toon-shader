@@ -222,7 +222,7 @@ inline void additional_lights(const float3 position_ws, const half3 normal_ws,
         #endif
             );
         const half attenuation = light.distanceAttenuation * light.shadowAttenuation;
-        const half brightness = get_brightness_vs(normal_ws, light.direction, attenuation);
+        const half brightness = get_brightness_vs(normal_ws, light.direction, attenuation) * step(0.001, attenuation);
         half3 ramp_color = light.color * albedo; 
 
         #ifdef _RAMP_MAP
