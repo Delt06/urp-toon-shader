@@ -84,6 +84,8 @@ A simple and performant outline shader. Renders outlines of objects on certain l
 
 <img src="Showcase/inverted_hull_outline.jpg" alt="Inverted Hull Outline" width="300">
 
+See the [Outline](https://github.com/Delt06/urp-toon-shader/wiki/Outline) Wiki page for details.
+
 ## Installation
 
 For the latest version (Unity compatibility is specified [here](#unity-version)):
@@ -118,7 +120,9 @@ where `<UNITY-VERSION>` may be either of the following:
 By default, the shader is updated only for LTS versions of Unity. 
 
 ## Documentation
-[Forest Demo Breakdown](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown)
+
+- [Forest Demo Breakdown](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown)
+- [Outline](https://github.com/Delt06/urp-toon-shader/wiki/Outline)
 
 ## Examples
 
