@@ -40,7 +40,12 @@ namespace DELTation.ToonShader.Editor.NormalsSmoothing
 		}
 
 		[MenuItem("Window/URP Toon Shader/Normals Smoothing Utility")]
-		private static void OpenWindow() => CreateWindow<NormalsSmoothingUtility>().ShowUtility();
+		private static void OpenWindow()
+		{
+			var window = CreateWindow<NormalsSmoothingUtility>();
+			window.titleContent = new GUIContent("Normals Smoothing Utility");
+			window.ShowUtility();
+		}
 
 		private void ComputedSmoothedNormals()
 		{
