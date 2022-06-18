@@ -9,14 +9,14 @@ A toon shader compatible with the Universal Render Pipeline.
 
 ### Table of Contents
 
-[Toon Shader Capabilities](#toon-shader-capabilities)  
-[Toon Shader (Lite) Capabilities](#toon-shader-lite-capabilities)  
-[Inverted Hull Outline](#inverted-hull-outline)  
-[Installation](#installation)  
-[Documentation](#documentation)  
-[Examples](#examples)  
-[Performance Benchmark](#performance-benchmark)  
-[Used Assets](#used-assets)  
+- [Toon Shader Capabilities](#toon-shader-capabilities)  
+- [Toon Shader (Lite) Capabilities](#toon-shader-lite-capabilities)  
+- [Inverted Hull Outline](#inverted-hull-outline)  
+- [Installation](#installation)  
+- [Documentation](#documentation)  
+- [Examples](#examples)  
+- [Performance Benchmark](#performance-benchmark)  
+- [Used Assets](#used-assets)  
 
 
 ## Toon Shader Capabilities
