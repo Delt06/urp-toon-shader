@@ -8,6 +8,8 @@
 		_DepthOffsetUnits ("Offset Units", Float) = 0
 		[Toggle(CLIP_SPACE)]
 		_ClipSpace ("Clip Space", Float) = 1
+		[Toggle(CUSTOM_NORMALS)]
+		_CustomNormals ("Custom Normals (UV2)", Float) = 0
 	}
 	SubShader
 	{
@@ -21,13 +23,19 @@
 			#pragma fragment frag
 
 			#pragma shader_feature_vertex CLIP_SPACE
+			#pragma shader_feature_vertex CUSTOM_NORMALS
+			#pragma shader_feature_vertex FALLBACK_TO_DEFAULT_NORMALS
 			
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
 			struct appdata
 			{
 				float3 vertex : POSITION;
+				#ifdef CUSTOM_NORMALS
+				float3 normal : TEXCOORD2;
+				#else
 				float3 normal : NORMAL;
+				#endif
 			};
 
 			CBUFFER_START(UnityPerMaterial)
