@@ -30,16 +30,16 @@ namespace DELTation.ToonShader.Editor.NormalsSmoothing
 			mesh.SetUVs(uvChannel, smoothedNormals);
 		}
 
-        /// <summary>
-        ///     Recalculate the normals of a mesh based on an angle threshold. This takes
-        ///     into account distinct vertices that have the same position.
-        /// </summary>
-        /// <param name="mesh"></param>
-        /// <param name="angle">
-        ///     The smoothing angle. Note that triangles that already share
-        ///     the same vertex will be smooth regardless of the angle!
-        /// </param>
-        public static void RecalculateNormals(this Mesh mesh, float angle)
+		/// <summary>
+		///     Recalculate the normals of a mesh based on an angle threshold. This takes
+		///     into account distinct vertices that have the same position.
+		/// </summary>
+		/// <param name="mesh"></param>
+		/// <param name="angle">
+		///     The smoothing angle. Note that triangles that already share
+		///     the same vertex will be smooth regardless of the angle!
+		/// </param>
+		public static void RecalculateNormals(this Mesh mesh, float angle)
 		{
 			var cosineThreshold = Mathf.Cos(angle * Mathf.Deg2Rad);
 
@@ -64,8 +64,8 @@ namespace DELTation.ToonShader.Editor.NormalsSmoothing
 					var i3 = triangles[i + 2];
 
 					// Calculate the normal of the triangle
-					var p1 = vertices[i2] - vertices[i1];
-					var p2 = vertices[i3] - vertices[i1];
+					var p1 = Vector3.Normalize(vertices[i2] - vertices[i1]);
+					var p2 = Vector3.Normalize(vertices[i3] - vertices[i1]);
 					var normal = Vector3.Cross(p1, p2).normalized;
 					var triIndex = i / 3;
 					triNormals[subMeshIndex][triIndex] = normal;
