@@ -123,6 +123,7 @@ By default, the shader is updated only for LTS versions of Unity.
 
 - [Forest Demo Breakdown](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown)
 - [Outline](https://github.com/Delt06/urp-toon-shader/wiki/Outline)
+- [Transparency Sorting Fix](https://github.com/Delt06/urp-toon-shader/wiki/Transparency-Sorting-Fix)
 
 ## Examples
 
