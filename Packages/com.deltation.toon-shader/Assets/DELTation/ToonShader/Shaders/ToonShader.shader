@@ -25,12 +25,12 @@
         [Toggle(_EMISSION)] _Emission ("Emission", Float) = 0
         [HDR] _EmissionColor ("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
         
-        [Toggle(_FRESNEL)] _Fresnel ("Rim", Float) = 1
+        [Toggle(_FRESNEL)] _Fresnel ("Rim", Float) = 0
         _FresnelThickness ("Rim Thickness", Range(0, 1)) = 0.45
         _FresnelSmoothness ("Rim Smoothness", Range(0, 1)) = 0.1
         [HDR] _FresnelColor ("Rim Color", Color) = (1.0, 1.0, 1.0, 1.0)
         
-        [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 1
+        [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 0
         [Toggle(_ANISO_SPECULAR)] _AnisoSpecular("Anisotropic Specular", Float) = 0
         _SpecularThreshold ("Specular Threshold", Range(0, 1)) = 0.8
         _SpecularExponent ("Specular Exponent", Range(0, 1000)) = 200
