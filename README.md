@@ -12,7 +12,8 @@ A toon shader compatible with the Universal Render Pipeline.
 - [Toon Shader Capabilities](#toon-shader-capabilities)  
 - [Toon Shader (Lite) Capabilities](#toon-shader-lite-capabilities)  
 - [Inverted Hull Outline](#inverted-hull-outline)  
-- [Installation](#installation)  
+- [Installation](#installation)
+- [Getting Started](#getting-started)
 - [Documentation](#documentation)  
 - [Examples](#examples)  
 - [Performance Benchmark](#performance-benchmark)  
@@ -117,7 +118,13 @@ where `<UNITY-VERSION>` may be either of the following:
 - `2021.3`
 - `2020.3`
 
-By default, the shader is updated only for LTS versions of Unity. 
+By default, the shader is updated only for LTS versions of Unity.
+
+## Getting Started
+
+- Ensure URP is installed (see [the official instructions](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@15.0/manual/InstallURPIntoAProject.html)).
+- Create a new material, select `DELTation/Toon Shader` in the shader menu.
+- For more details on the shader parameters, see [the Forest Demo Breakdown Wiki page](https://github.com/Delt06/urp-toon-shader/wiki/Forest-Demo-Breakdown).
 
 ## Documentation
 
