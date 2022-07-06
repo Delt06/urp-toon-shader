@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DELTation.ToonShader.Custom;
 using UnityEditor;
 using UnityEngine;
@@ -54,10 +56,40 @@ namespace DELTation.ToonShader.Editor.Custom
 
 		private static string GenerateShaderSource(CustomToonShader customToonShader, string shaderName)
 		{
-			var sourceShaderCodeLines = GetSourceShaderCode(customToonShader.SourceShader);
-			sourceShaderCodeLines[0] = $"Shader \"DELTation/Custom/{shaderName}\"";
-			var sourceShaderCode = string.Join(Environment.NewLine, sourceShaderCodeLines);
+			var lines = GetSourceShaderCode(customToonShader.SourceShader);
+			SetShaderName(lines, shaderName);
+
+			AddProperties(customToonShader, ref lines);
+
+			var sourceShaderCode = string.Join(Environment.NewLine, lines);
 			return sourceShaderCode;
+		}
+
+		private static void SetShaderName(string[] lines, string shaderName)
+		{
+			lines[0] = $"Shader \"DELTation/Custom/{shaderName}\"";
+		}
+
+		private static void AddProperties(CustomToonShader customToonShader, ref string[] lines)
+		{
+			var linesList = lines.ToList();
+			var indexOfStart = linesList.FindIndex(line => line.Contains("// Custom Properties Begin"));
+			if (indexOfStart == -1) return;
+			var indexOfEnd = linesList.FindIndex(indexOfStart, line => line.Contains("// Custom Properties End"));
+			if (indexOfEnd == -1) return;
+
+			var propertyIndent = new string(' ', 8);
+			var propertyLines = new List<string>();
+
+			foreach (var shaderProperty in customToonShader.Properties)
+			{
+				propertyLines.Add(
+					$"{propertyIndent}{shaderProperty.Name} (\"{shaderProperty.DisplayName}\", {shaderProperty.Type}) = {shaderProperty.DefaultValue}"
+				);
+			}
+
+			linesList.InsertRange(indexOfStart + 1, propertyLines);
+			lines = linesList.ToArray();
 		}
 
 		private static string[] GetSourceShaderCode(Shader sourceShader)

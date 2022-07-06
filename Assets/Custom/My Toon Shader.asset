@@ -15,3 +15,12 @@ MonoBehaviour:
   SourceShader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
   Shader: {fileID: 4800000, guid: 2e0a54ed13173b14898a9bf0e10092da, type: 3}
   ShaderName: Custom Toon Shader
+  Properties:
+  - Name: _CustomTexture
+    DisplayName: Custom Texture
+    Type: 2D
+    DefaultValue: '"white" {}'
+  - Name: _CustomTint
+    DisplayName: Custom Tint
+    Type: Color
+    DefaultValue: (0.0, 0.0, 0.0, 0.0)

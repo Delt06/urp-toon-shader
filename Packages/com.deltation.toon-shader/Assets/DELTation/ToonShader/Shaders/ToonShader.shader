@@ -65,6 +65,8 @@
         _ReflectionSmoothness ("Smoothness", Range(0, 1)) = 0.5
         _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
         
+        // Custom Properties Begin
+        // Custom Properties End
     }
     SubShader
     {
