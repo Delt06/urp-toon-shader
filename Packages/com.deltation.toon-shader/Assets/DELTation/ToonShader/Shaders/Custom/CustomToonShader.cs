@@ -12,7 +12,8 @@ namespace DELTation.ToonShader.Custom
 		[HideInInspector]
 		public Shader Shader;
 		public string ShaderName;
-		public CustomToonShaderProperty[] Properties;
+		public List<CustomToonShaderProperty> Properties = new();
+		public List<CustomToonShaderHook> Hooks = new();
 
 		private void Reset()
 		{
@@ -28,6 +29,14 @@ namespace DELTation.ToonShader.Custom
 			public string Type = "Float";
 			public string DefaultValue = "0";
 			public List<string> Attributes = new();
+		}
+
+		[Serializable]
+		public class CustomToonShaderHook
+		{
+			public CustomToonShaderHookType Name;
+			[TextArea]
+			public string Code = string.Empty;
 		}
 	}
 }

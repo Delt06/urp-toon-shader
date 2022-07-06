@@ -27,3 +27,6 @@ MonoBehaviour:
     Type: Color
     DefaultValue: (0.0, 0.0, 0.0, 0.0)
     Attributes: []
+  Hooks:
+  - Name: 0
+    Code: float4 _CustomTint;

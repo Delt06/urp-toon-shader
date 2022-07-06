@@ -11,6 +11,9 @@ namespace DELTation.ToonShader.Editor.Custom
 	[CustomEditor(typeof(CustomToonShader))]
 	public class CustomToonShaderEditor : UnityEditor.Editor
 	{
+		private static readonly string HookIndent = new(' ', 12);
+		private static readonly string PropertyIndent = new(' ', 8);
+
 		public override void OnInspectorGUI()
 		{
 			base.OnInspectorGUI();
@@ -56,29 +59,28 @@ namespace DELTation.ToonShader.Editor.Custom
 
 		private static string GenerateShaderSource(CustomToonShader customToonShader, string shaderName)
 		{
-			var lines = GetSourceShaderCode(customToonShader.SourceShader);
+			var lines = GetSourceShaderCode(customToonShader.SourceShader).ToList();
 			SetShaderName(lines, shaderName);
 
-			AddProperties(customToonShader, ref lines);
+			AddProperties(customToonShader, lines);
+			AddHooks(customToonShader, lines);
 
 			var sourceShaderCode = string.Join(Environment.NewLine, lines);
 			return sourceShaderCode;
 		}
 
-		private static void SetShaderName(string[] lines, string shaderName)
+		private static void SetShaderName(List<string> lines, string shaderName)
 		{
 			lines[0] = $"Shader \"DELTation/Custom/{shaderName}\"";
 		}
 
-		private static void AddProperties(CustomToonShader customToonShader, ref string[] lines)
+		private static void AddProperties(CustomToonShader customToonShader, List<string> lines)
 		{
-			var linesList = lines.ToList();
-			var indexOfStart = linesList.FindIndex(line => line.Contains("// Custom Properties Begin"));
+			var indexOfStart = lines.FindIndex(line => line.Contains("// Custom Properties Begin"));
 			if (indexOfStart == -1) return;
-			var indexOfEnd = linesList.FindIndex(indexOfStart, line => line.Contains("// Custom Properties End"));
+			var indexOfEnd = lines.FindIndex(indexOfStart, line => line.Contains("// Custom Properties End"));
 			if (indexOfEnd == -1) return;
 
-			var propertyIndent = new string(' ', 8);
 			var propertyLines = new List<string>();
 
 			foreach (var shaderProperty in customToonShader.Properties)
@@ -87,12 +89,41 @@ namespace DELTation.ToonShader.Editor.Custom
 					shaderProperty.Attributes.Append("CustomProperty").Select(a => $"[{a}]")
 				);
 				propertyLines.Add(
-					$"{propertyIndent}{attributes} {shaderProperty.Name} (\"{shaderProperty.DisplayName}\", {shaderProperty.Type}) = {shaderProperty.DefaultValue}"
+					$"{PropertyIndent}{attributes} {shaderProperty.Name} (\"{shaderProperty.DisplayName}\", {shaderProperty.Type}) = {shaderProperty.DefaultValue}"
 				);
 			}
 
-			linesList.InsertRange(indexOfStart + 1, propertyLines);
-			lines = linesList.ToArray();
+			lines.InsertRange(indexOfStart + 1, propertyLines);
+		}
+
+		private static void AddHooks(CustomToonShader customToonShader, List<string> lines)
+		{
+			foreach (var hook in customToonShader.Hooks)
+			{
+				var hookComment = $"// {hook.Name.ToString()}";
+				var found = false;
+
+				for (var index = 0; index < lines.Count; index++)
+				{
+					var line = lines[index];
+					if (!line.Contains(hookComment)) continue;
+
+					found = true;
+					var hookLines = new List<string> { $"{HookIndent} #define {hook.Name} \\" };
+
+					var hookCodeLines = hook.Code.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+					foreach (var hookCodeLine in hookCodeLines)
+					{
+						hookLines.Add(hookCodeLine + " \\");
+					}
+
+					hookLines.Add(string.Empty);
+					lines.InsertRange(index + 1, hookLines);
+				}
+
+				if (!found)
+					Debug.LogWarning($"Hook comments for {hook.Name} not found.");
+			}
 		}
 
 		private static string[] GetSourceShaderCode(Shader sourceShader)

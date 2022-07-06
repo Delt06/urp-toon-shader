@@ -140,6 +140,8 @@
             #if defined(_ADDITIONAL_LIGHTS_SPECULAR) && defined(_SPECULAR)
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
@@ -167,6 +169,8 @@
             #pragma fragment ShadowPassFragment
 
             #pragma multi_compile_instancing
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass.hlsl"
@@ -202,6 +206,8 @@
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
 
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderMetaPass.hlsl"
 
@@ -227,7 +233,8 @@
             #pragma fragment DepthOnlyFragment
 
             #pragma multi_compile_instancing
-           
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
@@ -252,6 +259,8 @@
             #pragma fragment DepthNormalsFragment
 
             #pragma multi_compile_instancing
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass.hlsl"
