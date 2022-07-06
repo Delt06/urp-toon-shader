@@ -153,6 +153,8 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_APP_DATA
+
             // TOON_SHADER_HOOK_VERTEX_INPUT
              #define TOON_SHADER_HOOK_VERTEX_INPUT \
 input.uv += sin(_Time.y*10) * 0.01; \
@@ -198,6 +200,8 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+
+            // TOON_SHADER_HOOK_APP_DATA
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
              #define TOON_SHADER_HOOK_VERTEX_INPUT \
@@ -252,6 +256,8 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_APP_DATA
+
             // TOON_SHADER_HOOK_VERTEX_INPUT
              #define TOON_SHADER_HOOK_VERTEX_INPUT \
 input.uv += sin(_Time.y*10) * 0.01; \
@@ -297,6 +303,8 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_APP_DATA
+
             // TOON_SHADER_HOOK_VERTEX_INPUT
              #define TOON_SHADER_HOOK_VERTEX_INPUT \
 input.uv += sin(_Time.y*10) * 0.01; \
@@ -339,6 +347,8 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+
+            // TOON_SHADER_HOOK_APP_DATA
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
              #define TOON_SHADER_HOOK_VERTEX_INPUT \
