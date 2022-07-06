@@ -153,6 +153,10 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+             #define TOON_SHADER_HOOK_VERTEX_INPUT \
+input.uv += sin(_Time.y*10) * 0.01; \
+
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
 albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
@@ -194,6 +198,10 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+             #define TOON_SHADER_HOOK_VERTEX_INPUT \
+input.uv += sin(_Time.y*10) * 0.01; \
 
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
@@ -244,6 +252,10 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+             #define TOON_SHADER_HOOK_VERTEX_INPUT \
+input.uv += sin(_Time.y*10) * 0.01; \
+
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
 albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
@@ -285,6 +297,10 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+             #define TOON_SHADER_HOOK_VERTEX_INPUT \
+input.uv += sin(_Time.y*10) * 0.01; \
+
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
 albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
@@ -323,6 +339,10 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+             #define TOON_SHADER_HOOK_VERTEX_INPUT \
+input.uv += sin(_Time.y*10) * 0.01; \
 
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \

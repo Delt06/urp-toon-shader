@@ -36,3 +36,5 @@ MonoBehaviour:
       SAMPLER(sampler_CustomTexture);'
   - Name: 2
     Code: albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv);
+  - Name: 3
+    Code: input.uv += sin(_Time.y*10) * 0.01;

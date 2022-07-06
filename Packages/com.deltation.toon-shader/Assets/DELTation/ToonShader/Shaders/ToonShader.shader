@@ -144,6 +144,7 @@
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -176,6 +177,7 @@
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -215,6 +217,7 @@
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -246,6 +249,7 @@
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -275,6 +279,7 @@
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
 
+            // TOON_SHADER_HOOK_VERTEX_INPUT
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"

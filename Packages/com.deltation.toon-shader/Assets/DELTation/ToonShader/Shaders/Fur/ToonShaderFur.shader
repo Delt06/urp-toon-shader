@@ -153,7 +153,7 @@
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
 
             #include "./ToonShaderFurUtils.hlsl"
-            #define TOON_SHADER_HOOK_VERTEX_INPUT fur_hook_vertex_input
+            #define TOON_SHADER_HOOK_VERTEX_INPUT fur_hook_vertex_input(input)
             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO fur_hook_fragment_albedo(input.uv, albedo)
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass.hlsl"
             
