@@ -109,7 +109,12 @@ namespace DELTation.ToonShader.Editor.Custom
 					if (!line.Contains(hookComment)) continue;
 
 					found = true;
-					var hookLines = new List<string> { $"{HookIndent} #define {hook.Name} \\" };
+					var hookLines = new List<string>();
+
+					if (!string.IsNullOrWhiteSpace(hook.Condition))
+						hookLines.Add("#if " + hook.Condition);
+
+					hookLines.Add($"{HookIndent} #define {hook.Name} \\");
 
 					var hookCodeLines = hook.Code.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 					foreach (var hookCodeLine in hookCodeLines)
@@ -118,6 +123,10 @@ namespace DELTation.ToonShader.Editor.Custom
 					}
 
 					hookLines.Add(string.Empty);
+
+					if (!string.IsNullOrWhiteSpace(hook.Condition))
+						hookLines.Add("#endif");
+
 					lines.InsertRange(index + 1, hookLines);
 				}
 

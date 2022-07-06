@@ -1,5 +1,5 @@
-﻿#ifndef TOON_SHADER_SHADOW_CASTER_PASS
-#define TOON_SHADER_SHADOW_CASTER_PASS
+﻿#ifndef TOON_SHADER_SHADOW_CASTER_PASS_INCLUDED
+#define TOON_SHADER_SHADOW_CASTER_PASS_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
@@ -40,7 +40,7 @@ v2f ShadowPassVertex(appdata input)
     UNITY_SETUP_INSTANCE_ID(input);
 
     #ifdef TOON_SHADER_HOOK_VERTEX_INPUT
-    TOON_SHADER_HOOK_VERTEX_INPUT(input);
+    TOON_SHADER_HOOK_VERTEX_INPUT;
     #endif
 
     output.position_cs = get_shadow_position_h_clip(input);

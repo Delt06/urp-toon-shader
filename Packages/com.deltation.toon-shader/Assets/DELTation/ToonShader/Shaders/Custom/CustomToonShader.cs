@@ -35,7 +35,8 @@ namespace DELTation.ToonShader.Custom
 		public class CustomToonShaderHook
 		{
 			public CustomToonShaderHookType Name;
-			[TextArea]
+			public string Condition;
+			[TextArea(4, 10)]
 			public string Code = string.Empty;
 		}
 	}

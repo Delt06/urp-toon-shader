@@ -141,6 +141,8 @@
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
 
+            #define TOON_SHADER_FORWARD_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
@@ -177,6 +179,8 @@
             #pragma fragment ShadowPassFragment
 
             #pragma multi_compile_instancing
+
+            #define TOON_SHADER_SHADOW_CASTER_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
@@ -258,6 +262,8 @@
 
             #pragma multi_compile_instancing
 
+            #define TOON_SHADER_DEPTH_ONLY_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
@@ -291,6 +297,8 @@
             #pragma fragment DepthNormalsFragment
 
             #pragma multi_compile_instancing
+
+            #define TOON_SHADER_DEPTH_NORMALS_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES

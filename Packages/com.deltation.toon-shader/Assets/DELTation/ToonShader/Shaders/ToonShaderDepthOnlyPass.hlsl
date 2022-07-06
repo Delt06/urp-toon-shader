@@ -1,5 +1,5 @@
-﻿#ifndef TOON_SHADER_DEPTH_ONLY_PASS
-#define TOON_SHADER_DEPTH_ONLY_PASS
+﻿#ifndef TOON_SHADER_DEPTH_ONLY_PASS_INCLUDED
+#define TOON_SHADER_DEPTH_ONLY_PASS_INCLUDED
 
 #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass_AppData.hlsl"
 
@@ -18,7 +18,7 @@ v2f DepthOnlyVertex(appdata input)
     UNITY_SETUP_INSTANCE_ID(input);
 
     #ifdef TOON_SHADER_HOOK_VERTEX_INPUT
-    TOON_SHADER_HOOK_VERTEX_INPUT(input);
+    TOON_SHADER_HOOK_VERTEX_INPUT;
     #endif
 
     output.position_cs = TransformObjectToHClip(input.positionOS.xyz);

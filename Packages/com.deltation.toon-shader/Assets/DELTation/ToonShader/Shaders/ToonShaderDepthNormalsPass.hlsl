@@ -1,5 +1,5 @@
-﻿#ifndef TOON_SHADER_DEPTH_NORMALS_PASS
-#define TOON_SHADER_DEPTH_NORMALS_PASS
+﻿#ifndef TOON_SHADER_DEPTH_NORMALS_PASS_INCLUDED
+#define TOON_SHADER_DEPTH_NORMALS_PASS_INCLUDED
 
 #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass_AppData.hlsl"
 
@@ -19,7 +19,7 @@ v2f DepthNormalsVertex(appdata input)
     UNITY_SETUP_INSTANCE_ID(input);
 
     #ifdef TOON_SHADER_HOOK_VERTEX_INPUT
-    TOON_SHADER_HOOK_VERTEX_INPUT(input);
+    TOON_SHADER_HOOK_VERTEX_INPUT;
     #endif
 
     output.position_cs = TransformObjectToHClip(input.positionOS.xyz);
