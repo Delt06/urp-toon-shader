@@ -143,6 +143,8 @@
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
+
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
@@ -173,6 +175,8 @@
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
+
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass.hlsl"
@@ -211,6 +215,8 @@
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
 
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderMetaPass.hlsl"
 
@@ -240,6 +246,8 @@
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
 
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
             
@@ -266,6 +274,8 @@
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
+
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass.hlsl"

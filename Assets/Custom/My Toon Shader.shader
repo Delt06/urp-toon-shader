@@ -152,6 +152,11 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
+
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
@@ -188,6 +193,11 @@ float4 _CustomTint; \
              #define TOON_SHADER_HOOK_INPUT_TEXTURES \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
+
+
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
 
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -234,6 +244,11 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
+
+
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderMetaPass.hlsl"
 
@@ -270,6 +285,11 @@ TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
 
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
+
+
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
             
@@ -302,6 +322,11 @@ float4 _CustomTint; \
              #define TOON_SHADER_HOOK_INPUT_TEXTURES \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
+
+
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
 
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
