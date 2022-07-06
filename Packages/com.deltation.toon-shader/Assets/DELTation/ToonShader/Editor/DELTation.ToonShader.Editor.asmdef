@@ -1,7 +1,9 @@
 {
     "name": "DELTation.ToonShader.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:ec5e0ba576b362a4e8e2dfc93e5426fc"
+    ],
     "includePlatforms": [
         "Editor"
     ],

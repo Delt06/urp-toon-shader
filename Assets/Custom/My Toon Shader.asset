@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6cd861481d4b55b3652478146d0b38, type: 3}
+  m_Name: My Toon Shader
+  m_EditorClassIdentifier: 
+  SourceShader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
+  Shader: {fileID: 4800000, guid: 2e0a54ed13173b14898a9bf0e10092da, type: 3}
+  ShaderName: Custom Toon Shader
+  Properties:
+  - Name: _CustomTexture
+    DisplayName: Custom Texture
+    TypedValue:
+      Type: 2
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 1
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Attributes:
+    - NoTilingOffset
+  - Name: _CustomTint
+    DisplayName: Custom Tint
+    TypedValue:
+      Type: 7
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 0
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 1, g: 1, b: 1, a: 1}
+    Attributes: []
+  Hooks:
+  - Name: 0
+    Condition: 
+    Code: float4 _CustomTint;
+  - Name: 1
+    Condition: 
+    Code: 'TEXTURE2D(_CustomTexture);
+
+      SAMPLER(sampler_CustomTexture);'
+  - Name: 2
+    Condition: 
+    Code: albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv);
+  - Name: 3
+    Condition: 
+    Code: input.uv += sin(_Time.y*10) * 0.01;

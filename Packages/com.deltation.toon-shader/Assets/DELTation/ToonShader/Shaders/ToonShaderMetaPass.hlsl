@@ -1,16 +1,16 @@
-﻿#ifndef TOON_SHADER_META_PASS
-#define TOON_SHADER_META_PASS
+﻿#ifndef TOON_SHADER_META_PASS_INCLUDED
+#define TOON_SHADER_META_PASS_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/MetaInput.hlsl"
 #include "./ToonShaderUtils.hlsl"
 
 struct appdata
 {
-    float4 positionOS   : POSITION;
-    float3 normalOS     : NORMAL;
-    float2 uv0          : TEXCOORD0;
-    float2 uv1          : TEXCOORD1;
-    float2 uv2          : TEXCOORD2;
+    float4 positionOS : POSITION;
+    float3 normalOS : NORMAL;
+    float2 uv0 : TEXCOORD0;
+    float2 uv1 : TEXCOORD1;
+    float2 uv2 : TEXCOORD2;
 
     #ifdef _VERTEX_COLOR
     half3 vertexColor : COLOR;
@@ -19,8 +19,8 @@ struct appdata
 
 struct v2f
 {
-    float4 positionCS   : SV_POSITION;
-    float2 uv           : TEXCOORD0;
+    float4 positionCS : SV_POSITION;
+    float2 uv : TEXCOORD0;
 
     #ifdef _VERTEX_COLOR
     half3 vertexColor : COLOR;
@@ -32,7 +32,8 @@ struct v2f
 v2f MetaPassVertex(appdata input)
 {
     v2f output;
-    output.positionCS = MetaVertexPosition(input.positionOS, input.uv1, input.uv2, unity_LightmapST, unity_DynamicLightmapST);
+    output.positionCS = MetaVertexPosition(input.positionOS, input.uv1, input.uv2, unity_LightmapST,
+                                           unity_DynamicLightmapST);
     output.uv = apply_tiling_offset(input.uv0, _BaseMap_ST);
     #ifdef _VERTEX_COLOR
     output.vertexColor = input.vertexColor;

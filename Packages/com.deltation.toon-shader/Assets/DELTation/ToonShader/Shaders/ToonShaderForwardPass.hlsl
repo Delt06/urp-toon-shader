@@ -59,7 +59,7 @@ v2f vert(appdata input)
     UNITY_TRANSFER_INSTANCE_ID(input, output);
 
     #ifdef TOON_SHADER_HOOK_VERTEX_INPUT
-    TOON_SHADER_HOOK_VERTEX_INPUT(input);
+    TOON_SHADER_HOOK_VERTEX_INPUT;
     #endif
 
     const VertexPositionInputs vertex_position_inputs = GetVertexPositionInputs(input.positionOS.xyz);

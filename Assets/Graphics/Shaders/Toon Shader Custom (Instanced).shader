@@ -1,4 +1,4 @@
-Shader "DELTation/Custom/Toon Shader (Fur)"
+Shader "DELTation/Custom/Toon Shader (Instanced Color)"
 {
     Properties
     {
@@ -66,10 +66,7 @@ Shader "DELTation/Custom/Toon Shader (Fur)"
         _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
         
         // Custom Properties Begin
-        [CustomProperty] _FurLength ("Fur Length", Range(0,1)) = 0.1
-        [CustomProperty] _FurStep ("Fur Step", Range(0,1)) = 0.1
-        [CustomProperty] _FurNoise ("Fur Noise", 2D) = "white" {}
-        [NoScaleOffset] [CustomProperty] _FurMask ("Fur Mask", 2D) = "white" {}
+        [CustomProperty] i_BaseColor ("Instanced Base Color", Color) = (1,1,1,1)
         // Custom Properties End
     }
     SubShader
@@ -148,38 +145,19 @@ Shader "DELTation/Custom/Toon Shader (Fur)"
             #define TOON_SHADER_FORWARD_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
-             #define TOON_SHADER_HOOK_INPUT_BUFFER \
-half _FurLength; \
-half _FurStep; \
-float4 _FurNoise_ST;  \
-
             // TOON_SHADER_HOOK_INPUT_TEXTURES
-             #define TOON_SHADER_HOOK_INPUT_TEXTURES \
-TEXTURE2D(_FurNoise); \
-SAMPLER(sampler_FurNoise); \
-TEXTURE2D(_FurMask);  \
-SAMPLER(sampler_FurMask); \
-
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
             // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
-#if defined(TOON_SHADER_FORWARD_PASS)
-             #define TOON_SHADER_HOOK_VERTEX_INPUT \
-const half fur_length = _FurLength; \
-const half fur_step = _FurStep; \
-input.positionOS.xyz += input.normalOS * fur_length * fur_step; \
-
-#endif
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
-const half mask = SAMPLE_TEXTURE2D(_FurMask, sampler_FurMask, input.uv).r; \
-clip(mask - 1); \
-const float4 fur_noise_st = _FurNoise_ST; \
-const half2 noise_uv = apply_tiling_offset(input.uv, fur_noise_st); \
-albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
 
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -212,38 +190,19 @@ albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
             #define TOON_SHADER_SHADOW_CASTER_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
-             #define TOON_SHADER_HOOK_INPUT_BUFFER \
-half _FurLength; \
-half _FurStep; \
-float4 _FurNoise_ST;  \
-
             // TOON_SHADER_HOOK_INPUT_TEXTURES
-             #define TOON_SHADER_HOOK_INPUT_TEXTURES \
-TEXTURE2D(_FurNoise); \
-SAMPLER(sampler_FurNoise); \
-TEXTURE2D(_FurMask);  \
-SAMPLER(sampler_FurMask); \
-
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
             // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
-#if defined(TOON_SHADER_FORWARD_PASS)
-             #define TOON_SHADER_HOOK_VERTEX_INPUT \
-const half fur_length = _FurLength; \
-const half fur_step = _FurStep; \
-input.positionOS.xyz += input.normalOS * fur_length * fur_step; \
-
-#endif
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
-const half mask = SAMPLE_TEXTURE2D(_FurMask, sampler_FurMask, input.uv).r; \
-clip(mask - 1); \
-const float4 fur_noise_st = _FurNoise_ST; \
-const half2 noise_uv = apply_tiling_offset(input.uv, fur_noise_st); \
-albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
 
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -281,38 +240,19 @@ albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
             #pragma shader_feature_local_fragment _ALPHATEST_ON
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
-             #define TOON_SHADER_HOOK_INPUT_BUFFER \
-half _FurLength; \
-half _FurStep; \
-float4 _FurNoise_ST;  \
-
             // TOON_SHADER_HOOK_INPUT_TEXTURES
-             #define TOON_SHADER_HOOK_INPUT_TEXTURES \
-TEXTURE2D(_FurNoise); \
-SAMPLER(sampler_FurNoise); \
-TEXTURE2D(_FurMask);  \
-SAMPLER(sampler_FurMask); \
-
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
             // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
-#if defined(TOON_SHADER_FORWARD_PASS)
-             #define TOON_SHADER_HOOK_VERTEX_INPUT \
-const half fur_length = _FurLength; \
-const half fur_step = _FurStep; \
-input.positionOS.xyz += input.normalOS * fur_length * fur_step; \
-
-#endif
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
-const half mask = SAMPLE_TEXTURE2D(_FurMask, sampler_FurMask, input.uv).r; \
-clip(mask - 1); \
-const float4 fur_noise_st = _FurNoise_ST; \
-const half2 noise_uv = apply_tiling_offset(input.uv, fur_noise_st); \
-albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
 
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -344,38 +284,19 @@ albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
             #define TOON_SHADER_DEPTH_ONLY_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
-             #define TOON_SHADER_HOOK_INPUT_BUFFER \
-half _FurLength; \
-half _FurStep; \
-float4 _FurNoise_ST;  \
-
             // TOON_SHADER_HOOK_INPUT_TEXTURES
-             #define TOON_SHADER_HOOK_INPUT_TEXTURES \
-TEXTURE2D(_FurNoise); \
-SAMPLER(sampler_FurNoise); \
-TEXTURE2D(_FurMask);  \
-SAMPLER(sampler_FurMask); \
-
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
             // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
-#if defined(TOON_SHADER_FORWARD_PASS)
-             #define TOON_SHADER_HOOK_VERTEX_INPUT \
-const half fur_length = _FurLength; \
-const half fur_step = _FurStep; \
-input.positionOS.xyz += input.normalOS * fur_length * fur_step; \
-
-#endif
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
-const half mask = SAMPLE_TEXTURE2D(_FurMask, sampler_FurMask, input.uv).r; \
-clip(mask - 1); \
-const float4 fur_noise_st = _FurNoise_ST; \
-const half2 noise_uv = apply_tiling_offset(input.uv, fur_noise_st); \
-albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
 
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
@@ -405,38 +326,19 @@ albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
             #define TOON_SHADER_DEPTH_NORMALS_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
-             #define TOON_SHADER_HOOK_INPUT_BUFFER \
-half _FurLength; \
-half _FurStep; \
-float4 _FurNoise_ST;  \
-
             // TOON_SHADER_HOOK_INPUT_TEXTURES
-             #define TOON_SHADER_HOOK_INPUT_TEXTURES \
-TEXTURE2D(_FurNoise); \
-SAMPLER(sampler_FurNoise); \
-TEXTURE2D(_FurMask);  \
-SAMPLER(sampler_FurMask); \
-
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
             // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
-#if defined(TOON_SHADER_FORWARD_PASS)
-             #define TOON_SHADER_HOOK_VERTEX_INPUT \
-const half fur_length = _FurLength; \
-const half fur_step = _FurStep; \
-input.positionOS.xyz += input.normalOS * fur_length * fur_step; \
-
-#endif
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
              #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
-const half mask = SAMPLE_TEXTURE2D(_FurMask, sampler_FurMask, input.uv).r; \
-clip(mask - 1); \
-const float4 fur_noise_st = _FurNoise_ST; \
-const half2 noise_uv = apply_tiling_offset(input.uv, fur_noise_st); \
-albedo.a *= SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r;  \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
 
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"

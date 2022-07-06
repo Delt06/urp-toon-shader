@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6cd861481d4b55b3652478146d0b38, type: 3}
+  m_Name: ToonShaderFur
+  m_EditorClassIdentifier: 
+  SourceShader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
+  Shader: {fileID: 4800000, guid: 41ef1a853a684eb08c739807254fc8d6, type: 3}
+  ShaderName: Toon Shader (Fur)
+  Properties:
+  - Name: _FurLength
+    DisplayName: Fur Length
+    TypedValue:
+      Type: 9
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 0
+      RangeMinValue: 0
+      RangeMaxValue: 1
+      RangeValue: 0.1
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Attributes: []
+  - Name: _FurStep
+    DisplayName: Fur Step
+    TypedValue:
+      Type: 9
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 0
+      RangeMinValue: 0
+      RangeMaxValue: 1
+      RangeValue: 0.1
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Attributes: []
+  - Name: _FurNoise
+    DisplayName: Fur Noise
+    TypedValue:
+      Type: 2
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 1
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Attributes: []
+  - Name: _FurMask
+    DisplayName: Fur Mask
+    TypedValue:
+      Type: 2
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 1
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
+    Attributes:
+    - NoScaleOffset
+  Hooks:
+  - Name: 3
+    Condition: defined(TOON_SHADER_FORWARD_PASS)
+    Code: 'const half fur_length = _FurLength;
+
+      const half fur_step = _FurStep;
+
+      input.positionOS.xyz
+      += input.normalOS * fur_length * fur_step;'
+  - Name: 0
+    Condition: 
+    Code: 'half _FurLength;
+
+      half _FurStep;
+
+      float4 _FurNoise_ST; '
+  - Name: 1
+    Condition: 
+    Code: "TEXTURE2D(_FurNoise);\nSAMPLER(sampler_FurNoise);\nTEXTURE2D(_FurMask);
+      \nSAMPLER(sampler_FurMask);"
+  - Name: 2
+    Condition: 
+    Code: 'const half mask = SAMPLE_TEXTURE2D(_FurMask, sampler_FurMask, input.uv).r;
+
+      clip(mask
+      - 1);
+
+      const float4 fur_noise_st = _FurNoise_ST;
+
+      const half2 noise_uv
+      = apply_tiling_offset(input.uv, fur_noise_st);
+
+      albedo.a *= SAMPLE_TEXTURE2D(_FurNoise,
+      sampler_FurNoise, noise_uv).r; '

@@ -33,6 +33,7 @@ namespace DELTation.ToonShader.Editor
 		{
 			if (Foldout("Surface Options"))
 				DrawSurfaceProperties(materialEditor, properties);
+			DrawCustomProperties(materialEditor, properties, material);
 			if (Foldout("Color", true))
 				DrawColorProperties(materialEditor, properties);
 			if (RampFoldout())
@@ -49,6 +50,28 @@ namespace DELTation.ToonShader.Editor
 				DrawReflectionProperties(materialEditor, properties, material);
 			if (MiscFoldout())
 				DrawMiscProperties(materialEditor, properties, material);
+		}
+
+		private void DrawCustomProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
+			Material material)
+		{
+			var shader = material.shader;
+			var customPropertyIndices = new List<int>();
+
+			for (var i = 0; i < properties.Length; i++)
+			{
+				var attributes = shader.GetPropertyAttributes(i);
+				if (attributes.Contains("CustomProperty"))
+					customPropertyIndices.Add(i);
+			}
+
+			if (customPropertyIndices.Count == 0) return;
+
+			if (Foldout("Custom"))
+				foreach (var index in customPropertyIndices)
+				{
+					DrawProperty(materialEditor, properties, properties[index].name);
+				}
 		}
 
 		private static void DrawNormalMapProperties(MaterialEditor materialEditor, MaterialProperty[] properties,

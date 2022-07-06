@@ -65,6 +65,8 @@
         _ReflectionSmoothness ("Smoothness", Range(0, 1)) = 0.5
         _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
         
+        // Custom Properties Begin
+        // Custom Properties End
     }
     SubShader
     {
@@ -138,6 +140,18 @@
             #if defined(_ADDITIONAL_LIGHTS_SPECULAR) && defined(_SPECULAR)
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
+
+            #define TOON_SHADER_FORWARD_PASS
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
@@ -165,6 +179,18 @@
             #pragma fragment ShadowPassFragment
 
             #pragma multi_compile_instancing
+
+            #define TOON_SHADER_SHADOW_CASTER_PASS
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass.hlsl"
@@ -200,6 +226,16 @@
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
 
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderMetaPass.hlsl"
 
@@ -225,7 +261,18 @@
             #pragma fragment DepthOnlyFragment
 
             #pragma multi_compile_instancing
-           
+
+            #define TOON_SHADER_DEPTH_ONLY_PASS
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
@@ -250,6 +297,18 @@
             #pragma fragment DepthNormalsFragment
 
             #pragma multi_compile_instancing
+
+            #define TOON_SHADER_DEPTH_NORMALS_PASS
+
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
 
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass.hlsl"
