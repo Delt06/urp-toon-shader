@@ -1,4 +1,4 @@
-Shader "DELTation/Custom/My Toon Shader"
+Shader "DELTation/Custom/Custom Toon Shader"
 {
     Properties
     {

@@ -27,12 +27,18 @@ namespace DELTation.ToonShader.Editor.Custom
 
 		private void GenerateShaderFile(CustomToonShader customToonShader)
 		{
+			if (string.IsNullOrWhiteSpace(customToonShader.ShaderName))
+			{
+				Debug.LogError("Shader name is empty.");
+				return;
+			}
+
 			var path = AssetDatabase.GetAssetPath(customToonShader);
 			var assetName = Path.GetFileNameWithoutExtension(path);
 			var directoryName = Path.GetDirectoryName(path)!;
 
 			var sourceShaderCode =
-				GenerateShaderSource(customToonShader, assetName);
+				GenerateShaderSource(customToonShader, customToonShader.ShaderName);
 			var shaderAssetPath = customToonShader.Shader != null
 				? AssetDatabase.GetAssetPath(customToonShader.Shader)
 				: Path.Combine(directoryName, assetName + ".shader");
@@ -46,10 +52,10 @@ namespace DELTation.ToonShader.Editor.Custom
 			AssetDatabase.SaveAssets();
 		}
 
-		private static string GenerateShaderSource(CustomToonShader customToonShader, string assetName)
+		private static string GenerateShaderSource(CustomToonShader customToonShader, string shaderName)
 		{
 			var sourceShaderCodeLines = GetSourceShaderCode(customToonShader.SourceShader);
-			sourceShaderCodeLines[0] = $"Shader \"DELTation/Custom/{assetName}\"";
+			sourceShaderCodeLines[0] = $"Shader \"DELTation/Custom/{shaderName}\"";
 			var sourceShaderCode = string.Join(Environment.NewLine, sourceShaderCodeLines);
 			return sourceShaderCode;
 		}

@@ -9,5 +9,12 @@ namespace DELTation.ToonShader.Custom
 		public Shader SourceShader;
 		[HideInInspector]
 		public Shader Shader;
+		public string ShaderName;
+
+		private void Reset()
+		{
+			if (string.IsNullOrEmpty(ShaderName))
+				ShaderName = name;
+		}
 	}
 }
