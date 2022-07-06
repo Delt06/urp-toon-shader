@@ -1,19 +1,11 @@
-// Shader is mostly a copy of the ToonShader
-Shader "DELTation/Toon Shader Custom Instanced"
+Shader "DELTation/Custom/Toon Shader (Instanced Color)"
 {
     Properties
     {
         [MainTexture]
         _BaseMap ("Texture", 2D) = "white" {}
-        
-        // No longer main color, used only for Material Editor compatibility
-        _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
-        
-        // New base color property, with white as default value to preview in Material Editor
         [MainColor]
-        i_BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
-        
-        
+        _BaseColor ("Tint", Color) = (1.0, 1.0, 1.0)
         _ShadowTint ("Shadow Tint", Color) = (0.0, 0.0, 0.0, 1.0)
         [Toggle(_PURE_SHADOW_COLOR)]
         _PureShadowColor ("Pure Shadow Color", Float) = 0
@@ -33,12 +25,12 @@ Shader "DELTation/Toon Shader Custom Instanced"
         [Toggle(_EMISSION)] _Emission ("Emission", Float) = 0
         [HDR] _EmissionColor ("Emission Color", Color) = (0.0, 0.0, 0.0, 0.0)
         
-        [Toggle(_FRESNEL)] _Fresnel ("Rim", Float) = 1
+        [Toggle(_FRESNEL)] _Fresnel ("Rim", Float) = 0
         _FresnelThickness ("Rim Thickness", Range(0, 1)) = 0.45
         _FresnelSmoothness ("Rim Smoothness", Range(0, 1)) = 0.1
         [HDR] _FresnelColor ("Rim Color", Color) = (1.0, 1.0, 1.0, 1.0)
         
-        [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 1
+        [Toggle(_SPECULAR)] _Specular ("Specular", Float) = 0
         [Toggle(_ANISO_SPECULAR)] _AnisoSpecular("Anisotropic Specular", Float) = 0
         _SpecularThreshold ("Specular Threshold", Range(0, 1)) = 0.8
         _SpecularExponent ("Specular Exponent", Range(0, 1000)) = 200
@@ -67,12 +59,15 @@ Shader "DELTation/Toon Shader Custom Instanced"
         
         // Editmode props
         [HideInInspector] _QueueOffset("Queue Offset", Float) = 0.0
-                
+        
         [Toggle(_REFLECTIONS)] _Reflections("Reflections", Float) = 0.0
         [Toggle(_REFLECTION_PROBES)] _ReflectionProbes("Reflection Probes", Float) = 0.0
         _ReflectionSmoothness ("Smoothness", Range(0, 1)) = 0.5
         _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
         
+        // Custom Properties Begin
+        [CustomProperty] i_BaseColor ("Instanced Base Color", Color) = (1, 1, 1, 1)
+        // Custom Properties End
     }
     SubShader
     {
@@ -111,20 +106,20 @@ Shader "DELTation/Toon Shader Custom Instanced"
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
-            
+
             #pragma shader_feature_local_fragment _REFLECTIONS
             #pragma shader_feature_local_fragment _REFLECTION_PROBES
             
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
-            #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
             #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
+            
+            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
+            #pragma multi_compile _ SHADOWS_SHADOWMASK
             
             
             // Unity
@@ -147,8 +142,23 @@ Shader "DELTation/Toon Shader Custom Instanced"
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
 
-            // change default input #include to new one (the same in other passes)
-            #include "./ToonShaderCustomInstancedInput.hlsl"
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
+
+            
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass.hlsl"
             
@@ -175,7 +185,23 @@ Shader "DELTation/Toon Shader Custom Instanced"
 
             #pragma multi_compile_instancing
 
-            #include "./ToonShaderCustomInstancedInput.hlsl"
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
+
+
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass.hlsl"
 
             ENDHLSL
@@ -200,7 +226,8 @@ Shader "DELTation/Toon Shader Custom Instanced"
             #pragma shader_feature_local _ANISO_SPECULAR
             #pragma shader_feature_local _ADDITIONAL_LIGHTS_SPECULAR
             #pragma shader_feature_local _ENVIRONMENT_LIGHTING_ENABLED
-            
+
+            #pragma shader_feature_local_fragment _SURFACE_TYPE_TRANSPARENT
             #pragma shader_feature_local_fragment _FRESNEL
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _RAMP_TRIPLE
@@ -208,7 +235,23 @@ Shader "DELTation/Toon Shader Custom Instanced"
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
 
-            #include "./ToonShaderCustomInstancedInput.hlsl"
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
+
+
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderMetaPass.hlsl"
 
             ENDHLSL
@@ -233,9 +276,24 @@ Shader "DELTation/Toon Shader Custom Instanced"
             #pragma fragment DepthOnlyFragment
 
             #pragma multi_compile_instancing
-           
 
-            #include "./ToonShaderCustomInstancedInput.hlsl"
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
+
+
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthOnlyPass.hlsl"
             
             ENDHLSL
@@ -259,7 +317,23 @@ Shader "DELTation/Toon Shader Custom Instanced"
 
             #pragma multi_compile_instancing
 
-            #include "./ToonShaderCustomInstancedInput.hlsl"
+            // TOON_SHADER_HOOK_INPUT_BUFFER
+            // TOON_SHADER_HOOK_INPUT_TEXTURES
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+             #define TOON_SHADER_CUSTOM_INSTANCING_BUFFER \
+TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor) \
+
+            // TOON_SHADER_CUSTOM_CBUFFER
+
+            // TOON_SHADER_HOOK_APP_DATA
+
+            // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+             #define TOON_SHADER_HOOK_FRAGMENT_ALBEDO \
+albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
+
+
+            #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderDepthNormalsPass.hlsl"
             ENDHLSL
         }

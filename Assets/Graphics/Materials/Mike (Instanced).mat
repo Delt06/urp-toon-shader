@@ -2,15 +2,20 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mike (Instanced)
-  m_Shader: {fileID: 4800000, guid: 9e8ca4a3b06e49acb94971a2fcd3f78a, type: 3}
-  m_ShaderKeywords: _ADDITIONAL_LIGHTS_ENABLED _FOG _MULTI_COMPILE_PROPERTIES _TOON_MAIN_LIGHT_VERTEX
-    _ZWRITE_ON
+  m_Shader: {fileID: 4800000, guid: 852509d381154f8429b33f5e5bf5eeed, type: 3}
+  m_ValidKeywords:
+  - _ADDITIONAL_LIGHTS_ENABLED
+  - _FOG
+  m_InvalidKeywords:
+  - _MULTI_COMPILE_PROPERTIES
+  - _TOON_MAIN_LIGHT_VERTEX
+  - _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -84,6 +89,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AdditionalLights: 1
     - _AdditionalLightsMultiplier: 0.28
@@ -122,6 +128,10 @@ Material:
     - _RampSmoothness: 0.45
     - _RampTriple: 0
     - _ReceiveShadows: 1
+    - _ReflectionBlend: 0.5
+    - _ReflectionProbes: 0
+    - _ReflectionSmoothness: 0.5
+    - _Reflections: 0
     - _ShadowMask: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -144,6 +154,7 @@ Material:
     - _ShadowTint: {r: 0.1525899, g: 0.17301533, b: 0.254717, a: 0.7647059}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SpecularColor: {r: 19.468573, g: 19.468573, b: 19.468573, a: 1}
+    - i_BaseColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &7503274539402703127
 MonoBehaviour:
