@@ -6,5 +6,6 @@ namespace DELTation.ToonShader.Custom
 	public enum CustomToonShaderHookType
 	{
 		TOON_SHADER_HOOK_INPUT_BUFFER,
+		TOON_SHADER_HOOK_INPUT_TEXTURES,
 	}
 }

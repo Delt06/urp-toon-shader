@@ -30,3 +30,7 @@ MonoBehaviour:
   Hooks:
   - Name: 0
     Code: float4 _CustomTint;
+  - Name: 1
+    Code: 'TEXTURE2D(_CustomTexture);
+
+      SAMPLER(sampler_CustomTexture);'
