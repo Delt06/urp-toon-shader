@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using DELTation.ToonShader.Custom;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace DELTation.ToonShader.Editor.Custom
 {
@@ -14,20 +16,33 @@ namespace DELTation.ToonShader.Editor.Custom
 		private static readonly string HookIndent = new(' ', 12);
 		private static readonly string PropertyIndent = new(' ', 8);
 
-		public override void OnInspectorGUI()
+		public override VisualElement CreateInspectorGUI()
 		{
-			base.OnInspectorGUI();
+			var container = new VisualElement();
+			InspectorElement.FillDefaultInspector(container, serializedObject, this);
 
 			var customToonShader = (CustomToonShader)target;
 
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.ObjectField(nameof(customToonShader.Shader), customToonShader.Shader, typeof(Shader), false
+			var shaderRoot = new VisualElement();
+			shaderRoot.Add(new ObjectField
+				{
+					value = customToonShader.Shader,
+					objectType = typeof(Shader),
+					allowSceneObjects = false,
+					label = nameof(customToonShader.Shader),
+				}
 			);
-			EditorGUI.EndDisabledGroup();
+			container.Add(shaderRoot);
+			shaderRoot.SetEnabled(false);
 
+			var button = new Button
+			{
+				text = "Generate",
+			};
+			button.clicked += () => GenerateShaderFile(customToonShader);
+			container.Add(button);
 
-			if (GUILayout.Button("Generate"))
-				GenerateShaderFile(customToonShader);
+			return container;
 		}
 
 		private void GenerateShaderFile(CustomToonShader customToonShader)
@@ -88,8 +103,10 @@ namespace DELTation.ToonShader.Editor.Custom
 				var attributes = string.Join(' ',
 					shaderProperty.Attributes.Append("CustomProperty").Select(a => $"[{a}]")
 				);
+				var typeString = shaderProperty.TypedValue.GetTypeString();
+				var valueString = shaderProperty.TypedValue.GetValueString();
 				propertyLines.Add(
-					$"{PropertyIndent}{attributes} {shaderProperty.Name} (\"{shaderProperty.DisplayName}\", {shaderProperty.Type}) = {shaderProperty.DefaultValue}"
+					$"{PropertyIndent}{attributes} {shaderProperty.Name} (\"{shaderProperty.DisplayName}\", {typeString}) = {valueString}"
 				);
 			}
 

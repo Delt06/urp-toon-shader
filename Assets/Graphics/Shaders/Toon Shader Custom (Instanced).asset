@@ -18,11 +18,21 @@ MonoBehaviour:
   Properties:
   - Name: i_BaseColor
     DisplayName: Instanced Base Color
-    Type: Color
-    DefaultValue: (1, 1, 1, 1)
+    TypedValue:
+      Type: 7
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 0
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 1, y: 1, z: 1, w: 1}
+      ColorValue: {r: 1, g: 1, b: 1, a: 1}
     Attributes: []
   Hooks:
   - Name: 5
+    Condition: 
     Code: TOON_SHADER_DEFINE_INSTANCED_PROP(half4, i_BaseColor)
   - Name: 2
+    Condition: 
     Code: albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor);

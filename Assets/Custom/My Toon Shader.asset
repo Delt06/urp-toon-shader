@@ -18,23 +18,43 @@ MonoBehaviour:
   Properties:
   - Name: _CustomTexture
     DisplayName: Custom Texture
-    Type: 2D
-    DefaultValue: '"white" {}'
+    TypedValue:
+      Type: 2
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 1
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
     Attributes:
     - NoTilingOffset
   - Name: _CustomTint
     DisplayName: Custom Tint
-    Type: Color
-    DefaultValue: (0.0, 0.0, 0.0, 0.0)
+    TypedValue:
+      Type: 7
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 0
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 1, g: 1, b: 1, a: 1}
     Attributes: []
   Hooks:
   - Name: 0
+    Condition: 
     Code: float4 _CustomTint;
   - Name: 1
+    Condition: 
     Code: 'TEXTURE2D(_CustomTexture);
 
       SAMPLER(sampler_CustomTexture);'
   - Name: 2
+    Condition: 
     Code: albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv);
   - Name: 3
+    Condition: 
     Code: input.uv += sin(_Time.y*10) * 0.01;

@@ -67,7 +67,7 @@ Shader "DELTation/Custom/Custom Toon Shader"
         
         // Custom Properties Begin
         [NoScaleOffset] [CustomProperty] _CustomTexture ("Custom Texture", 2D) = "white" {}
-        [CustomProperty] _CustomTint ("Custom Tint", Color) = (0.0, 0.0, 0.0, 0.0)
+        [CustomProperty] _CustomTint ("Custom Tint", Color) = (1,1,1,1)
         // Custom Properties End
     }
     SubShader
@@ -143,6 +143,8 @@ Shader "DELTation/Custom/Custom Toon Shader"
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
 
+            #define TOON_SHADER_FORWARD_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
              #define TOON_SHADER_HOOK_INPUT_BUFFER \
 float4 _CustomTint; \
@@ -152,6 +154,8 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
@@ -191,6 +195,8 @@ albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
 
             #pragma multi_compile_instancing
 
+            #define TOON_SHADER_SHADOW_CASTER_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
              #define TOON_SHADER_HOOK_INPUT_BUFFER \
 float4 _CustomTint; \
@@ -200,6 +206,8 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
@@ -255,6 +263,8 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
@@ -293,6 +303,8 @@ albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
 
             #pragma multi_compile_instancing
 
+            #define TOON_SHADER_DEPTH_ONLY_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
              #define TOON_SHADER_HOOK_INPUT_BUFFER \
 float4 _CustomTint; \
@@ -302,6 +314,8 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 
@@ -338,6 +352,8 @@ albedo *= SAMPLE_TEXTURE2D(_CustomTexture, sampler_CustomTexture, input.uv); \
 
             #pragma multi_compile_instancing
 
+            #define TOON_SHADER_DEPTH_NORMALS_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
              #define TOON_SHADER_HOOK_INPUT_BUFFER \
 float4 _CustomTint; \
@@ -347,6 +363,8 @@ float4 _CustomTint; \
 TEXTURE2D(_CustomTexture); \
 SAMPLER(sampler_CustomTexture); \
 
+            // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
+            // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
 

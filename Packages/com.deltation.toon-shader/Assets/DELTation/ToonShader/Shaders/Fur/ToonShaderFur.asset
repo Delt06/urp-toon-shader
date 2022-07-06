@@ -18,23 +18,55 @@ MonoBehaviour:
   Properties:
   - Name: _FurLength
     DisplayName: Fur Length
-    Type: Range(0, 1)
-    DefaultValue: 0.1
+    TypedValue:
+      Type: 9
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 0
+      RangeMinValue: 0
+      RangeMaxValue: 1
+      RangeValue: 0.1
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
     Attributes: []
   - Name: _FurStep
     DisplayName: Fur Step
-    Type: Range(0, 1)
-    DefaultValue: 0.1
+    TypedValue:
+      Type: 9
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 0
+      RangeMinValue: 0
+      RangeMaxValue: 1
+      RangeValue: 0.1
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
     Attributes: []
   - Name: _FurNoise
     DisplayName: Fur Noise
-    Type: 2D
-    DefaultValue: '"white" {}'
+    TypedValue:
+      Type: 2
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 1
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
     Attributes: []
   - Name: _FurMask
     DisplayName: Fur Mask
-    Type: 2D
-    DefaultValue: '"white" {}'
+    TypedValue:
+      Type: 2
+      IntegerValue: 0
+      FloatValue: 0
+      TextureValue: 1
+      RangeMinValue: 0
+      RangeMaxValue: 0
+      RangeValue: 0
+      VectorValue: {x: 0, y: 0, z: 0, w: 0}
+      ColorValue: {r: 0, g: 0, b: 0, a: 0}
     Attributes:
     - NoScaleOffset
   Hooks:
@@ -66,8 +98,8 @@ MonoBehaviour:
 
       const float4 fur_noise_st = _FurNoise_ST;
 
-      const half2
-      noise_uv = apply_tiling_offset(input.uv, fur_noise_st);
+      const half2 noise_uv
+      = apply_tiling_offset(input.uv, fur_noise_st);
 
-      albedo.a *=
-      SAMPLE_TEXTURE2D(_FurNoise, sampler_FurNoise, noise_uv).r; '
+      albedo.a *= SAMPLE_TEXTURE2D(_FurNoise,
+      sampler_FurNoise, noise_uv).r; '

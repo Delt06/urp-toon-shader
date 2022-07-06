@@ -66,7 +66,7 @@ Shader "DELTation/Custom/Toon Shader (Instanced Color)"
         _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
         
         // Custom Properties Begin
-        [CustomProperty] i_BaseColor ("Instanced Base Color", Color) = (1, 1, 1, 1)
+        [CustomProperty] i_BaseColor ("Instanced Base Color", Color) = (1,1,1,1)
         // Custom Properties End
     }
     SubShader
@@ -142,6 +142,8 @@ Shader "DELTation/Custom/Toon Shader (Instanced Color)"
             #define TOON_ADDITIONAL_LIGHTS_SPECULAR
             #endif
 
+            #define TOON_SHADER_FORWARD_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
@@ -184,6 +186,8 @@ albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
             #pragma fragment ShadowPassFragment
 
             #pragma multi_compile_instancing
+
+            #define TOON_SHADER_SHADOW_CASTER_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
@@ -277,6 +281,8 @@ albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
 
             #pragma multi_compile_instancing
 
+            #define TOON_SHADER_DEPTH_ONLY_PASS
+
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES
             // TOON_SHADER_CUSTOM_INSTANCING_BUFFER
@@ -316,6 +322,8 @@ albedo *= TOON_SHADER_ACCESS_INSTANCED_PROP(i_BaseColor); \
             #pragma fragment DepthNormalsFragment
 
             #pragma multi_compile_instancing
+
+            #define TOON_SHADER_DEPTH_NORMALS_PASS
 
             // TOON_SHADER_HOOK_INPUT_BUFFER
             // TOON_SHADER_HOOK_INPUT_TEXTURES

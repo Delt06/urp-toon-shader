@@ -66,8 +66,8 @@ Shader "DELTation/Custom/Toon Shader (Fur)"
         _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
         
         // Custom Properties Begin
-        [CustomProperty] _FurLength ("Fur Length", Range(0, 1)) = 0.1
-        [CustomProperty] _FurStep ("Fur Step", Range(0, 1)) = 0.1
+        [CustomProperty] _FurLength ("Fur Length", Range(0,1)) = 0.1
+        [CustomProperty] _FurStep ("Fur Step", Range(0,1)) = 0.1
         [CustomProperty] _FurNoise ("Fur Noise", 2D) = "white" {}
         [NoScaleOffset] [CustomProperty] _FurMask ("Fur Mask", 2D) = "white" {}
         // Custom Properties End

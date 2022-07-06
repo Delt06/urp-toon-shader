@@ -26,8 +26,7 @@ namespace DELTation.ToonShader.Custom
 		{
 			public string Name = "_Property";
 			public string DisplayName = "Property";
-			public string Type = "Float";
-			public string DefaultValue = "0";
+			public CustomToonShaderPropertyTypedValue TypedValue;
 			public List<string> Attributes = new();
 		}
 
