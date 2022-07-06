@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DELTation.ToonShader.Custom
@@ -26,6 +27,7 @@ namespace DELTation.ToonShader.Custom
 			public string DisplayName = "Property";
 			public string Type = "Float";
 			public string DefaultValue = "0";
+			public List<string> Attributes = new();
 		}
 	}
 }

@@ -20,7 +20,10 @@ MonoBehaviour:
     DisplayName: Custom Texture
     Type: 2D
     DefaultValue: '"white" {}'
+    Attributes:
+    - NoTilingOffset
   - Name: _CustomTint
     DisplayName: Custom Tint
     Type: Color
     DefaultValue: (0.0, 0.0, 0.0, 0.0)
+    Attributes: []

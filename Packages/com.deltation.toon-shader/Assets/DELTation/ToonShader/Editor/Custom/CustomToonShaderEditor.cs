@@ -83,8 +83,11 @@ namespace DELTation.ToonShader.Editor.Custom
 
 			foreach (var shaderProperty in customToonShader.Properties)
 			{
+				var attributes = string.Join(' ',
+					shaderProperty.Attributes.Append("CustomProperty").Select(a => $"[{a}]")
+				);
 				propertyLines.Add(
-					$"{propertyIndent}{shaderProperty.Name} (\"{shaderProperty.DisplayName}\", {shaderProperty.Type}) = {shaderProperty.DefaultValue}"
+					$"{propertyIndent}{attributes} {shaderProperty.Name} (\"{shaderProperty.DisplayName}\", {shaderProperty.Type}) = {shaderProperty.DefaultValue}"
 				);
 			}
 

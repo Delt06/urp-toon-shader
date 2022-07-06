@@ -66,8 +66,8 @@ Shader "DELTation/Custom/Custom Toon Shader"
         _ReflectionBlend ("Blend", Range(0, 1)) = 0.5
         
         // Custom Properties Begin
-        _CustomTexture ("Custom Texture", 2D) = "white" {}
-        _CustomTint ("Custom Tint", Color) = (0.0, 0.0, 0.0, 0.0)
+        [NoScaleOffset] [CustomProperty] _CustomTexture ("Custom Texture", 2D) = "white" {}
+        [CustomProperty] _CustomTint ("Custom Tint", Color) = (0.0, 0.0, 0.0, 0.0)
         // Custom Properties End
     }
     SubShader
