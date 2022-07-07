@@ -149,8 +149,10 @@
             // TOON_SHADER_CUSTOM_CBUFFER
 
             // TOON_SHADER_HOOK_APP_DATA
+            // TOON_SHADER_HOOK_FORWARD_PASS_V2F
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
+            // TOON_SHADER_HOOK_VERTEX_OUTPUT
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"

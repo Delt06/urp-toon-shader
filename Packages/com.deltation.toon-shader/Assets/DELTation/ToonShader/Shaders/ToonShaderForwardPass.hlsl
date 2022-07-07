@@ -44,6 +44,10 @@ struct v2f
     DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 8);
     #endif
 
+    #ifdef TOON_SHADER_HOOK_FORWARD_PASS_V2F
+    TOON_SHADER_HOOK_FORWARD_PASS_V2F
+    #endif
+
 
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -104,6 +108,10 @@ v2f vert(appdata input)
     output.additional_lights_specular_color = additional_lights_specular_color;
     #endif
 
+    #endif
+
+    #ifdef TOON_SHADER_HOOK_VERTEX_OUTPUT
+    TOON_SHADER_HOOK_VERTEX_OUTPUT;
     #endif
 
     return output;
