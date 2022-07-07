@@ -153,7 +153,9 @@
 
             // TOON_SHADER_HOOK_VERTEX_INPUT
             // TOON_SHADER_HOOK_VERTEX_OUTPUT
+            
             // TOON_SHADER_HOOK_FRAGMENT_ALBEDO
+            // TOON_SHADER_HOOK_RAMP_BRIGHTNESS
             
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderInput.hlsl"
             #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderForwardPass_AppData.hlsl"

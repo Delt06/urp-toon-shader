@@ -164,6 +164,10 @@ inline half get_brightness(const half4 position_cs, const half3 normal_ws, const
     brightness = min(brightness, brightness * ao_factor.directAmbientOcclusion);
     #endif
 
+    #ifdef TOON_SHADER_HOOK_RAMP_BRIGHTNESS
+    TOON_SHADER_HOOK_RAMP_BRIGHTNESS
+    #endif
+
     return get_ramp(brightness);
 }
 
