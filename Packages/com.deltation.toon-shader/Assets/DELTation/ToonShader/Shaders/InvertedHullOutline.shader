@@ -25,6 +25,8 @@
 			#pragma shader_feature_vertex CLIP_SPACE
 			#pragma shader_feature_vertex CUSTOM_NORMALS
 			#pragma shader_feature_vertex FALLBACK_TO_DEFAULT_NORMALS
+
+			#pragma multi_compile_fog
 			
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -38,25 +40,40 @@
 				#endif
 			};
 
+			struct v2f
+			{
+				float4 position_cs : SV_POSITION;
+				float fog_factor : FOG_FACTOR;
+			};
+
 			CBUFFER_START(UnityPerMaterial)
-			half4 _Color;
-			half _Scale;
+			float4 _Color;
+			float _Scale;
 			CBUFFER_END
 
-			float4 vert (const appdata v) : SV_POSITION
+			v2f vert (const appdata input)
 			{
+				v2f output;
+				
 #ifdef CLIP_SPACE
-				float4 vertex_hclip = TransformObjectToHClip(v.vertex);
-				float3 normal_hclip = TransformWorldToHClipDir(TransformObjectToWorldNormal(v.normal, true));
-				return vertex_hclip + float4(normal_hclip * _Scale, 0);
+				float4 vertex_hclip = TransformObjectToHClip(input.vertex);
+				float3 normal_hclip = TransformWorldToHClipDir(TransformObjectToWorldNormal(input.normal, true));
+				output.position_cs = vertex_hclip + float4(normal_hclip * _Scale, 0);
 #else
-				return TransformObjectToHClip(v.vertex + normalize(v.normal) * _Scale);
+				output.position_cs = TransformObjectToHClip(input.vertex + normalize(input.normal) * _Scale);
 #endif
+
+				output.fog_factor = ComputeFogFactor(output.position_cs.z);
+
+				return output;
+
 			}
 
-			half4 frag() : SV_Target
+			float4 frag(const v2f input) : SV_Target
 			{
-				return _Color;
+				float4 output = _Color;
+				output.rgb = MixFog(output.rgb, input.fog_factor);
+				return output;
 			}
 			ENDHLSL
 		}
