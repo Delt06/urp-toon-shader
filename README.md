@@ -1,4 +1,5 @@
-# URP Toon Shader for Unity
+# Toon Shader for Unity URP
+
 A toon shader compatible with the Universal Render Pipeline.
 
 ### Unity Version
