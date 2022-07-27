@@ -3,7 +3,9 @@ A toon shader compatible with the Universal Render Pipeline.
 
 ### Unity Version
 
-> Developed and verified with Unity 2021.3.0f1 LTS and URP package 12.1.6
+> Developed and verified with Unity 2021.3.0f1 LTS and URP package v12.1.6.
+
+> Only Forward rendering path is supported.
 
 ![Main](Showcase/main.jpg)
 
