@@ -7,7 +7,7 @@ A toon shader compatible with the Universal Render Pipeline.
 
 > Only Forward rendering path is supported.
 
-![Main](Showcase/main.jpg)
+![Main](https://github.com/Delt06/urp-toon-shader-cyberpunk-demo/blob/master/Documentation/screenshot.jpg?raw=true)
 
 ### Table of Contents
 
@@ -135,6 +135,8 @@ By default, the shader is updated only for LTS versions of Unity.
 - [Transparency Sorting Fix](https://github.com/Delt06/urp-toon-shader/wiki/Transparency-Sorting-Fix)
 
 ## Examples
+
+<img src="Showcase/main.jpg" alt="Forest Demo" width="400">
 
 <img src="Showcase/toony_tiny_city_demo.jpg" alt="Toony Tiny City Demo" width="400">
 
