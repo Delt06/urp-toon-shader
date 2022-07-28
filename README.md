@@ -136,6 +136,9 @@ By default, the shader is updated only for LTS versions of Unity.
 
 ## Examples
 
+<details>
+<summary> Bundled</summary>
+
 <img src="Showcase/main.jpg" alt="Forest Demo" width="400">
 
 <img src="Showcase/toony_tiny_city_demo.jpg" alt="Toony Tiny City Demo" width="400">
@@ -145,6 +148,107 @@ By default, the shader is updated only for LTS versions of Unity.
 <img src="Showcase/warrior.jpg" alt="warrior" width="400">
 
 <img src="Showcase/fur.jpg" alt="fur" width="400">
+
+</details>
+
+<details>
+<summary>Released Games</summary>
+
+<ul>
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.tornadoblade">
+        Tornado Blade
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/kJlmjO6aAfP4nyGGWh1wCduj7uCVfWYAvb8gOl07nHRbkjY9oxLdluiZY0pj6c1ZbQ=w240-h480-rw" alt="Tornado Blade" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.blowfight">
+        Blow Fight
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/x0JiCI0H6Qlw27cjPlPyWLMcgUkjGkqxXQTkf-DRqi5qqBbn-RyCN5TPqS_14IvERA=w240-h480-rw" alt="Blow Fight" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.miner.farm">
+         Miner Farm
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/bPU1C18MFA2TRQgwvq3VTYo_hntbe0I_tRIwUbO7x2SmXlCzJ7n97TAy1Xn530nQEA=w240-h480-rw" alt="Miner Farm" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.bulldozerrunner">
+         Bulldozer Runner
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/N6MO0mfLi2UhO61X1o6JJ9IYWLPzQANCndWOq3b9e-NnEWinCJaMdwcNzahm9PJWwiY=w240-h480-rw" alt="Bulldozer Runner" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=stoneage.survival.craft">
+        Survival Craft: Stone Age
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/kzNH-ESRhwKNE4zBQwvacDo5FHg5ofREMO2WGeJE-45yvUPmi0KdXKqUhOnpa90lNA=w240-h480-rw" alt="Survival Craft: Stone Age" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.bumpfight">
+        Bump Fight
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/GFX_AtN2H7ZYu_1a67p4UXoXUzBimDnl75qCSEIwjojy_dhIKgD-I0ClfCVK-E9Zg-4=w240-h480-rw" alt="Bump Fight" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.merge2race">
+        Merge 2 Race
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/1rfUHyOz6DoPIL26hm1XkYvluTqeMKcdOdvvmuWPmY_vaZL160HifhZ0QyaB18gwKVw=w240-h480-rw" alt="Merge 2 Race" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.countfight">
+        Count Fight
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/YhEVcheZQbdTogHtWuqEtMstnx0ii-DnZnmIxDtq7bKwAlaQ2z0RBSNPxYeo0JOE=w240-h480-rw" alt="Count Fight" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.loverslab">
+        Lovers Lab
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/4vEZfcl16Sap-RN0bEVPEpUucgRURYksXfCWHxFpumLSCBUMbUfrMtWrpmDFMep_rh0=w240-h480-rw" alt="Lovers Lab" width="200">
+  </li>
+
+  <li>
+    <p>
+      <a href="https://play.google.com/store/apps/details?id=com.igdclub.liquidio">
+        Liquid.io
+      </a>
+    </p>
+    <img src="https://play-lh.googleusercontent.com/BqwovDHv4JWJRkqzccOrpxKzksjXWDnkIc-qiwW4w-9mENALTGH0_1q3WGL4Do6HVWAu=w240-h480-rw" alt="Liquid.io" width="200">
+  </li>
+  
+</ul>
+
+</details>
+
 
 ## Used Assets
 - [UnityFx.Outline](https://github.com/Arvtesh/UnityFx.Outline)
