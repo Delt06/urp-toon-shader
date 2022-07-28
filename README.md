@@ -140,15 +140,19 @@ By default, the shader is updated only for LTS versions of Unity.
 <details>
 <summary> Bundled</summary>
 
-<img src="Showcase/main.jpg" alt="Forest Demo" width="400">
+<ul>
 
-<img src="Showcase/toony_tiny_city_demo.jpg" alt="Toony Tiny City Demo" width="400">
+<li><img src="Showcase/main.jpg" alt="Forest Demo" width="400"></li>
 
-<img src="Showcase/anime-character-arisa.jpg" alt="Anime Character: Arisa" width="400">
+<li><img src="Showcase/toony_tiny_city_demo.jpg" alt="Toony Tiny City Demo" width="400"></li>
 
-<img src="Showcase/warrior.jpg" alt="warrior" width="400">
+<li><img src="Showcase/anime-character-arisa.jpg" alt="Anime Character: Arisa" width="400"></li>
 
-<img src="Showcase/fur.jpg" alt="fur" width="400">
+<li><img src="Showcase/warrior.jpg" alt="warrior" width="400"></li>
+
+<li><img src="Showcase/fur.jpg" alt="fur" width="400"></li>
+
+</ul>
 
 </details>
 
