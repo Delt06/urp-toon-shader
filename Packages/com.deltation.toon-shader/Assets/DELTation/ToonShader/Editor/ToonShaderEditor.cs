@@ -31,34 +31,41 @@ namespace DELTation.ToonShader.Editor
 		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
 		{
-			if (Foldout("Surface Options"))
-				DrawSurfaceProperties(materialEditor, properties);
-			DrawCustomProperties(materialEditor, properties, material);
-			if (Foldout("Color", true))
-				DrawColorProperties(materialEditor, properties);
-			if (RampFoldout())
-				DrawRampProperties(materialEditor, properties, material);
-			if (Foldout("Normal Map", true))
-				DrawNormalMapProperties(materialEditor, properties, material);
-			if (Foldout("Emission", true))
-				DrawEmissionProperties(materialEditor, properties, material);
-			if (Foldout("Rim"))
-				DrawRimProperties(materialEditor, properties, material);
-			if (Foldout("Specular"))
-				DrawSpecularProperties(materialEditor, properties, material);
-			if (Foldout("Reflections"))
-				DrawReflectionProperties(materialEditor, properties, material);
-			if (MiscFoldout())
-				DrawMiscProperties(materialEditor, properties, material);
+			var ctx = new MaterialEditorContext(materialEditor, properties, material);
+			Foldout(ctx, "Surface Options", DrawSurfaceProperties);
+			DrawCustomProperties(ctx);
+			Foldout(ctx, "Color", DrawColorProperties, true);
+			RampFoldout(ctx, DrawRampProperties);
+			Foldout(ctx, "Normal Map", DrawNormalMapProperties);
+			Foldout(ctx, "Emission", DrawEmissionProperties);
+			Foldout(ctx, "Rim", DrawRimProperties);
+			Foldout(ctx, "Specular", DrawSpecularProperties);
+			Foldout(ctx, "Reflections", DrawReflectionProperties);
+			MiscFoldout(ctx, DrawMiscProperties);
 		}
 
-		private void DrawCustomProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawColorProperties(in MaterialEditorContext ctx) =>
+			DrawAlbedo(ctx);
+
+		private static void DrawSurfaceProperties(in MaterialEditorContext ctx)
 		{
-			var shader = material.shader;
+			DrawPropertyCustom(ctx, "Surface Type", DrawSurfaceType);
+			if (IsTransparent(ctx.Properties))
+				DrawPropertyCustom(ctx, "Blending Mode", DrawBlendMode);
+
+			DrawPropertyCustom(ctx, "Alpha Clipping", DrawAlphaClip);
+			if (IsAlphaClip(ctx.Properties))
+				DrawProperty(ctx, "_Cutoff");
+
+			DrawProperty(ctx, "_Cull");
+		}
+
+		private void DrawCustomProperties(in MaterialEditorContext context)
+		{
+			var shader = context.Material.shader;
 			var customPropertyIndices = new List<int>();
 
-			for (var i = 0; i < properties.Length; i++)
+			for (var i = 0; i < context.Properties.Length; i++)
 			{
 				var attributes = shader.GetPropertyAttributes(i);
 				if (attributes.Contains("CustomProperty"))
@@ -67,43 +74,31 @@ namespace DELTation.ToonShader.Editor
 
 			if (customPropertyIndices.Count == 0) return;
 
-			if (Foldout("Custom"))
-				foreach (var index in customPropertyIndices)
+			Foldout(context, "Custom", (in MaterialEditorContext ctx) =>
 				{
-					DrawProperty(materialEditor, properties, properties[index].name);
+					foreach (var index in customPropertyIndices)
+					{
+						DrawProperty(ctx, index);
+					}
 				}
+			);
 		}
 
-		private static void DrawNormalMapProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawNormalMapProperties(in MaterialEditorContext ctx)
 		{
 			EditorGUI.BeginChangeCheck();
 			const string bumpMapProperty = "_BumpMap";
-			DrawProperty(materialEditor, properties, bumpMapProperty);
+			DrawProperty(ctx, bumpMapProperty);
 
-			if (EditorGUI.EndChangeCheck())
-			{
-				var property = FindProperty(bumpMapProperty, properties);
-				const string normalMapKeyword = "_NORMALMAP";
-				if (property.textureValue == null)
-					material.DisableKeyword(normalMapKeyword);
-				else
-					material.EnableKeyword(normalMapKeyword);
-				materialEditor.PropertiesChanged();
-			}
-		}
+			if (!EditorGUI.EndChangeCheck()) return;
 
-		private static void DrawSurfaceProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
-		{
-			DrawPropertyCustom(materialEditor, properties, "Surface Type", DrawSurfaceType);
-			if (IsTransparent(properties))
-				DrawPropertyCustom(materialEditor, properties, "Blending Mode", DrawBlendMode);
-
-			DrawPropertyCustom(materialEditor, properties, "Alpha Clipping", DrawAlphaClip);
-			if (IsAlphaClip(properties))
-				DrawProperty(materialEditor, properties, "_Cutoff");
-
-			DrawProperty(materialEditor, properties, "_Cull");
+			var property = FindProperty(bumpMapProperty, ctx.Properties);
+			const string normalMapKeyword = "_NORMALMAP";
+			if (property.textureValue == null)
+				ctx.Material.DisableKeyword(normalMapKeyword);
+			else
+				ctx.Material.EnableKeyword(normalMapKeyword);
+			ctx.MaterialEditor.PropertiesChanged();
 		}
 
 		private static bool IsAlphaClip(MaterialProperty[] properties) =>
@@ -112,8 +107,11 @@ namespace DELTation.ToonShader.Editor
 		private static bool IsTransparent(MaterialProperty[] properties) =>
 			(SurfaceType)FindProperty("_Surface", properties).floatValue == SurfaceType.Transparent;
 
-		private static void DrawAlphaClip(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void DrawAlphaClip(in MaterialEditorContext ctx)
 		{
+			var properties = ctx.Properties;
+			var materialEditor = ctx.MaterialEditor;
+
 			var property = FindProperty("_AlphaClip", properties);
 			var alphaClip = property.floatValue > 0.5f;
 
@@ -125,15 +123,15 @@ namespace DELTation.ToonShader.Editor
 			{
 				property.floatValue = newAlphaClip ? 1f : 0f;
 				materialEditor.PropertiesChanged();
-				TryUpdateSurfaceData(materialEditor, properties);
+				TryUpdateSurfaceData(ctx);
 			}
 
 			EditorGUI.showMixedValue = false;
 		}
 
-		private static void DrawSurfaceType(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void DrawSurfaceType(in MaterialEditorContext ctx)
 		{
-			var surfaceProperty = FindProperty("_Surface", properties);
+			var surfaceProperty = FindProperty("_Surface", ctx.Properties);
 			var surfaceType = (SurfaceType)surfaceProperty.floatValue;
 
 			EditorGUI.showMixedValue = surfaceProperty.hasMixedValue;
@@ -143,17 +141,19 @@ namespace DELTation.ToonShader.Editor
 			if (EditorGUI.EndChangeCheck())
 			{
 				surfaceProperty.floatValue = (float)newSurfaceType;
-				materialEditor.PropertiesChanged();
-				TryUpdateSurfaceData(materialEditor, properties);
+				ctx.MaterialEditor.PropertiesChanged();
+				TryUpdateSurfaceData(ctx);
 			}
 
 			EditorGUI.showMixedValue = false;
 		}
 
-		private static void TryUpdateSurfaceData(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void TryUpdateSurfaceData(in MaterialEditorContext ctx)
 		{
+			var properties = ctx.Properties;
 			var surfaceProperty = FindProperty("_Surface", properties);
 			var surfaceType = (SurfaceType)surfaceProperty.floatValue;
+			var materialEditor = ctx.MaterialEditor;
 			var material = (Material)materialEditor.target;
 			var alphaClip = IsAlphaClip(properties);
 
@@ -232,8 +232,11 @@ namespace DELTation.ToonShader.Editor
 			materialEditor.PropertiesChanged();
 		}
 
-		private static void DrawBlendMode(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void DrawBlendMode(in MaterialEditorContext ctx)
 		{
+			var properties = ctx.Properties;
+			var materialEditor = ctx.MaterialEditor;
+
 			var blendProperty = FindProperty("_Blend", properties);
 			var currentBlendMode = (BlendMode)blendProperty.floatValue;
 
@@ -253,21 +256,21 @@ namespace DELTation.ToonShader.Editor
 				dstBlendProperty.floatValue = (float)newDstBlend;
 				blendProperty.floatValue = (float)newBlendMode;
 				materialEditor.PropertiesChanged();
-				TryUpdateSurfaceData(materialEditor, properties);
+				TryUpdateSurfaceData(ctx);
 			}
 
 			EditorGUI.showMixedValue = false;
 		}
 
-		private static void DrawPropertyCustom(MaterialEditor materialEditor, MaterialProperty[] properties,
+		private static void DrawPropertyCustom(in MaterialEditorContext ctx,
 			string label,
-			Action<MaterialEditor, MaterialProperty[]> draw)
+			MaterialPropertiesDrawer draw)
 		{
 			GUILayout.BeginHorizontal();
 			GUILayout.Label(label);
 			GUILayout.FlexibleSpace();
 
-			draw(materialEditor, properties);
+			draw(ctx);
 
 			GUILayout.EndHorizontal();
 		}
@@ -278,109 +281,103 @@ namespace DELTation.ToonShader.Editor
 			return result != default ? result : (UnityBlendMode.SrcAlpha, UnityBlendMode.OneMinusSrcAlpha);
 		}
 
-		private static void DrawRampProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawRampProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(materialEditor, properties, "_UseRampMap");
+			var material = ctx.Material;
+
+			DrawProperty(ctx, "_UseRampMap");
 
 			if (material.IsKeywordEnabled("_RAMP_MAP"))
 			{
-				DrawProperty(materialEditor, properties, "_RampMap");
+				DrawProperty(ctx, "_RampMap");
 			}
 			else
 			{
-				DrawProperty(materialEditor, properties, "_PureShadowColor");
-				DrawShadowTintProperty(materialEditor, properties);
-				DrawProperty(materialEditor, properties, "_RampTriple");
-				DrawRampProperty0(materialEditor, properties);
+				DrawProperty(ctx, "_PureShadowColor");
+				DrawShadowTintProperty(ctx);
+				DrawProperty(ctx, "_RampTriple");
+				DrawRampProperty0(ctx);
 
 				if (material.IsKeywordEnabled("_RAMP_TRIPLE"))
-					DrawProperty(materialEditor, properties, "_Ramp1");
+					DrawProperty(ctx, "_Ramp1");
 
-				DrawRampSmoothnessProperty(materialEditor, properties);
+				DrawRampSmoothnessProperty(ctx);
 			}
 		}
 
-		private static void DrawEmissionProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawEmissionProperties(in MaterialEditorContext ctx)
 		{
 			EditorGUILayout.BeginHorizontal();
-			DrawProperty(materialEditor, properties, "_Emission");
+			DrawProperty(ctx, "_Emission", "Enable");
 
-			if (material.IsKeywordEnabled("_EMISSION"))
-				DrawProperty(materialEditor, properties, "_EmissionColor");
+			if (ctx.Material.IsKeywordEnabled("_EMISSION"))
+				DrawProperty(ctx, "_EmissionColor");
 
 			EditorGUILayout.EndHorizontal();
 		}
 
-		private static void DrawRimProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawRimProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(materialEditor, properties, "_Fresnel");
+			DrawProperty(ctx, "_Fresnel", "Enable");
+			if (!ctx.Material.IsKeywordEnabled("_FRESNEL")) return;
 
-			if (material.IsKeywordEnabled("_FRESNEL"))
-			{
-				DrawProperty(materialEditor, properties, "_FresnelColor");
-				DrawProperty(materialEditor, properties, "_FresnelThickness");
-				DrawProperty(materialEditor, properties, "_FresnelSmoothness");
-			}
+			DrawProperty(ctx, "_FresnelColor");
+			DrawProperty(ctx, "_FresnelThickness");
+			DrawProperty(ctx, "_FresnelSmoothness");
 		}
 
-		private static void DrawSpecularProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawSpecularProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(materialEditor, properties, "_Specular");
+			DrawProperty(ctx, "_Specular", "Enable");
+			if (!ctx.Material.IsKeywordEnabled("_SPECULAR")) return;
 
-			if (material.IsKeywordEnabled("_SPECULAR"))
-			{
-				DrawProperty(materialEditor, properties, "_AnisoSpecular");
-				DrawProperty(materialEditor, properties, "_SpecularColor");
-				DrawProperty(materialEditor, properties, "_SpecularThreshold");
-				DrawProperty(materialEditor, properties, "_SpecularExponent");
-				DrawProperty(materialEditor, properties, "_SpecularSmoothness");
-			}
+			DrawProperty(ctx, "_AnisoSpecular");
+			DrawProperty(ctx, "_SpecularColor");
+			DrawProperty(ctx, "_SpecularThreshold");
+			DrawProperty(ctx, "_SpecularExponent");
+			DrawProperty(ctx, "_SpecularSmoothness");
 		}
 
-		private static void DrawReflectionProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawReflectionProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(materialEditor, properties, "_Reflections");
-			if (!material.IsKeywordEnabled("_REFLECTIONS")) return;
+			DrawProperty(ctx, "_Reflections", "Enable");
+			if (!ctx.Material.IsKeywordEnabled("_REFLECTIONS")) return;
 
-			DrawProperty(materialEditor, properties, "_ReflectionSmoothness");
-			DrawProperty(materialEditor, properties, "_ReflectionBlend");
-			DrawProperty(materialEditor, properties, "_ReflectionProbes");
+			DrawProperty(ctx, "_ReflectionSmoothness");
+			DrawProperty(ctx, "_ReflectionBlend");
+			DrawProperty(ctx, "_ReflectionProbes");
 		}
 
-		private static void DrawMiscProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
-			Material material)
+		private static void DrawMiscProperties(in MaterialEditorContext ctx)
 		{
-			DrawFogProperty(materialEditor, properties);
+			DrawFogProperty(ctx);
 
-			DrawProperty(materialEditor, properties, "_AdditionalLights");
+			DrawProperty(ctx, "_AdditionalLights");
+
+			var material = ctx.Material;
 			if (material.IsKeywordEnabled("_ADDITIONAL_LIGHTS_ENABLED") &&
 			    material.IsKeywordEnabled("_SPECULAR"))
-				DrawProperty(materialEditor, properties, "_AdditionalLightsSpecular");
+				DrawProperty(ctx, "_AdditionalLightsSpecular");
 
-			DrawProperty(materialEditor, properties, "_EnvironmentLightingEnabled");
-			DrawProperty(materialEditor, properties, "_ShadowMask");
+			DrawProperty(ctx, "_EnvironmentLightingEnabled");
+			DrawProperty(ctx, "_ShadowMask");
 
 
-			DrawVertexColorProperty(materialEditor, properties);
+			DrawVertexColorProperty(ctx);
 
-			DrawPropertyCustom(materialEditor, properties, "Priority", DrawQueueOffset);
+			DrawPropertyCustom(ctx, "Priority", DrawQueueOffset);
 		}
 
-		private static void DrawQueueOffset(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void DrawQueueOffset(in MaterialEditorContext ctx)
 		{
-			var property = FindProperty("_QueueOffset", properties);
+			var property = FindProperty("_QueueOffset", ctx.Properties);
 			EditorGUI.showMixedValue = property.hasMixedValue;
 			var currentValue = (int)property.floatValue;
 			var newValue = EditorGUILayout.IntSlider(currentValue, -QueueOffsetRange, QueueOffsetRange);
 			if (currentValue != newValue)
 			{
 				property.floatValue = newValue;
-				materialEditor.PropertiesChanged();
+				ctx.MaterialEditor.PropertiesChanged();
 			}
 
 			EditorGUI.showMixedValue = false;

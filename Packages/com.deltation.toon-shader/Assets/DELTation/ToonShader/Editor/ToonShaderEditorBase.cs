@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEditor;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 namespace DELTation.ToonShader.Editor
@@ -8,8 +9,6 @@ namespace DELTation.ToonShader.Editor
 	public abstract class ToonShaderEditorBase : ShaderGUI
 	{
 		private readonly Dictionary<string, bool> _foldouts = new();
-		private GUIStyle _foldoutStyle;
-		private GUIStyle _headerStyle;
 
 		protected virtual bool InstancingField => true;
 		protected virtual bool RenderQueueField => true;
@@ -19,18 +18,9 @@ namespace DELTation.ToonShader.Editor
 			var material = materialEditor.target as Material;
 			if (material == null) return;
 
-			_headerStyle = new GUIStyle
-			{
-				normal = new GUIStyleState
-				{
-					textColor = Color.white,
-				},
-				richText = true,
-			};
-			_foldoutStyle = EditorStyles.foldout;
-			_foldoutStyle.richText = true;
-
 			DrawProperties(materialEditor, properties, material);
+
+			EditorGUILayout.Space();
 
 			if (InstancingField)
 				materialEditor.EnableInstancingField();
@@ -42,61 +32,66 @@ namespace DELTation.ToonShader.Editor
 		protected abstract void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material);
 
-		protected void Label(string text) => GUILayout.Label(FormatLabel(text), _headerStyle);
-
-		private static string FormatLabel(string text) => $"<size=14><b>{text}</b></size>";
-
-		[MustUseReturnValue]
-		protected bool Foldout(string text, bool openByDefault = false)
+		protected void Foldout(in MaterialEditorContext context, string text, MaterialPropertiesDrawer drawer,
+			bool openByDefault = false)
 		{
+			const int space = 1;
+			EditorGUILayout.Space(space);
+
 			if (!_foldouts.TryGetValue(text, out var foldout))
 				foldout = openByDefault;
-			foldout = EditorGUILayout.Foldout(foldout, FormatLabel(text), _foldoutStyle);
+
+			foldout = CoreEditorUtils.DrawHeaderFoldout(new GUIContent(text), foldout);
 			_foldouts[text] = foldout;
-			return foldout;
+
+			if (foldout)
+			{
+				EditorGUI.indentLevel++;
+				drawer(context);
+				EditorGUI.indentLevel--;
+			}
+
+			EditorGUILayout.Space(space);
 		}
 
-		[MustUseReturnValue]
-		protected bool MiscFoldout(bool openByDefault = false) => Foldout("Misc", openByDefault);
+		protected void MiscFoldout(in MaterialEditorContext context, MaterialPropertiesDrawer drawer,
+			bool openByDefault = false) => Foldout(context, "Misc", drawer, openByDefault);
 
-		[MustUseReturnValue]
-		protected bool RampFoldout(bool openByDefault = true) => Foldout("Ramp", openByDefault);
+		protected void RampFoldout(in MaterialEditorContext context, MaterialPropertiesDrawer drawer,
+			bool openByDefault = true) => Foldout(context, "Ramp", drawer, openByDefault);
 
-		protected static void DrawProperty(MaterialEditor materialEditor, MaterialProperty[] properties, string name)
+		protected static void DrawProperty(in MaterialEditorContext ctx, string name,
+			[CanBeNull] string labelOverride = null)
 		{
-			var property = FindProperty(name, properties);
-			materialEditor.ShaderProperty(property, property.displayName);
+			var property = FindProperty(name, ctx.Properties);
+			ctx.MaterialEditor.ShaderProperty(property, labelOverride ?? property.displayName);
 		}
 
-		protected static void DrawColorProperties(MaterialEditor materialEditor, MaterialProperty[] properties)
+		protected static void DrawProperty(in MaterialEditorContext ctx, int index)
 		{
-			DrawProperty(materialEditor, properties, "_BaseMap");
-			DrawProperty(materialEditor, properties, "_BaseColor");
+			var property = ctx.Properties[index];
+			ctx.MaterialEditor.ShaderProperty(property, property.displayName);
 		}
 
-		protected static void DrawRampProperty0(MaterialEditor materialEditor, MaterialProperty[] properties)
+		protected static void DrawAlbedo(in MaterialEditorContext ctx)
 		{
-			DrawProperty(materialEditor, properties, "_Ramp0");
+			DrawProperty(ctx, "_BaseMap");
+			DrawProperty(ctx, "_BaseColor");
 		}
 
-		protected static void DrawRampSmoothnessProperty(MaterialEditor materialEditor, MaterialProperty[] properties)
-		{
-			DrawProperty(materialEditor, properties, "_RampSmoothness");
-		}
+		protected static void DrawRampProperty0(in MaterialEditorContext ctx) =>
+			DrawProperty(ctx, "_Ramp0");
 
-		protected static void DrawShadowTintProperty(MaterialEditor materialEditor, MaterialProperty[] properties)
-		{
-			DrawProperty(materialEditor, properties, "_ShadowTint");
-		}
+		protected static void DrawRampSmoothnessProperty(in MaterialEditorContext ctx) =>
+			DrawProperty(ctx, "_RampSmoothness");
 
-		protected static void DrawFogProperty(MaterialEditor materialEditor, MaterialProperty[] properties)
-		{
-			DrawProperty(materialEditor, properties, "_Fog");
-		}
+		protected static void DrawShadowTintProperty(in MaterialEditorContext ctx) =>
+			DrawProperty(ctx, "_ShadowTint");
 
-		protected static void DrawVertexColorProperty(MaterialEditor materialEditor, MaterialProperty[] properties)
-		{
-			DrawProperty(materialEditor, properties, "_VertexColor");
-		}
+		protected static void DrawFogProperty(in MaterialEditorContext ctx) =>
+			DrawProperty(ctx, "_Fog");
+
+		protected static void DrawVertexColorProperty(in MaterialEditorContext ctx) =>
+			DrawProperty(ctx, "_VertexColor");
 	}
 }

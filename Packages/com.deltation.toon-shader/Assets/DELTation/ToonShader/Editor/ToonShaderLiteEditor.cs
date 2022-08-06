@@ -10,24 +10,26 @@ namespace DELTation.ToonShader.Editor
 		protected override void DrawProperties(MaterialEditor materialEditor, MaterialProperty[] properties,
 			Material material)
 		{
-			DrawColorProperties(materialEditor, properties);
-			DrawShadowTintProperty(materialEditor, properties);
-			if (RampFoldout())
-			{
-				DrawRampProperty0(materialEditor, properties);
-				DrawRampSmoothnessProperty(materialEditor, properties);
-			}
+			var ctx = new MaterialEditorContext(materialEditor, properties, material);
 
-			if (MiscFoldout(true))
-				DrawMisc(materialEditor, properties);
+			Foldout(ctx, "Color", DrawAlbedo, true);
+			RampFoldout(ctx, DrawRampProperties);
+			MiscFoldout(ctx, DrawMisc);
 		}
 
-		private static void DrawMisc(MaterialEditor materialEditor, MaterialProperty[] properties)
+		private static void DrawRampProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(materialEditor, properties, "_VertexLit");
-			DrawProperty(materialEditor, properties, "_ReceiveShadows");
-			DrawFogProperty(materialEditor, properties);
-			DrawVertexColorProperty(materialEditor, properties);
+			DrawShadowTintProperty(ctx);
+			DrawRampProperty0(ctx);
+			DrawRampSmoothnessProperty(ctx);
+		}
+
+		private static void DrawMisc(in MaterialEditorContext ctx)
+		{
+			DrawProperty(ctx, "_VertexLit");
+			DrawProperty(ctx, "_ReceiveShadows");
+			DrawFogProperty(ctx);
+			DrawVertexColorProperty(ctx);
 		}
 	}
 }
