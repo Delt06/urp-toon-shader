@@ -6,8 +6,6 @@ A toon shader compatible with the Universal Render Pipeline.
 
 > Developed and verified with Unity 2021.3.0f1 LTS and URP package v12.1.6.
 
-> Only Forward rendering path is supported.
-
 ![Main](https://github.com/Delt06/urp-toon-shader-cyberpunk-demo/blob/master/Documentation/screenshot.jpg?raw=true)
 
 ### Table of Contents
@@ -65,6 +63,8 @@ A toon shader compatible with the Universal Render Pipeline.
 - SRP Batcher compatibility
 - GPU Instancing
 
+> Only Forward rendering path is supported.
+
 ## Toon Shader (Lite) Capabilities
 
 <img src="Showcase/toon_lite_icon.jpg" alt="Toon Lite Icon" width="150">
@@ -81,6 +81,8 @@ A toon shader compatible with the Universal Render Pipeline.
 ### Performance
 - SRP Batcher compatibility
 - GPU Instancing
+
+> Only Forward rendering path is supported.
 
 ## Inverted Hull Outline
 
