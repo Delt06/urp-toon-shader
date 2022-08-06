@@ -12,14 +12,14 @@ namespace DELTation.ToonShader.Editor
 		{
 			var ctx = new MaterialEditorContext(materialEditor, properties, material);
 
-			ColorFoldout(ctx);
-			DrawShadowTintProperty(ctx);
+			Foldout(ctx, "Color", DrawAlbedo, true);
 			RampFoldout(ctx, DrawRampProperties);
 			MiscFoldout(ctx, DrawMisc);
 		}
 
 		private static void DrawRampProperties(in MaterialEditorContext ctx)
 		{
+			DrawShadowTintProperty(ctx);
 			DrawRampProperty0(ctx);
 			DrawRampSmoothnessProperty(ctx);
 		}

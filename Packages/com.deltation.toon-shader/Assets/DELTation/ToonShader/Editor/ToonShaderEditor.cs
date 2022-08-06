@@ -45,7 +45,7 @@ namespace DELTation.ToonShader.Editor
 		}
 
 		private static void DrawColorProperties(in MaterialEditorContext ctx) =>
-			ColorFoldout(ctx);
+			DrawAlbedo(ctx);
 
 		private static void DrawSurfaceProperties(in MaterialEditorContext ctx)
 		{
@@ -308,7 +308,7 @@ namespace DELTation.ToonShader.Editor
 		private static void DrawEmissionProperties(in MaterialEditorContext ctx)
 		{
 			EditorGUILayout.BeginHorizontal();
-			DrawProperty(ctx, "_Emission");
+			DrawProperty(ctx, "_Emission", "Enable");
 
 			if (ctx.Material.IsKeywordEnabled("_EMISSION"))
 				DrawProperty(ctx, "_EmissionColor");
@@ -318,7 +318,7 @@ namespace DELTation.ToonShader.Editor
 
 		private static void DrawRimProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(ctx, "_Fresnel");
+			DrawProperty(ctx, "_Fresnel", "Enable");
 			if (!ctx.Material.IsKeywordEnabled("_FRESNEL")) return;
 
 			DrawProperty(ctx, "_FresnelColor");
@@ -328,7 +328,7 @@ namespace DELTation.ToonShader.Editor
 
 		private static void DrawSpecularProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(ctx, "_Specular");
+			DrawProperty(ctx, "_Specular", "Enable");
 			if (!ctx.Material.IsKeywordEnabled("_SPECULAR")) return;
 
 			DrawProperty(ctx, "_AnisoSpecular");
@@ -340,7 +340,7 @@ namespace DELTation.ToonShader.Editor
 
 		private static void DrawReflectionProperties(in MaterialEditorContext ctx)
 		{
-			DrawProperty(ctx, "_Reflections");
+			DrawProperty(ctx, "_Reflections", "Enable");
 			if (!ctx.Material.IsKeywordEnabled("_REFLECTIONS")) return;
 
 			DrawProperty(ctx, "_ReflectionSmoothness");

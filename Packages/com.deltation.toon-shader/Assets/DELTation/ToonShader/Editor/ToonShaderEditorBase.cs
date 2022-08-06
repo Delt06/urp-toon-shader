@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace DELTation.ToonShader.Editor
 			if (material == null) return;
 
 			DrawProperties(materialEditor, properties, material);
+
+			EditorGUILayout.Space();
 
 			if (InstancingField)
 				materialEditor.EnableInstancingField();
@@ -57,10 +60,11 @@ namespace DELTation.ToonShader.Editor
 		protected void RampFoldout(in MaterialEditorContext context, MaterialPropertiesDrawer drawer,
 			bool openByDefault = true) => Foldout(context, "Ramp", drawer, openByDefault);
 
-		protected static void DrawProperty(in MaterialEditorContext ctx, string name)
+		protected static void DrawProperty(in MaterialEditorContext ctx, string name,
+			[CanBeNull] string labelOverride = null)
 		{
 			var property = FindProperty(name, ctx.Properties);
-			ctx.MaterialEditor.ShaderProperty(property, property.displayName);
+			ctx.MaterialEditor.ShaderProperty(property, labelOverride ?? property.displayName);
 		}
 
 		protected static void DrawProperty(in MaterialEditorContext ctx, int index)
@@ -69,7 +73,7 @@ namespace DELTation.ToonShader.Editor
 			ctx.MaterialEditor.ShaderProperty(property, property.displayName);
 		}
 
-		protected static void ColorFoldout(in MaterialEditorContext ctx)
+		protected static void DrawAlbedo(in MaterialEditorContext ctx)
 		{
 			DrawProperty(ctx, "_BaseMap");
 			DrawProperty(ctx, "_BaseColor");
