@@ -38,11 +38,15 @@ namespace DELTation.ToonShader.Editor
 			if (!_foldouts.TryGetValue(text, out var foldout))
 				foldout = openByDefault;
 
-			const bool isBoxed = true;
-			foldout = CoreEditorUtils.DrawHeaderFoldout(new GUIContent(text), foldout, isBoxed);
+			foldout = CoreEditorUtils.DrawHeaderFoldout(new GUIContent(text), foldout);
 			_foldouts[text] = foldout;
 
-			if (foldout) drawer(context);
+			if (foldout)
+			{
+				EditorGUI.indentLevel++;
+				drawer(context);
+				EditorGUI.indentLevel--;
+			}
 
 			EditorGUILayout.Space(space);
 		}
