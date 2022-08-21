@@ -179,6 +179,8 @@
 
             #pragma shader_feature_local_fragment _ALPHATEST_ON
 
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 

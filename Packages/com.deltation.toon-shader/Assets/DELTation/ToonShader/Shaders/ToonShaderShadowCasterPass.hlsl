@@ -6,6 +6,7 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
 float3 _LightDirection;
+float3 _LightPosition;
 
 #include "Packages/com.deltation.toon-shader/Assets/DELTation/ToonShader/Shaders/ToonShaderShadowCasterPass_AppData.hlsl"
 
@@ -23,7 +24,13 @@ float4 get_shadow_position_h_clip(appdata input)
     const float3 position_ws = TransformObjectToWorld(input.positionOS.xyz);
     const float3 normal_ws = TransformObjectToWorldNormal(input.normalOS);
 
-    float4 position_cs = TransformWorldToHClip(ApplyShadowBias(position_ws, normal_ws, _LightDirection));
+    #if _CASTING_PUNCTUAL_LIGHT_SHADOW
+    const float3 light_direction_ws = normalize(_LightPosition - position_ws);
+    #else
+    const float3 light_direction_ws = _LightDirection;
+    #endif
+
+    float4 position_cs = TransformWorldToHClip(ApplyShadowBias(position_ws, normal_ws, light_direction_ws));
 
     #if UNITY_REVERSED_Z
     position_cs.z = min(position_cs.z, position_cs.w * UNITY_NEAR_CLIP_VALUE);
