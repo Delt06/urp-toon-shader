@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace DELTation.ToonShader.Editor.NormalsSmoothing
 {
