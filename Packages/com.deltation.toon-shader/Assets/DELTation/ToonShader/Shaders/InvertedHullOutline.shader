@@ -4,7 +4,7 @@
 	{
 		_Color ("Color", Color) = (0, 0, 0, 0)
 		_Scale ("Scale", Range(0, 10)) = 0.05
-		_ViewBiasEdge ("View Bias Edge", Range(-1, 1)) = -1
+		_ViewBiasThreshold ("View Bias Threshold", Range(-1, 1)) = -1
 		_ViewBiasSmoothness ("View Bias Smoothness", Range(0, 2)) = 0
 		_DepthOffsetFactor ("Depth Offset Factor", Float) = 0
 		_DepthOffsetUnits ("Depth Offset Units", Float) = 0
@@ -51,7 +51,7 @@
 			CBUFFER_START(UnityPerMaterial)
 			float4 _Color;
 			float _Scale;
-			float _ViewBiasEdge;
+			float _ViewBiasThreshold;
 			float _ViewBiasSmoothness;
 			CBUFFER_END
 
@@ -62,7 +62,7 @@
 				float3 normalWs = TransformObjectToWorldNormal(input.normal, true);
 				const float3 position_ws = TransformObjectToWorld(input.vertex);
 				const float3 view_dir_ws = GetWorldSpaceViewDir(position_ws);
-				const float bias = smoothstep(_ViewBiasEdge, _ViewBiasEdge + _ViewBiasSmoothness, -dot(normalWs, view_dir_ws));
+				const float bias = smoothstep(_ViewBiasThreshold, _ViewBiasThreshold + _ViewBiasSmoothness, -dot(normalWs, view_dir_ws));
 				
 #ifdef CLIP_SPACE
 				float4 vertex_hclip = TransformWorldToHClip(position_ws);
