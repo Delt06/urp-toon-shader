@@ -4,8 +4,10 @@
 	{
 		_Color ("Color", Color) = (0, 0, 0, 0)
 		_Scale ("Scale", Range(0, 10)) = 0.05
-		_DepthOffsetFactor ("Offset Factor", Float) = 0
-		_DepthOffsetUnits ("Offset Units", Float) = 0
+		_ViewBiasEdge ("View Bias Edge", Range(-1, 1)) = -1
+		_ViewBiasSmoothness ("View Bias Smoothness", Range(0, 2)) = 0
+		_DepthOffsetFactor ("Depth Offset Factor", Float) = 0
+		_DepthOffsetUnits ("Depth Offset Units", Float) = 0
 		[Toggle(CLIP_SPACE)]
 		_ClipSpace ("Clip Space", Float) = 1
 		[Toggle(CUSTOM_NORMALS)]
@@ -49,18 +51,25 @@
 			CBUFFER_START(UnityPerMaterial)
 			float4 _Color;
 			float _Scale;
+			float _ViewBiasEdge;
+			float _ViewBiasSmoothness;
 			CBUFFER_END
 
 			v2f vert (const appdata input)
 			{
 				v2f output;
+
+				float3 normalWs = TransformObjectToWorldNormal(input.normal, true);
+				const float3 position_ws = TransformObjectToWorld(input.vertex);
+				const float3 view_dir_ws = GetWorldSpaceViewDir(position_ws);
+				const float bias = smoothstep(_ViewBiasEdge, _ViewBiasEdge + _ViewBiasSmoothness, -dot(normalWs, view_dir_ws));
 				
 #ifdef CLIP_SPACE
-				float4 vertex_hclip = TransformObjectToHClip(input.vertex);
-				float3 normal_hclip = TransformWorldToHClipDir(TransformObjectToWorldNormal(input.normal, true));
-				output.position_cs = vertex_hclip + float4(normal_hclip * _Scale, 0);
-#else
-				output.position_cs = TransformObjectToHClip(input.vertex + normalize(input.normal) * _Scale);
+				float4 vertex_hclip = TransformWorldToHClip(position_ws);
+				float3 normal_hclip = TransformWorldToHClipDir(normalWs);
+				output.position_cs = vertex_hclip + float4(normal_hclip * _Scale * bias, 0);
+#else				
+				output.position_cs = TransformWorldToHClip(position_ws + normalWs * _Scale * bias);
 #endif
 
 				output.fog_factor = ComputeFogFactor(output.position_cs.z);

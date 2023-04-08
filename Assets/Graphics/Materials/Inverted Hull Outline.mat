@@ -2,14 +2,16 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Inverted Hull Outline
   m_Shader: {fileID: 4800000, guid: ff7f2aca5d3f42edbad9a22bab9bebe6, type: 3}
-  m_ShaderKeywords: CLIP_SPACE
+  m_ValidKeywords:
+  - CLIP_SPACE
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -75,16 +77,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _BiasEdge: -0.878
+    - _BiasSmoothness: 0.247
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _ClipSpace: 1
     - _Cull: 2
+    - _CustomNormals: 0
     - _Cutoff: 0.5
-    - _DepthOffsetFactor: 18.18
+    - _DepthOffsetFactor: 7
     - _DepthOffsetUnits: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -99,11 +105,14 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Scale: 0.02
-    - _Smoothness: 0.5
+    - _Smoothness: 0.445
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Step: -1
     - _Surface: 0
+    - _ViewBiasEdge: -1
+    - _ViewBiasSmoothness: 0.25
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
