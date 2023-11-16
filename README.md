@@ -2,6 +2,10 @@
 
 A toon shader compatible with the Universal Render Pipeline.
 
+> ⚠️ The repository is no longer actively maintained.
+>
+> 🆕 The techniques from this project are the foundation of [Toon RP](https://github.com/Delt06/toon-rp), a custom Scripable Render Pipeline designed for stylized rendering.
+
 ### Unity Version
 
 > Developed and verified with Unity 2021.3.0f1 LTS and URP package v12.1.6.
